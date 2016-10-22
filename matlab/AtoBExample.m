@@ -6,7 +6,7 @@ import presspull.*
 %% Get rectangles A and B.
 rect_A = [0, 0, pi/4,  0.5, 0.25]; % x, y, theta, l, w
 rect_B = [1, 1, pi/1.33, 0.5, 0.25];
-ug = 0.55;
+ug = 1.0;
 
 % Contact points on A and B.
 c = calcRectangleCorners([0,0,0,0.5,0.25]);
@@ -114,11 +114,48 @@ for i = 1:length(theta)
     end
 end
 
-A = G + [cos(omega)*d; sin(omega)*d];
+A = G + [cos(min_theta)*d; sin(min_theta)*d];
 BA = A - G;
 perpBA = [BA(2); -BA(1)];
 C = t*G + (1-t)*A + k * perpBA;
 
+% Secant step refinement.
+x(1) = min_theta + 0.05;
+x(2) = min_theta;
+
+A = G + [cos(x(1))*d; sin(x(1))*d];
+BA = A - G;
+perpBA = [BA(2); -BA(1)];
+C = t*G + (1-t)*A + k * perpBA;
+AX = x_A_world - A;
+AC = C - A;
+f(1) = abs(AX(1)*AC(2) - AX(2)*AC(1));
+
+A = G + [cos(x(2))*d; sin(x(2))*d];
+BA = A - G;
+perpBA = [BA(2); -BA(1)];
+C = t*G + (1-t)*A + k * perpBA;
+AX = x_A_world - A;
+AC = C - A;
+f(2) = abs(AX(1)*AC(2) - AX(2)*AC(1));
+
+for i = 3:10
+    x(i) = x(i-1) - f(i-1)*(x(i-1)-x(i-2))/(f(i-1)-f(i-2));
+    if abs(x(i) - x(i-1)) < 1e-7
+        break
+    end
+
+    A = G + [cos(x(i))*d; sin(x(i))*d];
+    BA = A - G;
+    perpBA = [BA(2); -BA(1)];
+    C = t*G + (1-t)*A + k * perpBA;
+    AX = x_A_world - A;
+    AC = C - A;
+    f(i) = abs(AX(1)*AC(2) - AX(2)*AC(1));
+end
+min_theta = x(i);
+
+%
 plot(A(1),A(2),'b.');
 plot(C(1),C(2),'r+');
 plot([x_A_world(1) A(1)], [x_A_world(2) A(2)], 'g')
