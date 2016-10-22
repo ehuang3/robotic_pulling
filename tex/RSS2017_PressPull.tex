@@ -1,0 +1,204 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{times}
+
+% numbers option provides compact numerical references in the text. 
+\usepackage[numbers]{natbib}
+\usepackage{multicol}
+\usepackage[bookmarks=true]{hyperref}
+\usepackage{amsmath,amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+% \usepackage{caption}
+% \usepackage{subcaption}
+% \usepackage{subfig}
+% \usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{scopes}
+\usetikzlibrary{shapes.misc}
+\tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},
+%default radius will be 1pt. 
+cross/.default={2pt}}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\newcommand{\EH}[1]{{\color{blue} {Eric: {#1}}  }}
+
+\pdfinfo{
+   /Author (Eric Huang)
+   /Title  (Robots: Our new overlords)
+   /CreationDate (D:20161016120000)
+   /Subject (Robots)
+   /Keywords (Robots;Overlords)
+}
+
+\begin{document}
+
+% paper title
+\title{Robotic Pulling}
+
+% You will get a Paper-ID when submitting a pdf file to the conference system
+% \author{Author Names Omitted for Anonymous Review. Paper-ID [add your ID here]}
+
+%\author{\authorblockN{Michael Shell}
+%\authorblockA{School of Electrical and\\Computer Engineering\\
+%Georgia Institute of Technology\\
+%Atlanta, Georgia 30332--0250\\
+%Email: mshell@ece.gatech.edu}
+%\and
+%\authorblockN{Homer Simpson}
+%\authorblockA{Twentieth Century Fox\\
+%Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\and
+%\authorblockN{James Kirk\\ and Montgomery Scott}
+%\authorblockA{Starfleet Academy\\
+%San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212\\
+%Fax: (888) 555--1212}}
+
+
+% avoiding spaces at the end of the author lines is not a problem with
+% conference papers because we don't use \thanks or \IEEEmembership
+
+
+% for over three affiliations, or if they all won't fit within the width
+% of the page, use this alternative format:
+% 
+%\author{\authorblockN{Michael Shell\authorrefmark{1},
+%Homer Simpson\authorrefmark{2},
+%James Kirk\authorrefmark{3}, 
+%Montgomery Scott\authorrefmark{3} and
+%Eldon Tyrell\authorrefmark{4}}
+%\authorblockA{\authorrefmark{1}School of Electrical and Computer Engineering\\
+%Georgia Institute of Technology,
+%Atlanta, Georgia 30332--0250\\ Email: mshell@ece.gatech.edu}
+%\authorblockA{\authorrefmark{2}Twentieth Century Fox, Springfield, USA\\
+%Email: homer@thesimpsons.com}
+%\authorblockA{\authorrefmark{3}Starfleet Academy, San Francisco, California 96678-2391\\
+%Telephone: (800) 555--1212, Fax: (888) 555--1212}
+%\authorblockA{\authorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
+
+
+\maketitle
+
+% \begin{abstract}
+% \end{abstract}
+
+\IEEEpeerreviewmaketitle
+
+% \section{Introduction}
+
+\section{Theory}
+
+% Press-pull stability theorem figure.
+\begin{figure}
+  \centering
+  \def\iangle{35} % Angle of the inclined plane
+  \begin{tikzpicture}[
+    scale=1.25, every node/.style={scale=1.25},
+    force/.style={>=latex,draw=black,fill=black},
+    axis/.style={densely dashed,draw=gray,font=\small},
+    ]
+    \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
+    \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
+    \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
+    {[axis,->]
+      \draw (0,0) -- (2.5,0) node[right] {$x$};
+      \draw (0,0) -- (0,2.5) node[above] {$y$};
+    }
+    {[force,->]
+      \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
+    }
+    \fill (0,0) circle [radius=1.pt];
+    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+  \end{tikzpicture}
+  \caption{Motion of a press-pulled slider.}
+  \label{fig:presspull-motion}
+\end{figure}
+
+% \begin{figure}[t!]
+%   \centering
+%   \includegraphics[width=0.8\columnwidth]{fig/1}
+%   \caption{H}
+%   \label{fig:presspull-ex}
+% \end{figure}
+
+\begin{theorem}
+  For press-pulling of a rigid body in the plane, the line from the
+  press-pull contact point to the body's center of pressure converges
+  to the line of motion.
+\end{theorem}
+
+\begin{proof}
+  Let the $y$-axis of the coordinate frame be aligned with the line of
+  motion of the press-pull contact point (see Figure
+  \ref{fig:presspull-motion} for an example). Then the instantaneous
+  rotation center of the body must fall on the $x$-axis, and we can
+  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+
+  Suppose the center of pressure is strictly to the right of the line
+  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+  7.4 in \cite{Mason}, the rotation center lies on the positive
+  $x$-axis and has negative rotation. The velocity of a point on the
+  rigid body is given by
+  $\mathbf{v}(\mathbf{r}) =
+  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+  \mathbf{r}_\text{IC})$.
+  We can compute the motion of the body relative to the contact point
+  by
+  % 
+  \begin{align*}
+    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+  \end{align*}
+  % 
+  where $\mathbf{v}_c$ is the velocity of the contact point. In other
+  words, the body is rotating clockwise relative to the
+  contact point with angular velocity
+  % 
+  \begin{equation}
+    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+  \end{equation}
+  %
+
+  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+  pressure in the frame of the contact point. When the line of motion
+  passes through the center of pressure, a pure translation takes
+  place (Theorem 7.4 in \cite{Mason}). This implies that
+  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+  $\theta$ is monotonically decreasing, we see that it must converge
+  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+
+  The case when the center of pressure is strictly to the left of the
+  line of motion follows from symmetry about the $y$-axis.
+\end{proof}
+
+Note that the above proof holds for \textit{all pressure
+  distributions} of the body on the support
+surface. % Given that pressure
+% distributions are highly indeterminate, this is a very strong result.
+
+% \begin{proposition}
+%   When pressing down on a point contact on a rigid body, the center of
+%   pressure is given by
+%   \begin{equation}
+%     \text{CoP} = \frac{1}{f_0 + p_c}\left(\int_R\mathbf{r}p(\mathbf{r})dA + \mathbf{r}_cp_c\right)
+%   \end{equation}
+% \end{proposition}
+% In other words, the resulting center of pressure is located on the
+% line segment between the contact point and the original center of
+% pressure. 
+
+% \begin{proposition}
+%   A rigid body in the plane can be moved from A to B with arbitrary
+%   accuracy using at most two press-pulls.
+% \end{proposition}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
+
+
