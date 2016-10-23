@@ -159,3 +159,21 @@ min_theta = x(i);
 plot(A(1),A(2),'b.');
 plot(C(1),C(2),'r+');
 plot([x_A_world(1) A(1)], [x_A_world(2) A(2)], 'g')
+
+%% Rate of convergence.
+tol = 1e-3;
+
+CoP_A = [rect_A(1); rect_A(2)];
+CoP_B = [rect_B(1); rect_B(2)];
+
+t_1 = anglePointRay(CoP_A, x_A_world, A-x_A_world);
+t_2 = anglePointRay(C, G, x_B_world-G);
+
+a_1 = norm(CoP_A - x_A_world);
+a_2 = norm(C - G);
+
+swRate(a_1, t_1, tol)
+norm(A-x_A_world)
+
+swRate(a_2, t_2, tol)
+norm(x_B_world - G)
