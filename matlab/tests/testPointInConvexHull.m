@@ -27,4 +27,4 @@ for i = 1:size(K,1)
     A(i,:) = n0';
     b(i) = d;
 end
-in_cvhull = all(A*mu >= b);
+in_cvhull = all(A*[0 0 -1]' >= b);
