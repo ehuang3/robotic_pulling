@@ -38,10 +38,21 @@ for i = 1:length(theta)
     mu = 1;
     G_R = presspull.G(R,xr,-sign(xr),mu,f0);
 
-    % Intersection with xy-plane.
+    % Intersect G(R) with xy-plane.
     n = [0 0 1]';
     d = 0;
     [x0, y0, k0] = intersectPlaneConvexHull(n,d,R_x,R_y,G_R);
+
+    % Compute F(R).
+    w = -sign(xr);
+    F_x = -mu.*sign(w).*(-R_y-xr)./sqrt((R_x-xr).^2 + (R_y).^2).*P;
+    F_y = -mu.*sign(w).*(R_x)./sqrt((R_x-xr).^2 + (R_y).^2).*P;
+
+    % Intersect F(R) with F. 
+    f = computeFrictionalForce(mu,xr,w,R,P);
+    n = [0 0 1];
+    d = f(1);
+    % [x0, y0, k0] = intersectPlaneConvexHull(n,d,R_x,R_y,F_x);
 
     % Plot.
     xy0 = inv(rot) * [x0';y0'];
@@ -51,9 +62,4 @@ for i = 1:length(theta)
     plot(0.5,0,'b*');
     pause(0.1);
 end
-
-
-
-
-
 

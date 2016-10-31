@@ -33,4 +33,4 @@ for t = theta
 end
 
 %% 
-plot(theta(2:end-1),1./x_r(2:end-1))
+plot(theta(2:end-1),x_r(2:end-1))

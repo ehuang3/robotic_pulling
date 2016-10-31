@@ -1,4 +1,4 @@
-%% Calculate angular velocity bounds.
+%% Compute frictional moment hull.
 
 import presspull.*
 
@@ -8,7 +8,7 @@ X = X + 0.40;
 CoP = [0.40; 0];
 
 % Rotate tetrapod.
-theta = pi/3;
+theta = pi/4;
 rot = [cos(theta) -sin(theta); sin(theta) cos(theta)];
 XY = rot * [X';Y'];
 X = XY(1,:)';

@@ -20,8 +20,9 @@ for i = 1:size(K,1)
     n = cross(T(:,1),T(:,2));
     n0 = n / norm(n);
     d = p1'*n0;
-    n0 = sign(mu'*n0 - d) .* n0;
-    d = sign(mu'*n0 - d) .* d;
+    s = sign(mu'*n0 - d);
+    n0 = s.*n0;
+    d = s.*d;
     A(i,:) = n0';
     b(i) = d;
 end
