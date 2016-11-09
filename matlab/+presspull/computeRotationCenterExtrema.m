@@ -71,13 +71,15 @@ while tol < err && i < max_iters
     xr = (u+l)/2;
     G_R = G(R,xr,-sign(xr),1,1);
     if pointInConvexHull([x0;y0;0],R_x,R_y,G_R)
-        u = xr;
-    else
         l = xr;
+    else
+        u = xr;
     end
     err = u-l;
     i = i+1;
 end
+u
+l
 xu = u;
 
 end

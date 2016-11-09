@@ -40,7 +40,7 @@ K = convhull(X,Y,G);
 pointInConvexHull([CoP;0],X,Y,G)
 
 % Plot G(R).
-trimesh(K,X,Y,G,'facealpha',0.5,'facecolor','interp','edgecolor','interp')
+% trimesh(K,X,Y,G,'facealpha',0.5,'facecolor','interp','edgecolor','interp')
 xlabel('x')
 ylabel('y')
 zlabel('g')

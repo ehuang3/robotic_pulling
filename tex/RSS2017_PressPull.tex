@@ -7,23 +7,36 @@
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{amsmath,amssymb}
 \usepackage{amsthm}
+\usepackage{mathtools}
 \usepackage{graphicx}
 % \usepackage{caption}
-% \usepackage{subcaption}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{epstopdf}
 % \usepackage{subfig}
-% \usepackage{float}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
 \usepackage{tikz}
 \usetikzlibrary{scopes}
 \usetikzlibrary{shapes.misc}
 \tikzset{cross/.style={cross out, draw=black, minimum size=2*(#1-\pgflinewidth), inner sep=0pt, outer sep=0pt},
-%default radius will be 1pt. 
+%default radius will be 1pt.
 cross/.default={2pt}}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+\DeclareMathOperator{\sign}{\text{sgn}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\intr}{int}
+\DeclareMathOperator{\dom}{dom}
 
 \newcommand{\EH}[1]{{\color{blue} {Eric: {#1}}  }}
+
 
 \pdfinfo{
    /Author (Eric Huang)
@@ -83,14 +96,95 @@ cross/.default={2pt}}
 
 \maketitle
 
-% \begin{abstract}
-% \end{abstract}
+\begin{abstract}
+\end{abstract}
 
 \IEEEpeerreviewmaketitle
 
-% \section{Introduction}
+\section{Introduction}
 
 \section{Theory}
+
+\subsection{Planar Pulling Subject to Friction}
+
+We present a preliminary quasi-static analysis of planar pulling
+subject to friction. Planar pulling is the manipulation skill where
+the robot contacts a rigid body at a point and pulls that contact
+point along a trajectory. 
+
+Let the \textit{generalized velocity} of a planar rigid body be
+$\mathbf{v}^+ = [v_x, v_y, \omega]^T$, where $v_x$ and $v_y$ are the
+linear velocities of a reference point and $\omega$ is the angular
+velocity about that point. Taking the origin as the reference point,
+the velocity of a point $\mathbf{x}$ on the body is then given by
+$\mathbf{v}(\mathbf{x}) = [v_x, v_y]^T + \omega\hat{\mathbf{k}} \times
+\mathbf{x}$ and can be written in matrix notation as
+\begin{equation} \label{eq:generalized-velocity}
+\mathbf{v}(\mathbf{x}) = A(\mathbf{x})\mathbf{v}^+,
+\end{equation}
+where
+\begin{equation}
+  A(\mathbf{x}) = 
+  \begin{bmatrix*}[r]
+    1 & 0 & -x_2 \\
+    0 & 1 &  x_1
+  \end{bmatrix*}.
+\end{equation}
+
+In this analysis, we choose a coordinate frame such that the origin is
+the contact point and the $y$-axis aligns with the contact point
+velocity (see Figure \ref{fig:presspull-motion} for an example). Then
+the total frictional force and moment of the body at the origin are
+\begin{align}
+  % Force
+  % \mathbf{f}_f &= -\mu\,\sign(\dot{\theta})\,\mathbf{\hat{k}}\,\times\int_{R}\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA \\
+  % \mathbf{f}_f &= -\mu\int_{R}\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA \\
+  \mathbf{f}_f &= -\mu\int_{R}\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA \\
+  % Moment
+  % \mathbf{m}_f &= -\mu\,\sign(\dot{\theta}) \int_{R}\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA,
+  % \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA,
+  \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA,
+\end{align}
+where $\mu$ is the coefficient of friction, $R$ is the region of the
+rigid body in contact with the plane, $\mathbf{v}(\mathbf{r})$ is the
+body point velocity given by (\ref{eq:generalized-velocity}) and
+$p(\mathbf{r})$ is a pressure distribution over $R$.
+
+\begin{align}
+  \mathrm{P}(\mathbf{v}^+) &= \mu\int_R\lVert \mathbf{v}(\mathbf{r}) \rVert p(\mathbf{r}) dA
+  % &\mathbf{v}^+_1 = 0, \mathbf{v}^+_2 = 1
+\end{align}
+Form the Lagrangian
+\begin{equation}
+  \mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mathrm{P}(\mathbf{v}^+) - \lambda_1(v^+_1 - 1) - \lambda_2v^+_2
+\end{equation}
+The gradient of $\mathrm{L}$ with respect to $\mathbf{v}^+$ is
+\begin{equation}
+  \nabla\mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mu\int_R\frac{A(\mathbf{r})^TA(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA - \begin{bmatrix}\lambda_1, \lambda_2, 0\end{bmatrix}^T
+\end{equation}
+After some work, we end up with the following conditions on the force and the moment
+\begin{align}
+  \mathbf{f}_f &= -\begin{bmatrix}\lambda_1, \lambda_2\end{bmatrix}^T\\
+  \mathbf{m}_f &= 0
+\end{align}
+
+We prefer the minimum power interpretation in our theoretical analysis
+for a few reasons. For bodies with discrete points of support, the
+minimum still exists whereas the moment may be indeterminate.
+
+% \begin{enumerate}
+% \item Pull contact setup
+% \item Generalized velocities
+% \item A(x)
+% \item Dissipation function (convex)
+% \item Pressure distribution p(r)
+% \item Lagrangian of pulling
+% \item Force balance
+% \item Moment balance
+% \item Discrete pressure distributions
+% \end{enumerate}
+
+\subsection{Quasi-static Stability}
 
 % Press-pull stability theorem figure.
 \begin{figure}
@@ -118,20 +212,14 @@ cross/.default={2pt}}
   \label{fig:presspull-motion}
 \end{figure}
 
-% \begin{figure}[t!]
-%   \centering
-%   \includegraphics[width=0.8\columnwidth]{fig/1}
-%   \caption{H}
-%   \label{fig:presspull-ex}
-% \end{figure}
-
 \begin{theorem}
-  For press-pulling of a rigid body in the plane, the line from the
-  press-pull contact point to the body's center of pressure converges
-  to the line of motion.
+  For pulling of a rigid body in the plane, the line from the pulling
+  contact point to the body's center of pressure converges to the line
+  of motion.
 \end{theorem}
 
 \begin{proof}
+  % TODO Shorten this proof. Rewrite to use generalized velocities.
   Let the $y$-axis of the coordinate frame be aligned with the line of
   motion of the press-pull contact point (see Figure
   \ref{fig:presspull-motion} for an example). Then the instantaneous
@@ -148,20 +236,16 @@ cross/.default={2pt}}
   \mathbf{r}_\text{IC})$.
   We can compute the motion of the body relative to the contact point
   by
-  % 
   \begin{align*}
     \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
     &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
   \end{align*}
-  % 
   where $\mathbf{v}_c$ is the velocity of the contact point. In other
   words, the body is rotating clockwise relative to the
   contact point with angular velocity
-  % 
   \begin{equation}
     \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
   \end{equation}
-  %
 
   Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
   pressure in the frame of the contact point. When the line of motion
@@ -177,8 +261,7 @@ cross/.default={2pt}}
 
 Note that the above proof holds for \textit{all pressure
   distributions} of the body on the support
-surface. % Given that pressure
-% distributions are highly indeterminate, this is a very strong result.
+surface.
 
 % \begin{proposition}
 %   When pressing down on a point contact on a rigid body, the center of
@@ -196,9 +279,105 @@ surface. % Given that pressure
 %   accuracy using at most two press-pulls.
 % \end{proposition}
 
+\subsection{Frictional Force \& Moment Envelopes}
+
+\begin{figure*}[!ht]
+  \centering
+  \begin{subfigure}[b]{0.24\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{./fig/moment_hull_1}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.24\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{fig/moment_hull_2}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.24\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{fig/moment_hull_3}
+    \caption{}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.24\textwidth}
+    \centering
+    \includegraphics[width=1\linewidth]{fig/CoP_boundary}
+    \caption{}
+  \end{subfigure}
+  \caption{Example moment envelope for a 2D tetrapod with rotation center $x_{\text{IC}} = 0.75$. (a) Support region $R$. (b) Normalized-moment surface $g(R)$. (c) Convex moment envelope $G(R)$. (d) Intersection of the moment envelope and the $xy$-plane. The intersection bounds the set of feasible centers of pressure with zero moment.}
+  \label{fig:moment-envelope}
+\end{figure*}
+
+The frictional force and moment equations are
+\begin{align}
+  \mathbf{f}_f &= -\mu\,\sign(\dot{\theta})\,\mathbf{\hat{k}}\,\times\int_{R}\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA \\
+  \mathbf{m}_f &= -\mu\,\sign(\dot{\theta}) \int_{R}\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA
+\end{align}
+
+Let $f_0 = \int_{R}p(\mathbf{r})dA$ be the total pressure. 
+Leave $r_{\text{IC}}$ fixed.
+We define the functions
+\begin{align}
+\mathbf{f}(\mathbf{r}) &= -\mu\,\sign(\dot{\theta})f_0\,\mathbf{\hat{k}}\,\times\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert}\\
+g(\mathbf{r}) &= -\mu\,\sign(\dot{\theta})f_0\,\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert}
+\end{align}
+which are the frictional force and the frictional torque, respectively, that would result from a unit normalized pressure at $\mathbf{r}$.
+
+Convex hull/envelope.
+
+\section{Methods}
+
+\subsection{Exact Angular Velocities Bounds}
+
+\begin{proposition}
+  Suppose $P(u) := \argmin_x f(x,u)$ with
+  $f:\mathbb{R}\times\mathbb{R}\rightarrow\mathbb{R}$ continuous,
+  convex and $f \rightarrow \infty$ as $|x| \rightarrow \infty$. If
+  $f$ is strictly convex in $x$, then $P$ is a continuous function on
+  the interior of $\dom P$.
+\end{proposition}
+
+\begin{proof}
+  Given by Corollary 7.43 in \cite{Rockafellar}.
+\end{proof}
+
+\begin{theorem}
+  For pulling of a planar rigid body with known center of pressure,
+  the set of all feasible rotation centers is connected.
+\end{theorem}
+
+\begin{proof}
+  Let $v^+$ be the generalized velocity. The rotation center that
+  generates zero moment is the solution to 
+  \begin{equation}
+    \int_R\lVert A(x)v^+ \rVert d\mu(x)
+  \end{equation}
+  subject to 
+\end{proof}
+
+\begin{algorithm}
+\caption{Exact Angular Velocity Bounds}\label{euclid}
+\begin{algorithmic}[1]
+\Procedure{Find Extrema}{$R$, $x_0$, $y_0$}
+\State $\textit{stringlen} \gets \text{length of }\textit{string}$
+\State $i \gets \textit{patlen}$
+\BState \emph{top}:
+\If {$i > \textit{stringlen}$} \Return false
+\EndIf
+\State $j \gets \textit{patlen}$
+\BState \emph{loop}:
+\If {$\textit{string}(i) = \textit{path}(j)$}
+\State $j \gets j-1$.
+\State $i \gets i-1$.
+\State \textbf{goto} \emph{loop}.
+\State \textbf{close};
+\EndIf
+\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
+\State \textbf{goto} \emph{top}.
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}
+
 \bibliographystyle{plainnat}
 \bibliography{references}
 
 \end{document}
-
-
