@@ -78,8 +78,6 @@ while tol < err && i < max_iters
     err = u-l;
     i = i+1;
 end
-u
-l
 xu = u;
 
 end
