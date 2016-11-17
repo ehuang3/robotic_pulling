@@ -6,19 +6,25 @@
 \usepackage{multicol}
 \usepackage[bookmarks=true]{hyperref}
 \usepackage{amsmath,amssymb}
+% \usepackage[standard]{ntheorem}
 \usepackage{amsthm}
 \usepackage{mathtools}
 \usepackage{graphicx}
 % \usepackage{caption}
+% \usepackage{figure}
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{epstopdf}
+\usepackage{dblfloatfix}
+\usepackage{fixltx2e}
 % \usepackage{subfig}
 \usepackage{algorithm}
+\usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
 \makeatletter
 \def\BState{\State\hskip-\ALG@thistlm}
 \makeatother
+\algdef{SE}[DOWHILE]{Do}{DoWhile}[1]{\algorithmicdo\ #1}[1]{\algorithmicwhile\ #1}
 
 \usepackage{tabstackengine}
 \stackMath
@@ -30,8 +36,10 @@
 %default radius will be 1pt.
 cross/.default={2pt}}
 
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
 \newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
 \DeclareMathOperator{\sign}{\text{sgn}}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -107,7 +115,7 @@ cross/.default={2pt}}
 
 \section{Theory}
 
-\subsection{Planar Pulling Subject to Friction}
+\subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
 
 We present a preliminary quasi-static analysis of planar pulling
 subject to friction. Planar pulling is the manipulation skill where
@@ -164,8 +172,6 @@ $\mathcal{C} = \{[0,1,\omega]^T, \omega \in \mathbb{R}\}$ so that the
 contact point motion is aligned with the coordinate frame. We call the
 objective in (\ref{eq:constrained-frictional-dissipation}) the
 frictional dissipation equation $\mathrm{P}(\mathbf{v}^+)$.
-
-
 
 \begin{equation} \label{eq:frictional-dissipation}
   \mathrm{P}(\mathbf{v}^+) = \mu\int_R\lVert \mathbf{v}(\mathbf{r}) \rVert p(\mathbf{r}) dA
@@ -297,7 +303,7 @@ surface.
 
 \subsection{Frictional Force \& Moment Envelopes}
 
-\begin{figure*}[ht]
+\begin{figure}[t]
   \centering
   \begin{subfigure}[b]{0.24\textwidth}
     \centering
@@ -321,7 +327,7 @@ surface.
   \end{subfigure}
   \caption{Example moment envelope for a 2D tetrapod with rotation center $x_{\text{IC}} = 0.75$. (a) Support region $R$. (b) Normalized-moment surface $g(R)$. (c) Convex moment envelope $G(R)$. (d) Intersection of the moment envelope and the $xy$-plane. The intersection bounds the set of feasible centers of pressure with zero moment.}
   \label{fig:moment-envelope}
-\end{figure*}
+\end{figure}
 
 The frictional force and moment equations are
 \begin{align}
@@ -348,7 +354,8 @@ Convex hull/envelope.
   The constrained frictional dissipation equation
   $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
   pressure distributions with some support force off of the
-  $x$-axis. When otherwise, the equation admits an interval of minima.
+  $x$-axis. When otherwise, the equation admits an interval of
+  minimizers.
 \end{proposition}
 
 \begin{proof}
@@ -388,94 +395,127 @@ An object whose contact region is two discrete points, e.g. a spoon,
 can have multiple minimizing angular velocities when aligned with the
 $x$-axis.
 
-\begin{proposition}
+\begin{proposition}\label{prop:var-analysis}
   Suppose $P(u) := \argmin_x f(x,u)$ with
   $f:\mathcal{X}\times\mathcal{U}\rightarrow\mathbb{R}$ continuous and
-  level-set bounded. Then the set-valued mapping $P(u)$ is outer
-  semi-continuous and locally bounded.
+  level-bounded in $x$ locally uniformly in $u$. Then the set-valued
+  mapping $P(u)$ is outer-semicontinuous and locally bounded.
 \end{proposition}
 
 \begin{proof}
-  Proposition adapted from Corollary 7.42 in \cite{Rockafellar}.
+  Proposition adapted from Corollary 7.42 and Theorem 1.17 in
+  \cite{Rockafellar}.
 \end{proof}
 
-\begin{theorem}
+\begin{theorem}\label{thm:angular-velocities}
   For pulling of a planar rigid body with known center of pressure,
-  the set of all feasible angular velocities is connected.
+  the set of all realizable angular velocities is connected.
 \end{theorem}
 
 \begin{proof}
-  Let us assume that the contact point moves with velocity
-  $\mathbf{v}_c = [0,1]^T$. Then the generalized velocity of the
-  pulled body is of the form $\mathbf{v}^+ = [0, 1, \omega]^T$. We
-  want to show that the set of feasible angular velocities is a
-  connected set.
-
-  First, we argue that the frictional dissipation equation
-  $\mathrm{D}(\mathbf{v}^+) = \mu\int_R\lVert
-  A(\mathbf{r})\mathbf{v}^+ \rVert p(\mathbf{r})dA$
-  has a unique minimum. 
-
-  For a given body point $\mathbf{x}$, the matrix $A(\mathbf{x})$ has
-  a null space spanned by $[x_2,-x_1,1]^T$. 
+  Let $\Omega$ be the set of realizable angular velocities,
+  w.r.t. (\ref{eq:constrained-frictional-dissipation}), for a given
+  support region $R$ with known center of pressure. $\Omega$ is
+  nonempty since a single support point located at the center of
+  pressure has an analytic solution. Let
+  $\omega_1, \omega_2 \in \Omega$ and let $p_1, p_2$ be their
+  corresponding pressure distributions. Then the new distribution
+  $p_t = tp_1 + (1-t)p_2$, with $t \in [0,1]$, shares the same center
+  of pressure as $p_1,p_2$. Define the function
   \begin{equation}
-    A(\mathbf{x})\mathbf{v}^+ = 
-    \begin{bmatrix*}[r]
-      1 & 0 & -x_2\\
-      0 & 1 & x_1\\
-    \end{bmatrix*} 
-    \begin{bmatrix*}
-      0\\ 1 \\ \omega
-    \end{bmatrix*}
-     = 
-     \begin{bmatrix*}
-       -x_2\omega \\
-       1 + x_1\omega
-     \end{bmatrix*}
+    f(\omega, t) = \mu\int_R\lVert A(\mathbf{r})\mathbf{v}^+(\omega)\rVert p_t(\mathbf{r})dA,
   \end{equation}
-
-  \begin{center}
-    \bgroup
-    \def\arraystretch{1.5}%  1 is the default, change whatever you need
-    \begin{tabular}{r l c r}
-      $\mathcal{N}(A(\mathbf{x}))$ = &$[\;x_2$ & $-x_1$ & $1\;]^T$ \\
-      $\mathbf{v}^+$ = &$[\;0$ & $1$ & $\omega\;]^T$ \\
-    \end{tabular}
-    \egroup
-  \end{center}
-
-  Let $v^+$ be the generalized velocity. The rotation center that
-  generates zero moment is the solution to 
-  \begin{equation}
-    \int_R\lVert A(x)v^+ \rVert d\mu(x)
-  \end{equation}
-  subject to 
+  where $\mathbf{v}^+: \omega \rightarrow [0,1,\omega]^T$ and
+  $\dom f:= \mathbb{R}\times[0,1]$. By inspection, $f$ is
+  continuous. For all $t \in [0,1]$ and $\alpha \in \mathbb{R}$, the
+  set $\{(\omega,t)\;|\;f(\omega,t)\leq \alpha\}$ is bounded because
+  $f \rightarrow \infty$ as $|x|\rightarrow \infty$. Hence, $f$ is
+  level-bounded in $\omega$ locally uniformly in $t$, and $f$
+  satisfies the conditions of Proposition \ref{prop:var-analysis}.
 
   The image of a connected set by an outer-semicontinuous set-valued
   mapping whose values are nonempty and connected is connected
-  \cite{hiriart1985images}.
+  \cite{hiriart1985images}. Let $P(t) := \argmin_\omega f(\omega,t)$.
+  For a given $t$, the set $P(t)$ is convex-valued and therefore
+  connected. Since $f$ is continuous and level-bounded, the set is
+  also nonempty (Theorem 1.9 \cite{Rockafellar}). Therefore, the image
+  $P([0,1])$ contains the interval connecting $\omega_1$ and
+  $\omega_2$. Because the choice of $\omega_1,\omega_2$ was arbitrary,
+  $\Omega$ is connected.
+\end{proof}
+In general, Theorem \ref{thm:angular-velocities} holds for any convex
+set of pressure distributions.  % Note, the set of pressure
+% distributions with identical centers of pressure is convex.
+
+\begin{corollary}
+  For pulling of a planar rigid body with known center of pressure,
+  the set of all realizable angular velocities is a bounded interval.
+\end{corollary}
+
+\begin{proof}
+  By Theorem 7.4 of \cite{Mason}, the angular velocity of the body is
+  strictly negative (positive) when the center of pressure falls
+  strictly in the right (left) half-plane. This shows that $\Omega$ is
+  bounded from below (above). The Bisector Bound \cite{Mason} states
+  that the set of feasible rotation centers falls behind the line
+  bisecting the contact point and the center of pressure. With respect
+  to our coordinate frame (Section \ref{sec:planar-pulling}), we see
+  that $\Omega$ is bounded above (below) by 
+  \begin{equation}
+    \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*},
+  \end{equation}
+  where $x^*$, strictly positive (negative), is the intersection of
+  the bisector line and the $x$-axis. Therefore, $\Omega$ is a
+  bounded interval.
+
+  When the center of pressure falls on the line of motion, the rigid
+  body translates and $\Omega = \{0\}$ \cite{Mason}.
 \end{proof}
 
+Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
+velocity bounds for a given support region $R$ and center of pressure
+$[x_0,y_0]^T$. The run-time of the algorithm is
+$\mathcal{O}(d\,n\log{} n)$, where $d$ is the number of significant
+digits returned and $n$ is the number of points in the discretization
+of $R$.
+
 \begin{algorithm}
-\caption{Exact Angular Velocity Bounds}\label{euclid}
+\caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
 \begin{algorithmic}[1]
-\Procedure{Find Extrema}{$R$, $x_0$, $y_0$}
-\State $\textit{stringlen} \gets \text{length of }\textit{string}$
-\State $i \gets \textit{patlen}$
-\BState \emph{top}:
-\If {$i > \textit{stringlen}$} \Return false
+\Function{Find Extrema}{$R$, $x_0$, $y_0$}
+\If {$x_0$ is $0$} \Return {$[0,0]$}
 \EndIf
-\State $j \gets \textit{patlen}$
-\BState \emph{loop}:
-\If {$\textit{string}(i) = \textit{path}(j)$}
-\State $j \gets j-1$.
-\State $i \gets i-1$.
-\State \textbf{goto} \emph{loop}.
-\State \textbf{close};
+% \BState \emph{min}:
+\State $l \gets 0$
+\State $u \gets -\lVert\mathbf{v}_c\rVert/(x_0 + y_0^2/x_0)$
+\State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+% \BState \emph{max}:
+\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/(x_0 + y_0^2/x_0)$
+\Do% {$u \gets 2u$}
+\State {$u \gets 2u$}
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, u]^T$
+\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
+\DoWhile{$[x_0,y_0]^T \in \Call{ConvHull}{G}$}
+\State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+% \BState \emph{return}:
+\State $l \gets \Call{Min}{\omega_1,\omega_2}$
+\State $u \gets \Call{Max}{\omega_1,\omega_2}$
+\State \Return {$[l, u]$}
+\EndFunction
+% 
+\Function{Bisection Search}{$R$, $x_0$, $y_0$, $l$, $u$}
+\While{$\varepsilon < |u-l|$}
+\State $\omega \gets (u+l)/2$
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, \omega]^T$
+\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
+\If {$[x_0,y_0]^T \in \Call{ConvHull}{G}$} 
+\State $u \gets \omega$
+\Else{} 
+\State $l \gets \omega$
 \EndIf
-\State $i \gets i+\max(\textit{delta}_1(\textit{string}(i)),\textit{delta}_2(j))$.
-\State \textbf{goto} \emph{top}.
-\EndProcedure
+\EndWhile
+\State \Return $(u+l)/2$
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
