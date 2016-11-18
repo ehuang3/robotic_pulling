@@ -160,12 +160,16 @@ rigid body in contact with the plane, $\mathbf{v}(\mathbf{r})$ is the
 body point velocity given by (\ref{eq:generalized-velocity}) and
 $p(\mathbf{r})$ is a pressure distribution over $R$.
 
+The principle of minimal dissipation states that the motion of the
+pulled body minimizes the instantaneous work dissipated by friction
+\cite{alexander1993bounds}. That is, the motion minimizes the
+following: 
 \begin{equation}
 \begin{aligned}
 & \underset{\mathbf{v}^+}{\text{minimize}}
 & & \mu\int_R\lVert A(\mathbf{r})\mathbf{v}^+ \rVert p(\mathbf{r}) dA \\
 & \text{subject to}
-& & \mathbf{v}^+ \in \mathcal{C} 
+& & \mathbf{v}^+ \in \mathcal{C}.
 \end{aligned} \label{eq:constrained-frictional-dissipation}
 \end{equation}
 Without loss of generality, we take
@@ -174,23 +178,30 @@ contact point motion is aligned with the coordinate frame. We call the
 objective in (\ref{eq:constrained-frictional-dissipation}) the
 frictional dissipation equation $\mathrm{P}(\mathbf{v}^+)$.
 
-Form the Lagrangian
+The principle of minimal dissipation is equivalent to the quasi-static
+model of planar sliding with friction \cite{alexander1993bounds}.  In
+fact, the quasi-static model is identical to the first order
+optimality conditions of
+(\ref{eq:constrained-frictional-dissipation}). To see this, take the
+Lagrangian of (\ref{eq:constrained-frictional-dissipation})
 \begin{equation}
-  \mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mathrm{P}(\mathbf{v}^+) - \lambda_1v^+_1 - \lambda_2(v^+_2-1)
+  \mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mathrm{P}(\mathbf{v}^+) + \lambda_1v^+_1 + \lambda_2(v^+_2-1)
 \end{equation}
-The gradient of $\mathrm{L}$ with respect to $\mathbf{v}^+$ is
+and set gradient of $\mathrm{L}$ with respect to $\mathbf{v}^+$,
 \begin{equation}
-  \nabla\mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mu\int_R\frac{A(\mathbf{r})^TA(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA - \begin{bmatrix}\lambda_1, \lambda_2, 0\end{bmatrix}^T
+  \nabla\mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mu\int_R\frac{A(\mathbf{r})^TA(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA + \begin{bmatrix}\lambda_1, \lambda_2, 0\end{bmatrix}^T,
 \end{equation}
-After some work, we end up with the following conditions on the force and the moment
+to zero. After some work, we end up with the following first order
+conditions on the force and the moment
 \begin{align}
-  \mathbf{f}_f &= -\begin{bmatrix}\lambda_1, \lambda_2\end{bmatrix}^T\\
-  \mathbf{m}_f &= 0
+  \mathbf{f}_f &= \begin{bmatrix}\lambda_1, \lambda_2\end{bmatrix}^T\\
+  \mathbf{m}_f &= 0,
 \end{align}
+that is, the quasi-static motion model.
 
-We prefer the frictional dissipation equation in our theoretical
-analysis because the equation is continuous and convex in $\mu$,
-$p(\mathbf{x})$ and $\mathbf{v}^+$.
+We prefer the principle of minimal dissipation in our theoretical
+analysis because the frictional dissipation equation is continuous and
+convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
 \subsection{Quasi-static Stability}
 
