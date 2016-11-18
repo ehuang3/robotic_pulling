@@ -148,17 +148,18 @@ the total frictional force and moment of the body at the origin are
 \begin{align}
   % Force
   % \mathbf{f}_f &= -\mu\,\sign(\dot{\theta})\,\mathbf{\hat{k}}\,\times\int_{R}\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA \\
-  % \mathbf{f}_f &= -\mu\int_{R}\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA \\
-  \mathbf{f}_f &= -\mu\int_{R}\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA \\
+  \mathbf{f}_f &= -\mu\int_{R}\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA \\
+  % \mathbf{f}_f &= -\mu\int_{R}\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA \\
   % Moment
   % \mathbf{m}_f &= -\mu\,\sign(\dot{\theta}) \int_{R}\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA,
-  % \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA,
-  \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA,
+  \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact}
+  % \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact}
 \end{align}
 where $\mu$ is the coefficient of friction, $R$ is the region of the
 rigid body in contact with the plane, $\mathbf{v}(\mathbf{r})$ is the
 body point velocity given by (\ref{eq:generalized-velocity}) and
 $p(\mathbf{r})$ is a pressure distribution over $R$.
+
 \begin{equation}
 \begin{aligned}
 & \underset{\mathbf{v}^+}{\text{minimize}}
@@ -173,12 +174,9 @@ contact point motion is aligned with the coordinate frame. We call the
 objective in (\ref{eq:constrained-frictional-dissipation}) the
 frictional dissipation equation $\mathrm{P}(\mathbf{v}^+)$.
 
-\begin{equation} \label{eq:frictional-dissipation}
-  \mathrm{P}(\mathbf{v}^+) = \mu\int_R\lVert \mathbf{v}(\mathbf{r}) \rVert p(\mathbf{r}) dA
-\end{equation}
 Form the Lagrangian
 \begin{equation}
-  \mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mathrm{P}(\mathbf{v}^+) - \lambda_1(v^+_1 - 1) - \lambda_2v^+_2
+  \mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mathrm{P}(\mathbf{v}^+) - \lambda_1v^+_1 - \lambda_2(v^+_2-1)
 \end{equation}
 The gradient of $\mathrm{L}$ with respect to $\mathbf{v}^+$ is
 \begin{equation}
@@ -190,21 +188,9 @@ After some work, we end up with the following conditions on the force and the mo
   \mathbf{m}_f &= 0
 \end{align}
 
-We prefer the minimum power interpretation in our theoretical analysis
-for a few reasons. For bodies with discrete points of support, the
-minimum still exists whereas the moment may be indeterminate.
-
-% \begin{enumerate}
-% \item Pull contact setup
-% \item Generalized velocities
-% \item A(x)
-% \item Dissipation function (convex)
-% \item Pressure distribution p(r)
-% \item Lagrangian of pulling
-% \item Force balance
-% \item Moment balance
-% \item Discrete pressure distributions
-% \end{enumerate}
+We prefer the frictional dissipation equation in our theoretical
+analysis because the equation is continuous and convex in $\mu$,
+$p(\mathbf{x})$ and $\mathbf{v}^+$.
 
 \subsection{Quasi-static Stability}
 
@@ -301,7 +287,7 @@ surface.
 %   accuracy using at most two press-pulls.
 % \end{proposition}
 
-\subsection{Frictional Force \& Moment Envelopes}
+\subsection{Frictional Force \& Moment Envelopes}\label{sec:frictional-envelope}
 
 \begin{figure}[t]
   \centering
@@ -325,30 +311,72 @@ surface.
     \includegraphics[width=1\linewidth]{fig/CoP_boundary}
     \caption{}
   \end{subfigure}
-  \caption{Example moment envelope for a 2D tetrapod with rotation center $x_{\text{IC}} = 0.75$. (a) Support region $R$. (b) Normalized-moment surface $g(R)$. (c) Convex moment envelope $G(R)$. (d) Intersection of the moment envelope and the $xy$-plane. The intersection bounds the set of feasible centers of pressure with zero moment.}
+  \caption{Example moment envelope for a 2D tetrapod with rotation
+    center $x_{\text{IC}} = 0.75$. (a) Support region $R$. (b)
+    Normalized-moment surface $G(R)$. (c) Convex moment envelope of
+    $G(R)$. (d) Intersection of the moment envelope and the
+    $xy$-plane. The intersection bounds the set of feasible centers of
+    pressure with zero moment.}
   \label{fig:moment-envelope}
 \end{figure}
 
-The frictional force and moment equations are
+The frictional force and moment envelopes provide a nice geometric
+model of the constraints between the center of pressure, force and
+moment \cite{Mason}. A frictional envelope has as its parameters the
+support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be the
+total pressure. Then the functions
 \begin{align}
-  \mathbf{f}_f &= -\mu\,\sign(\dot{\theta})\,\mathbf{\hat{k}}\,\times\int_{R}\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA \\
-  \mathbf{m}_f &= -\mu\,\sign(\dot{\theta}) \int_{R}\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA
+  \mathbf{f}(\mathbf{x}) &= -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert},\\
+  g(\mathbf{x}) &= -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x}
 \end{align}
+evaluate the frictional force and frictional torque that would result
+from a unit normalized pressure at $\mathbf{x}$. For this exposition,
+we will focus on how to generate the frictional moment envelope
+illustrated in Figure \ref{fig:moment-envelope}. 
 
-Let $f_0 = \int_{R}p(\mathbf{r})dA$ be the total pressure. 
-Leave $r_{\text{IC}}$ fixed.
-We define the functions
-\begin{align}
-\mathbf{f}(\mathbf{r}) &= -\mu\,\sign(\dot{\theta})f_0\,\mathbf{\hat{k}}\,\times\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert}\\
-g(\mathbf{r}) &= -\mu\,\sign(\dot{\theta})f_0\,\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert}
-\end{align}
-which are the frictional force and the frictional torque, respectively, that would result from a unit normalized pressure at $\mathbf{r}$.
+Let $G$ map $R$ into a surface in $\mathbb{R}^3$ by associating each
+point $\mathbf{x} \in R$ with its maximum potential moment
+$g(\mathbf{x})$, i.e.
+\begin{equation}
+G(\mathbf{x}) =
+\begin{bmatrix*}
+  x\\
+  y\\
+  g(\mathbf{x})
+\end{bmatrix*},
+\end{equation}
+and let $\hat{p} = p/f_0$ be the normalized pressure. Then the set
+$\{\int_RG(\mathbf{r})\hat{p}(\mathbf{r})dA
+\,|\int_R\hat{p}(\mathbf{r})dA=1 \}$
+is the convex hull of the surface $G(R)$. Moreover, any point in the
+convex hull of $G(R)$ satisfies
+\begin{align*}
+  \int_R G(\mathbf{r}) \hat{p}(\mathbf{r})dA &= \int_R 
+  \begin{bmatrix*}
+    x\\
+    y\\
+    g(\mathbf{x})
+  \end{bmatrix*}
+  \hat{p}(\mathbf{r})dA\\
+  &= 
+    \begin{bmatrix*}
+      x_0\\
+      y_0\\
+      \int_R g(\mathbf{x}) \hat{p}(\mathbf{r})dA
+    \end{bmatrix*}. \numberthis
+\end{align*}
+Thus, the convex hull of $G(R)$ is the set of all feasible centers of
+pressure and moments for a given support region $R$ and velocity
+$\mathbf{v}^+$. An identical procedure generates the frictional force
+envelope, i.e. the convex hull of $F(R)$.
 
-Convex hull/envelope.
+The frictional force and moment envelopes are employed in Sections
+\ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
+compute bounds on feasible angular velocities and centers of pressure.
 
 \section{Methods}
 
-\subsection{Exact Angular Velocities Bounds}
+\subsection{Exact Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
 \begin{proposition}
   The constrained frictional dissipation equation
@@ -409,11 +437,11 @@ $x$-axis.
 
 \begin{theorem}\label{thm:angular-velocities}
   For pulling of a planar rigid body with known center of pressure,
-  the set of all realizable angular velocities is connected.
+  the set of all feasible angular velocities is connected.
 \end{theorem}
 
 \begin{proof}
-  Let $\Omega$ be the set of realizable angular velocities,
+  Let $\Omega$ be the set of feasible angular velocities,
   w.r.t. (\ref{eq:constrained-frictional-dissipation}), for a given
   support region $R$ with known center of pressure. $\Omega$ is
   nonempty since a single support point located at the center of
@@ -449,7 +477,7 @@ set of pressure distributions.  % Note, the set of pressure
 
 \begin{corollary}
   For pulling of a planar rigid body with known center of pressure,
-  the set of all realizable angular velocities is a bounded interval.
+  the set of all feasible angular velocities is a bounded interval.
 \end{corollary}
 
 \begin{proof}
@@ -474,10 +502,19 @@ set of pressure distributions.  % Note, the set of pressure
 
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
-$[x_0,y_0]^T$. The run-time of the algorithm is
-$\mathcal{O}(d\,n\log{} n)$, where $d$ is the number of significant
-digits returned and $n$ is the number of points in the discretization
-of $R$.
+$[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
+$\Omega$. The bisection search tests the feasibility of an angular
+velocity $\omega$ by checking whether the point $[x_0,y_0,0]^T$ is
+contained in the associated frictional moment envelope (see Section
+\ref{sec:frictional-envelope}). In quasi-static terminology, this is
+equivalent to checking whether there exists a pressure distribution
+with center of pressure $[x_0,y_0]^T$ such that the velocity
+$\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
+about the contact point (Equation \ref{eq:moment-at-contact}).
+
+The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
+$d$ is the number of significant digits returned and $n$ is the number
+of points in the discretization of $R$.
 
 \begin{algorithm}
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
@@ -495,7 +532,7 @@ of $R$.
 \State {$u \gets 2u$}
 \State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, u]^T$
 \State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
-\DoWhile{$[x_0,y_0]^T \in \Call{ConvHull}{G}$}
+\DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$}
 \State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
 % \BState \emph{return}:
 \State $l \gets \Call{Min}{\omega_1,\omega_2}$
@@ -508,7 +545,7 @@ of $R$.
 \State $\omega \gets (u+l)/2$
 \State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, \omega]^T$
 \State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
-\If {$[x_0,y_0]^T \in \Call{ConvHull}{G}$} 
+\If {$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$} 
 \State $u \gets \omega$
 \Else{} 
 \State $l \gets \omega$
@@ -518,6 +555,8 @@ of $R$.
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
+
+\subsection{Center of Pressure Bounds}\label{sec:cop-bounds}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
