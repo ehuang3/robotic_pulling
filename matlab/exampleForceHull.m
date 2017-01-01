@@ -32,7 +32,7 @@ for t = theta
     % Compute Fx(R).
     f0 = 1;
     mu = 1;
-    F_x = Fx(R,xr,-sign(xr),mu);
+    F_x = calcFx(R,xr,-sign(xr),mu);
     K_R = convhull(R_x,R_y,F_x);
     
     % Plot Fx(R).
@@ -52,7 +52,7 @@ for t = theta
     % Compute Fy(R).
     f0 = 1;
     mu = 1;
-    F_y = Fy(R,xr,-sign(xr),mu);
+    F_y = calcFy(R,xr,-sign(xr),mu);
     K_R = convhull(R_x,R_y,F_y);
     
     % Plot Fy(R).

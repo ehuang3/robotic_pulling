@@ -1,4 +1,5 @@
 %% Find the zero crossing of mf.
+import presspull.*
 
 % Initial values.
 mu = 1;

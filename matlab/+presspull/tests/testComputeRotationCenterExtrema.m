@@ -1,4 +1,5 @@
 %% Find the extrema of rotation centers.
+import presspull.*
 
 % Generate tetrapod.
 [X, Y, K] = generate2DTetrapod(0.5,0.7,0);

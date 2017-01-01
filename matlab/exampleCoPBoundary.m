@@ -36,7 +36,7 @@ for i = 1:length(theta)
     % Compute G(R).
     f0 = 1;
     mu = 1;
-    G_R = presspull.G(R,xr,-sign(xr),mu,f0);
+    G_R = calcG(R,xr,-sign(xr),mu,f0);
 
     % Intersect G(R) with xy-plane.
     n = [0 0 1]';

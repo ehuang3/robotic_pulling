@@ -1,4 +1,4 @@
-function [ G_R ] = G( R, xr, w, mu, f0 )
+function [ G_R ] = calcG( R, xr, w, mu, f0 )
 %G
 %
 

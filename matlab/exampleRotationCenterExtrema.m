@@ -29,7 +29,7 @@ CoP = rot*CoP;
 % Plot minima.
 R_x = R(:,1);
 R_y = R(:,2);
-G_R = G(R, xl, -sign(xl), 1, 1);
+G_R = calcG(R, xl, -sign(xl), 1, 1);
 n = [0 0 1]';
 d = 0;
 [x0, y0, k0] = intersectPlaneConvexHull(n,d,R_x,R_y,G_R);
