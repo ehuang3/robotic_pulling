@@ -5,7 +5,7 @@ import presspull.*
 [X, Y, K] = generate2DTetrapod(0.5,0.7,0);
 X = X + 0.5;
 
-t = pi/4;
+t = pi/3;
 x0 = 0.5;
 y0 = 0;
 
@@ -22,3 +22,6 @@ CoP = [x0; y0];
 CoP = rot*CoP;
 
 [xl, xu] = computeRotationCenterExtrema(R,CoP(1),CoP(2));
+wl = -1/xl;
+wu = -1/xu;
+[wl wu]
