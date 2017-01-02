@@ -4,6 +4,7 @@ function [ xl, xu ] = computeRotationCenterExtrema( R, x0, y0 )
 
 %% 
 import presspull.*
+assert(size(R,1)==2,'Dimension mismatch');
 
 % If CoP lies on the y-axis, the rotation center is at infinity.
 if x0 == 0
@@ -15,11 +16,11 @@ end
 % Reflect the object if the CoP falls in the left-half plane.
 reflect = x0 < 0;
 if reflect
-    R(:,1) = -R(:,1);
+    R(1,:) = -R(1,:);
     x0 = -x0;
 end
-R_x = R(:,1);
-R_y = R(:,2);
+R_x = R(1,:);
+R_y = R(2,:);
 
 % Compute a feasible rotation center.
 [~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
@@ -33,7 +34,7 @@ u = xr;
 err = u-l;
 while tol < err && i < max_iters
     xr = (u+l)/2;
-    G_R = G(R,xr,-sign(xr),1,1);
+    G_R = calcG(R,xr,-sign(xr),1,1);
     if pointInConvexHull([x0;y0;0],R_x,R_y,G_R)
         u = xr;
     else
@@ -50,13 +51,13 @@ xl = (u+l)/2;
 % Bisection search for maximum.
 l = xr;
 u = xr;
-G_R = G(R,u,-sign(u),1,1);
+G_R = calcG(R,u,-sign(u),1,1);
 i = 0;
 max_iters = 50;
 while pointInConvexHull([x0;y0;0],R_x,R_y,G_R) && i < max_iters
     l = u;
     u = 2*u;
-    G_R = G(R,u,-sign(u),1,1);
+    G_R = calcG(R,u,-sign(u),1,1);
     i = i+1;
 end
 if i == max_iters
@@ -69,7 +70,7 @@ i = 0;
 max_iters = 50;
 while tol < err && i < max_iters
     xr = (u+l)/2;
-    G_R = G(R,xr,-sign(xr),1,1);
+    G_R = calcG(R,xr,-sign(xr),1,1);
     if pointInConvexHull([x0;y0;0],R_x,R_y,G_R)
         l = xr;
     else

@@ -5,13 +5,13 @@ function [ in_cvhull ] = pointInConvexHull( pt, X, Y, Z )
 %% 
 K = convhull(X,Y,Z);
 mu = [mean(X) mean(Y) mean(Z)]';
-XYZ = [X Y Z];
+XYZ = [X; Y; Z];
 A = zeros([size(K,1) 3]);
 b = zeros([size(K,1) 1]);
 for i = 1:size(K,1)
-    p1 = XYZ(K(i,1),:)';
-    p2 = XYZ(K(i,2),:)';
-    p3 = XYZ(K(i,3),:)';
+    p1 = XYZ(:,K(i,1));
+    p2 = XYZ(:,K(i,2));
+    p3 = XYZ(:,K(i,3));
     P = [p1 p2 p3] - [p1 p1 p1];
     T = orth(P);
     if size(T,2) == 1

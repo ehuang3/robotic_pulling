@@ -42,6 +42,8 @@ for dy = linspace(0, y_max-y_min, n_y)
     end
     pts = [pts; [sl (y_min+dy).*ones([size(sl,1),1])]];
 end
+% Convert to row vector -- one point per column.
+pts = pts';
 
 end
 
