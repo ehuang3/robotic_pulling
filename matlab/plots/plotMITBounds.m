@@ -25,7 +25,7 @@ s = rand
 cp0 = s*e1 + (1-s)*e2;
 
 %% Translate contact point to origin, orient object.
-step = 3e-3;
+step = 2e-3;
 Rg0 = fillScanLines2DGrid2(K,V0(1,:),V0(2,:),step);
 
 % Shift contact point to origin and rotate object into 0 orientation.
@@ -65,23 +65,21 @@ R = @(t) [cos(t) -sin(t); sin(t) cos(t)];
 
 t = linspace(-pi/2,pi/2,200);
 B = zeros([2 length(t)]);
-U1 = zeros([1 length(t)]);
-L1 = zeros([1 length(t)]);
+U = zeros([1 length(t)]);
+L = zeros([1 length(t)]);
 for i = 1:length(t)
     Vt = R(t(i)) * V;
     comt = R(t(i)) * com;
     Rgt = R(t(i)) * Rg;
-    [xl xu] = computeRotationCenterExtrema(Rgt,comt(1),comt(2),Vt,K);
-    U1(i) = -1./xu;
-    L1(i) = -1./xl;
-%     B(1,i) = xu;
-%     B(2,i) = xl;
+    [xl, xu] = computeRotationCenterExtrema(Rgt,comt(1),comt(2),Vt,K);
+    U(i) = -1./xu;
+    L(i) = -1./xl;
 end
 
 %% Integrate angular velocity bounds.
 TT = [(t-pi) t];
 UU = [-U1 U1];
-LL = [-L1 L1];
+LL = [-L L];
 
 fun = @(t,y) linterp(TT,LL,y);
 [tout, yout] = ode45(fun, [0 1], -pi/3)
