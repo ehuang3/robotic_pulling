@@ -44,7 +44,7 @@ for xp = x_pts
             q = [xp;yp];
             v = [0;1];
             [t,s] = intersectLineLine(p,u,q,v);
-            if (s >= 0) && (0 <= t && t <= 1)
+            if (s >= 0) && (0 <= t && t < 1)
                 w = w + 1;
             end
         end

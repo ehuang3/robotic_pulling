@@ -1,4 +1,4 @@
-function [ xl, xu ] = computeRotationCenterExtrema( R, x0, y0 )
+function [ xl, xu ] = computeRotationCenterExtrema( R, x0, y0, V, k )
 %COMPUTEROTATIONCENTEREXTREMA 
 %   
 
@@ -19,23 +19,21 @@ if reflect
     R(1,:) = -R(1,:);
     x0 = -x0;
 end
-R_x = R(1,:);
-R_y = R(2,:);
 
 % Compute a feasible rotation center.
 [~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
 
 % Bisection search for minimum.
 tol = 1e-7;
-max_iters = 50;
+max_iters = 100;
 i = 0;
 l = 0;
 u = xr;
 err = u-l;
 while tol < err && i < max_iters
     xr = (u+l)/2;
-    G_R = calcG(R,xr,-sign(xr),1,1);
-    if pointInConvexHull([x0;y0;0],R_x,R_y,G_R)
+    [G_R, Rx, Ry] = calcG2(R,xr,-sign(xr),1,1,V,k);
+    if pointInConvexHull([x0;y0;0],Rx,Ry,G_R)
         u = xr;
     else
         l = xr;
@@ -51,13 +49,13 @@ xl = (u+l)/2;
 % Bisection search for maximum.
 l = xr;
 u = xr;
-G_R = calcG(R,u,-sign(u),1,1);
+[G_R, Rx, Ry] = calcG2(R,u,-sign(u),1,1,V,k);
 i = 0;
 max_iters = 50;
-while pointInConvexHull([x0;y0;0],R_x,R_y,G_R) && i < max_iters
+while pointInConvexHull([x0;y0;0],Rx,Ry,G_R) && i < max_iters
     l = u;
     u = 2*u;
-    G_R = calcG(R,u,-sign(u),1,1);
+    [G_R, Rx, Ry] = calcG2(R,u,-sign(u),1,1,V,k);
     i = i+1;
 end
 if i == max_iters
@@ -67,11 +65,11 @@ end
 
 err = u-l;
 i = 0;
-max_iters = 50;
+max_iters = 100;
 while tol < err && i < max_iters
     xr = (u+l)/2;
-    G_R = calcG(R,xr,-sign(xr),1,1);
-    if pointInConvexHull([x0;y0;0],R_x,R_y,G_R)
+    [G_R, Rx, Ry] = calcG2(R,xr,-sign(xr),1,1,V,k);
+    if pointInConvexHull([x0;y0;0],Rx,Ry,G_R)
         l = xr;
     else
         u = xr;
