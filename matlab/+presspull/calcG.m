@@ -10,4 +10,3 @@ Y = R(2,:);
 G_R = -mu.*f0.*sign(w).*(X.*X + Y.*Y - X.*xr)./sqrt((X-xr).^2 + Y.^2);
 
 end
-

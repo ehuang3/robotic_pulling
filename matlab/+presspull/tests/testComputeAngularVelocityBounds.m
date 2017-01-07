@@ -26,4 +26,4 @@ CoP = rot*CoP;
 x0 = CoP(1);
 y0 = CoP(2);
 
-computeAngularVelocityBounds(R, x0, y0, 1)
+[wl wu] = computeAngularVelocityBounds(R, x0, y0, 1)

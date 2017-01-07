@@ -51,5 +51,10 @@ for j = 1:num_Y
     end
 end
 
+% 
+if nargout == 1
+    XX = [XX(I>0) YY(I>0)]';
+end
+
 end
 

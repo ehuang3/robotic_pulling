@@ -377,9 +377,9 @@ convex hull of $G(R)$ satisfies
     \end{bmatrix*}. \numberthis
 \end{align*}
 Thus, the convex hull of $G(R)$ is the set of all feasible centers of
-pressure and moments for a given support region $R$ and velocity
-$\mathbf{v}^+$. An identical procedure generates the frictional force
-envelope, i.e. the convex hull of $F(R)$.
+pressure and frictional moments for a given support region $R$ and
+velocity $\mathbf{v}^+$. An identical procedure generates the
+frictional force envelope, i.e. the convex hull of $F(R)$.
 
 The frictional force and moment envelopes are employed in Sections
 \ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
@@ -540,8 +540,8 @@ of points in the discretization of $R$.
 % \BState \emph{max}:
 \State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/(x_0 + y_0^2/x_0)$
 \Do% {$u \gets 2u$}
-\State {$u \gets 2u$}
-\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, u]^T$
+\State {$l \gets 2l$}
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, l]^T$
 \State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
 \DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$}
 \State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
@@ -567,7 +567,22 @@ of points in the discretization of $R$.
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Exact Position Bounds}\label{sec:cop-bounds}
+\subsection{Integrated Position Bounds}\label{sec:cop-bounds}
+
+The angular velocity bounds derived in section
+\ref{sec:exact-angular-velocity-bounds} can be integrated into bounds
+on the position of the pulled body.  Let $\omega$ be the true angular
+velocity. Let $\omega_l$ be the lower bound on the angular
+velocity. Let $\omega_u$ be the upper bound on the angular velocity.
+
+\begin{proposition}
+  For pulling of a rigid body with known initial pose, the orientation
+  of the body is bounded above and below by $\theta_u$ and $\theta_l$.
+\end{proposition}
+
+\begin{proof}
+  
+\end{proof}
 
 \subsection{Center of Pressure Bounds}\label{sec:cop-bounds}
 

@@ -1,11 +1,17 @@
-function [ pts ] = fillScanLines2D( k, x, y )
+function [ pts ] = fillScanLines2D( k, x, y, step )
 %FILLSCANLINES2D
 %   
 
 %%
 import presspull.*
 
-step = 1e-2;
+assert(size(k,2)==2,'Dimension mismatch');
+assert(size(k,1)==length(x)-1,'Dimension mismatch');
+assert(size(k,1)==length(y)-1,'Dimension mismatch');
+
+if nargin == 3
+    step = 1e-2;
+end
 
 % Find min and max Y.
 y_min = min(y);

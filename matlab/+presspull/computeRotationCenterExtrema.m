@@ -7,7 +7,7 @@ import presspull.*
 assert(size(R,1)==2,'Dimension mismatch');
 
 % If CoP lies on the y-axis, the rotation center is at infinity.
-if x0 == 0
+if abs(x0) < 1e-15
     xl = inf;
     xu = inf;
     return;

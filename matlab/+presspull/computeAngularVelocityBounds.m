@@ -1,4 +1,4 @@
-function [ b ] = computeAngularVelocityBounds( R, x0, y0, v_c )
+function [ l, u ] = computeAngularVelocityBounds( R, x0, y0, v_c )
 %COMPUTEANGULARVELOCITYBOUNDS 
 %   Compute angular velocity bounds for a given support region R, center of
 %   pressure [x0; y0] and contact point velocity v_c.
@@ -28,13 +28,15 @@ u = -v_c/(x0 + y0^2/x0);
 while true
     l = 2*l;
     G_R = calcG(R,-v_c/l,l,1,1);
-    if ~pointInConvexHull([x0,y0,0]', R(1,:), R(2,:), G_R)
+    % if ~pointInConvexHull([x0,y0,0]', R(1,:), R(2,:), G_R)
+    if ~pointInConvexHull3([x0,y0,0]', [R; G_R])
         break;
     end
 end
 w2 = bisectionSearch(R,x0,y0,v_c,l,u);
 % Return bounds.
-b = [min(w1,w2), max(w1,w2)];
+l = min(w1,w2); 
+u = max(w1,w2);
 end
 
 function [ w ] = bisectionSearch( R, x0, y0, v_c, l, u )
@@ -43,7 +45,8 @@ function [ w ] = bisectionSearch( R, x0, y0, v_c, l, u )
     while eps < abs(u-l)
         w = (u + l)/2;
         G_R = calcG(R,-v_c/w,w,1,1);
-        if pointInConvexHull([x0,y0,0]', R(1,:), R(2,:), G_R)
+        % if pointInConvexHull([x0,y0,0]', R(1,:), R(2,:), G_R)
+        if pointInConvexHull3([x0,y0,0]', [R; G_R])
             u = w;
         else
             l = w;
