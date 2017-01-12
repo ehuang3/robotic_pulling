@@ -6,8 +6,8 @@ function [ pts ] = fillScanLines2DGrid2( k, x, y, step )
 import presspull.*
 
 assert(size(k,2)==2,'Dimension mismatch');
-assert(size(k,1)==length(x)-1,'Dimension mismatch');
-assert(size(k,1)==length(y)-1,'Dimension mismatch');
+% assert(size(k,1)==length(x)-1,'Dimension mismatch');
+% assert(size(k,1)==length(y)-1,'Dimension mismatch');
 
 if nargin == 3
     step = 1e-2;
@@ -54,13 +54,16 @@ for xp = x_pts
     end
 end
 
-%% Add each polygon line segment as additional points.
+%% Add polygon boundary as additional points.
+d = 0;
 for i = 1:size(k,1)
-    A = [x(k(i,1)), y(k(i,1))]';
-    B = [x(k(i,2)), y(k(i,2))]';
-    d = ceil(norm(B-A)/step)+1;
-    pts = [pts (repmat(A,[1,d]) + (B-A)*linspace(0,1,d))];
+                A = [x(k(i,1)), y(k(i,1))]';
+            B = [x(k(i,2)), y(k(i,2))]';
+    d = d + norm(B-A);
 end
+n_cp = ceil(d/step);
+bd = getSpacedContactPoints([x;y],k,n_cp);
+pts = [pts bd];
 
 end
 

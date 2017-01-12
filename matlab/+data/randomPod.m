@@ -175,7 +175,7 @@ for i = 1:n_feet
         c_max = max(norm(l2-l1),r_max)/2; % Max chord.
         c_min = f_u/(pi*c_max); % Has to be zero.
         c_area = (c_max-c_min)^2;
-        p = h_area / c_area
+        p = h_area / c_area;
 
         if rand < (1-p)
             warning('low probability')

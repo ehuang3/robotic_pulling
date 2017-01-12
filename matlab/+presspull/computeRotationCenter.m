@@ -4,13 +4,15 @@ function [ xr, mf ] = computeRotationCenter( R, P )
 
 %% 
 import presspull.*
+assert(size(R,1)==2,'Dimension mismatch');
+assert(size(P,2)==size(R,2),'Dimension mismatch');
 
 % Compute the center of pressure.
-CoP = R'*P;
+CoP = R*P';
 
 % If the CoP lies in the negative x plane, flip it.
 if CoP(1) < 0
-    R(:,1) = -R(:,1);
+    R(1,:) = -R(1,:);
 end
 w = -1;
 mu = 1;

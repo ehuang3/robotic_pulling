@@ -4,8 +4,8 @@ function [ mf, d_mf ] = computeFrictionalMoment( mu, x_IC, w, R, P )
 
 %% Compute the total frictional moment.
 % Get X, Y of points in support region.
-R_x = R(:,1);
-R_y = R(:,2);
+R_x = R(1,:);
+R_y = R(2,:);
 
 % Compute frictional moment.
 xr = x_IC;

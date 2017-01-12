@@ -17,11 +17,17 @@ end
 reflect = x0 < 0;
 if reflect
     R(1,:) = -R(1,:);
+    V(1,:) = -V(1,:);
     x0 = -x0;
 end
 
 % Compute a feasible rotation center.
-[~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
+P_bd = generateCoMPressures(R,[x0;y0]);
+K_bd = convhull(R');
+R_bd = R(:,K_bd);
+xr0 = computeRotationCenter(R_bd,P_bd);
+% [~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
+xr = xr0;
 
 % Bisection search for minimum.
 tol = 1e-7;
@@ -33,7 +39,7 @@ err = u-l;
 while tol < err && i < max_iters
     xr = (u+l)/2;
     [G_R, Rx, Ry] = calcG2(R,xr,-sign(xr),1,1,V,k);
-    if pointInConvexHull([x0;y0;0],Rx,Ry,G_R)
+    if pointInConvexHullG([x0;y0;0],Rx,Ry,G_R)
         u = xr;
     else
         l = xr;
@@ -44,7 +50,8 @@ end
 xl = (u+l)/2;
 
 % Compute a feasible rotation center.
-[~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
+xr = xr0;
+% [~, xr] = intersectLineLine([x0;y0],[y0;-x0],[0;0],[1;0]);
 
 % Bisection search for maximum.
 l = xr;
@@ -52,7 +59,7 @@ u = xr;
 [G_R, Rx, Ry] = calcG2(R,u,-sign(u),1,1,V,k);
 i = 0;
 max_iters = 50;
-while pointInConvexHull([x0;y0;0],Rx,Ry,G_R) && i < max_iters
+while pointInConvexHullG([x0;y0;0],Rx,Ry,G_R) && i < max_iters
     l = u;
     u = 2*u;
     [G_R, Rx, Ry] = calcG2(R,u,-sign(u),1,1,V,k);
@@ -69,7 +76,7 @@ max_iters = 100;
 while tol < err && i < max_iters
     xr = (u+l)/2;
     [G_R, Rx, Ry] = calcG2(R,xr,-sign(xr),1,1,V,k);
-    if pointInConvexHull([x0;y0;0],Rx,Ry,G_R)
+    if pointInConvexHullG([x0;y0;0],Rx,Ry,G_R)
         l = xr;
     else
         u = xr;
@@ -78,6 +85,11 @@ while tol < err && i < max_iters
     i = i+1;
 end
 xu = u;
+
+if reflect
+    xl = -xl;
+    xu = -xu;
+end
 
 end
 
