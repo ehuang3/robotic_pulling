@@ -33,6 +33,7 @@ w1 = bisectionSearch(R,x0,y0,v_c,l,u,V,K);
 l = -v_c/x_r;
 u = -v_c/x_r;
 while true
+    u = l;
     l = 2*l;
     [G, Rx, Ry] = calcG2(R,-v_c/l,l,1,1,V,K);
     if ~pointInConvexHullG([x0,y0,0]', Rx, Ry, G)

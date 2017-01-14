@@ -15,7 +15,11 @@ end
 V0 = object.V;
 K = object.K;
 com0 = object.com;
-R0 = fillScanLines2DGrid2(K,V0(1,:),V0(2,:),step);
+if isfield(object, 'R')
+    R0 = object.R;
+else
+    R0 = fillScanLines2DGrid2(K,V0(1,:),V0(2,:),step);
+end
 
 cp0 = contact_point;
 

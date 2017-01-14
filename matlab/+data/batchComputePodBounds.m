@@ -17,7 +17,7 @@ load('/home/eric/src/presspull/data/pods/3pod_0.10+0.025.mat')
 
 %% Loop.
 % i = 1;
-for i = 15:21
+for i = 24:30
     object = Objects(i);
     disp(['Object ' num2str(i)])
     disp(object)
