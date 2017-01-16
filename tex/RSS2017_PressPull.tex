@@ -1,7 +1,7 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{times}
 
-% numbers option provides compact numerical references in the text. 
+% numbers option provides compact numerical references in the text.
 \usepackage[numbers]{natbib}
 \usepackage{multicol}
 \usepackage[bookmarks=true]{hyperref}
@@ -47,6 +47,7 @@ cross/.default={2pt}}
 \DeclareMathOperator{\dom}{dom}
 
 \newcommand{\EH}[1]{{\color{blue} {Eric: {#1}}  }}
+\newcommand{\TODO}[1]{{\color{red} {{#1}}  }}
 
 \pdfinfo{
    /Author (Eric Huang)
@@ -107,11 +108,128 @@ cross/.default={2pt}}
 \maketitle
 
 \begin{abstract}
+
+% Items that an abstract should address:
+% 1. What were the main contributions?
+% 2. 
+% 3. 
+
+Planar pulling is the manipulation skill where
+the robot contacts a rigid body at a point and pulls that contact
+point along a trajectory.
+
+Major contributions:
+  \begin{enumerate}
+  \item Proof of stability
+  \item first known algorithm that computes exact angular velocity
+    bounds on the friction dominated motion of a pushed/pulled object.
+  \item Uncertainty bounds on the orientation
+  \item Planner that exploits the stability of pulling using the exact
+    angular velocity bounds.
+  \item to return trajectories.
+  \item An easy to implement in both hardware and software skill. 
+  \item validated on a real robotic system.
+
+    A useful addition to a roboticist's toolkit. that is serviceable
+    in a wide range of scenarios. ranging from furniture rearrangement
+    or table-top manipulation to bin picking.
+  \end{enumerate}
 \end{abstract}
 
 \IEEEpeerreviewmaketitle
 
 \section{Introduction}
+
+% Items that an introduction should address:
+% 1. 
+% 2. 
+
+In this paper, we demonstrate the value of 
+
+\begin{enumerate}
+\item Looking at pushing from a different perspective
+\item contributions
+\item open-loop stable with convergence guarantees
+\item easy to use
+\item Outline of sections
+\end{enumerate}
+
+\section{Related Work}
+
+\TODO{
+Items that a related works section should address:
+\begin{enumerate}
+\item What were the prior works?
+\item What were the limitations of the prior works?
+\item What are the advantages of our work?
+\end{enumerate}
+}
+
+
+\begin{enumerate}
+\item Planar Robotic Manipulation
+  \begin{enumerate}
+  \item Pushing
+  \item Tapping
+  \item Throwing
+  \item Grasping
+  \item Pivoting
+  \item Why pulling over other planar manipulation skills
+  \end{enumerate}
+\item Robotic Pushing
+  \begin{enumerate}
+  \item Planning
+  \item Force-motion model
+  \item Quasi-static motion model
+  \item Stable pushing
+  \end{enumerate}
+
+  Our work is most closely related to robotic pushing.
+
+  Lynch 
+
+  two-point stable pushing of Lynch et al. \cite{}.
+
+  mechanical components robust to variations in the friction
+
+\item Pushing Bounds
+
+  \begin{enumerate}
+  \item Bisector bound
+  \item Vertical strip bound
+  \item Alexander and Maddocks bound
+  \item Peshkin's bound
+  \end{enumerate}
+
+\item Holonomic Planning
+\item DDP
+\item Uncertainty reduction
+\item Stability
+\end{enumerate}
+
+
+
+
+
+
+
+The problem of finding exact angular velocity bounds for a pushed
+object with an indeterminant pressure distribution was first raised in
+Mason's seminal thesis on robotic pushing \cite{Mason1982}. Since
+then, various inexact angular velocity bounds have been published.
+The bisector bound restricts the feasible rotation centers to a
+half-space delimited by the perpendicular bisector between the contact
+point and center of pressure \cite{Mason}.  Alexander and Maddock
+bounded the set of feasible rotation centers to lie within the minimum
+object-enclosing vertical strip perpendicular to the wrench applied by
+the pusher \cite{alexander1993bounds}.  Peshkin bounded the motion of
+a pushed object by computing the set of feasible rotation centers of
+the minimum object-enclosing disk centered at the object's center of
+pressure \cite{peshkin1988motion}.  In contrast to the prior art, our
+algorithm is the first to find \textit{exact} angular velocity bounds
+for a pushed object.
+
+
 
 \section{Theory}
 
@@ -120,7 +238,7 @@ cross/.default={2pt}}
 We present a preliminary quasi-static analysis of planar pulling
 subject to friction. Planar pulling is the manipulation skill where
 the robot contacts a rigid body at a point and pulls that contact
-point along a trajectory. 
+point along a trajectory.
 
 Let the \textit{generalized velocity} of a planar rigid body be
 $\mathbf{v}^+ = [v_x, v_y, \omega]^T$, where $v_x$ and $v_y$ are the
@@ -387,6 +505,12 @@ compute bounds on feasible angular velocities and centers of pressure.
 
 \section{Methods}
 
+
+
+\subsection{Center of Pressure}\label{sec:cop}
+
+We compute the center of pressure for a 
+
 \subsection{Exact Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
 \begin{proposition}
@@ -514,9 +638,12 @@ set of pressure distributions.  % Note, the set of pressure
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
 $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
-$\Omega$. The bisection search tests the feasibility of an angular
-velocity $\omega$ by checking whether the point $[x_0,y_0,0]^T$ is
-contained in the associated frictional moment envelope (see Section
+$\Omega$. To initialize, the bisection search first finds feasible
+pressure distribution using linear programming and then finds feasible
+rotation center using the root-finding method in \cite{Mason1982}. The
+bisection search tests the feasibility of an angular velocity $\omega$
+by checking whether the point $[x_0,y_0,0]^T$ is contained in the
+associated frictional moment envelope (see Section
 \ref{sec:frictional-envelope}). In quasi-static terminology, this is
 equivalent to checking whether there exists a pressure distribution
 with center of pressure $[x_0,y_0]^T$ such that the velocity
@@ -534,11 +661,13 @@ of points in the discretization of $R$.
 \If {$x_0$ is $0$} \Return {$[0,0]$}
 \EndIf
 % \BState \emph{min}:
+\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  \mathbf{0} \leq \mathbf{x} \leq \mathbf{1}$
+\State $x_r \gets \Call{Compute Rotation Center}{R,P}$
 \State $l \gets 0$
-\State $u \gets -\lVert\mathbf{v}_c\rVert/(x_0 + y_0^2/x_0)$
+\State $u \gets -\lVert\mathbf{v}_c\rVert/x_r$
 \State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
 % \BState \emph{max}:
-\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/(x_0 + y_0^2/x_0)$
+\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/x_r$
 \Do% {$u \gets 2u$}
 \State {$l \gets 2l$}
 \State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, l]^T$
@@ -569,22 +698,132 @@ of points in the discretization of $R$.
 
 \subsection{Integrated Position Bounds}\label{sec:cop-bounds}
 
+\begin{figure}[th]
+  \centering
+    \includegraphics[width=1\linewidth]{fig/omega_bounds}
+    \caption{Example angular velocity bounds for the 2D tetrapod from
+      Figure \ref{fig:moment-envelope}. The tetrapod is oriented such
+      that the stable pulling configuration corresponds to
+      $\theta=0$.}
+  \label{fig:omega-bounds}
+\end{figure}
+
 The angular velocity bounds derived in section
 \ref{sec:exact-angular-velocity-bounds} can be integrated into bounds
-on the position of the pulled body.  Let $\omega$ be the true angular
-velocity. Let $\omega_l$ be the lower bound on the angular
-velocity. Let $\omega_u$ be the upper bound on the angular velocity.
+on the position of the pulled body.  Let $\theta$ be the true
+orientation of the pulled body in the world frame. Let the function
+$\omega$ map from the pulling angle to the true angular
+velocity. Likewise, let $u$ and $l$ be upper and lower bounds on the
+true orientation, and let the functions $\alpha$ and $\beta$ map from
+the pulling angle to the upper and lower angular velocity bounds. An
+example plot of $u$ and $l$ is illustrated in Figure
+\ref{fig:omega-bounds}.
+
+We assume that the pulling trajectory
+$\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
+finite number of straight line segments of equal length. Given such a
+$\gamma$, the pulling angle
+$\phi(t) = \tan^{-1}(\gamma_y(t),\gamma_x(t))$ is a piece-wise
+constant (step) function. As the planar rigid body is pulled along
+$\gamma$, the variables $\theta$, $u$, $\ell$ change according to the
+dynamical system
+\begin{align}
+  \dot{\theta} &= \omega(\theta - \phi(t))\\
+  \dot{u} &=  \alpha(u - \phi(t)) \label{eq:u-ode}\\ 
+  \dot{\ell} &=  \beta(\ell - \phi(t)). 
+\end{align}
+Without loss of generality, we assume that the body is pulled at a
+constant unit velocity.
 
 \begin{proposition}
   For pulling of a rigid body with known initial pose, the orientation
-  of the body is bounded above and below by $\theta_u$ and $\theta_l$.
+  of the body is bounded above and below by $u$ and $\ell$.
 \end{proposition}
 
 \begin{proof}
-  
+  Suppose the proposition is false and $\theta$ crosses the bound $u$
+  at time $t_0$, i.e. $u(t_0)=\theta(t_0)$ and $\theta(t) > u(t)$
+  immediately afterwards. Let the line segment of $\gamma$ at $t_0$ be
+  indexed by $i$ and have length $\varepsilon$. Then $\phi(t)$ is
+  constant for $t$ in the range $[t_0,(i+1)\varepsilon)$. Pick $t_1$
+  from said range such that $\theta(t_1) > u(t_1)$. Because $\phi$ is
+  constant in $[t_0,t_1]$, we can apply separation of variables to
+  solve differential equation (\ref{eq:u-ode}) and get
+  \begin{equation}
+    \int_{u(t_0)}^{u(t_1)}\frac{1}{\alpha(x - \phi(t_0))}dx = \int_{t_0}^{t_1}dt.
+  \end{equation}
+  This result shows that we can integrate the inverse of an angular
+  velocity function to compute the amount of time required to reach a
+  particular orientation. However, we can also apply separation of
+  variables to the function $\omega$. Observe that because $\alpha$ is
+  an upper bound
+  \begin{equation} 
+    \alpha(x - \phi(t_0)) \geq \omega(x - \phi(t_0)),
+  \end{equation}
+  the resulting integral of $\omega$ satisfies
+  \begin{equation}
+    \int_{u(t_0)}^{u(t_1)}\frac{1}{\alpha(x - \phi(t_0))}dx \leq \int_{u(t_0)}^{u(t_1)}\frac{1}{\omega(x - \phi(t_0))}dx.
+  \end{equation}
+  This indicates that $\theta(t_1) \leq u(t_1)$, a
+  contradiction. Therefore, the upper bound holds and the lower bound
+  follows from an identical argument.
 \end{proof}
 
-\subsection{Center of Pressure Bounds}\label{sec:cop-bounds}
+% \begin{proposition}
+%   The angular velocity bounds on the motion of the pulled body are
+%   continuous with respect to the orientation.
+% \end{proposition}
+
+% \begin{proof}
+%   \TODO{
+%     Sketch of proof idea:
+%     \begin{enumerate}
+%     \item A sequence of continuous functions which converges uniformly
+%       to the lower bound $\alpha$ $\Rightarrow$ $\alpha$ is
+%       continuous.
+%     \item To construct such a sequence:
+%     \item For all $N\in\mathcal{N}$, take $N$ evenly spaced points in
+%       $[-\pi,\pi]$.
+%     \item Can construct continuous function that approximates $\alpha$
+%       by picking a minimum generating pressure distribution for each
+%       $\theta_i$ and interpolating continuously between each
+%       $\alpha(\theta_i)$.
+%     \item If we can show the interpolating function has bounded
+%       subgradient, then we can show it converges uniformly to
+%       $\alpha$.
+%     \item Intuitively we should be able to pick pressures $p_i$ and
+%       $p_{i+1}$ for orientations $\theta_i$ and $\theta_{i+1}$ such
+%       that they are ``close'' together. Then we need to show that
+%       $p_i$ and $p_{i+1}$ being close implies that their minimizing
+%       angular velocities are close in a global sense.
+%     \item ?????
+%     \end{enumerate}
+%   }
+% \end{proof}
+
+
+\subsection{Differential Dynamic Programming}
+
+\begin{proposition}
+  $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
+
+\begin{align*}
+  \dot x &= x \\
+  \dot y &= y \\
+  \dot\ell &= \alpha() \\
+  \dot u &= \beta() 
+\end{align*}
+
+  $\dot{\theta}_u = u()$
+
+  $\dot{\theta}_\ell = \ell()$
+\end{proposition}
+
+\section{Implementation}
+
+\subsection{Hardware}
+
+\subsection{MATLAB}
 
 \section{Experiments}
 
@@ -594,6 +833,10 @@ velocity. Let $\omega_u$ be the upper bound on the angular velocity.
 \item Alexander and Maddock omitted because...
 \item Turn faster for smaller objects?
 \end{enumerate}
+
+\section{Discussion}
+
+\section{Conclusion}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
