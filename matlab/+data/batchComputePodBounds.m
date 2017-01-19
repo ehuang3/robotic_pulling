@@ -61,7 +61,7 @@ for i = 24:30
         result(j).peshkin.T = T;
         result(j).peshkin.cp = contact_point;
     end
-    
+
     %% Save results to file.
     result_path = fullfile(output_path, [sprintf('%02d',i) '.mat']);
     save(result_path, 'result');
