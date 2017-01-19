@@ -12,7 +12,11 @@ N = (1:n);
 I = a(1)/2 + sum(a(2:end).*cos(2*pi*f.*N.*omega) + b(2:end).*sin(2*pi*f.*N.*omega));
 vpa(I,2);
 
-Ival = double(subs(I,omega,w));
+if ~isempty(w)
+    Ival = double(subs(I,omega,w));
+else
+    Ival = NaN;
+end
 
 end
 
