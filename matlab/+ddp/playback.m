@@ -20,45 +20,46 @@ V = rot(t0) * V;
 com = rot(t0) * (com0 - cp0);
 cp = cp0 - cp0;
 
-% Plot.
-subplot(221)
-cla; hold on; axis equal; grid on;
-Vx = [V(1,K(:,1)); V(1,K(:,2))];
-Vy = [V(2,K(:,1)); V(2,K(:,2))];
-plot(Vx,Vy,'k');
-plot(com(1),com(2),'k*');
-plot(cp(1),cp(2),'r*');
-
+% % Plot.
+% subplot(221)
+% cla; hold on; axis equal; grid on;
+% Vx = [V(1,K(:,1)); V(1,K(:,2))];
+% Vy = [V(2,K(:,1)); V(2,K(:,2))];
+% plot(Vx,Vy,'k');
+% plot(com(1),com(2),'k*');
+% plot(cp(1),cp(2),'r*');
+% 
 blue = [0 113 188]/255;
 orange = [216 82 24]/255;
-
-% Plot.
-subplot(2,2,3)
-cla; hold on; axis auto; grid on;
-u = X(3,:) + pi - U(2,:);
-l = X(4,:) + pi - U(2,:);
-plot(t,u,'color',orange)
-plot(t,l,'color',blue)
-
-% Plot.
-dt = t(2) - t(1);
-alpha = (u(2:end)-u(1:end-1))./dt./U(1,1:end-1);
-beta = (l(2:end)-l(1:end-1))./dt./U(1,1:end-1);
-subplot(224)
-cla; hold on; axis auto; grid on;
-plot(t(1:end-1),alpha,'color',orange)
-plot(t(1:end-1),beta,'color',blue)
-
-% Plot.
-subplot(221)
-cla;hold on; axis auto; grid on;
-plot(u(1:end-1),alpha,'color',orange)
-plot(l(1:end-1),beta,'color',blue)
-title('phase')
-xlabel('\theta')
-% axis([-4 4 -4 4])
+% 
+% % Plot.
+% subplot(2,2,3)
+% cla; hold on; axis auto; grid on;
+% u = X(3,:) + pi - U(2,:);
+% l = X(4,:) + pi - U(2,:);
+% plot(t,u,'color',orange)
+% plot(t,l,'color',blue)
+% 
+% % Plot.
+% dt = t(2) - t(1);
+% alpha = (u(2:end)-u(1:end-1))./dt./U(1,1:end-1);
+% beta = (l(2:end)-l(1:end-1))./dt./U(1,1:end-1);
+% subplot(224)
+% cla; hold on; axis auto; grid on;
+% plot(t(1:end-1),alpha,'color',orange)
+% plot(t(1:end-1),beta,'color',blue)
+% 
+% % Plot.
+% subplot(221)
+% cla;hold on; axis auto; grid on;
+% plot(u(1:end-1),alpha,'color',orange)
+% plot(l(1:end-1),beta,'color',blue)
+% title('phase')
+% xlabel('\theta')
+% % axis([-4 4 -4 4])
 
 %% 
+figure(3)
 
 n_steps = size(X,2);
 comu = zeros([2,n_steps]);
@@ -74,7 +75,7 @@ for i = 1:n_steps
     comu(:,i) = rot(ui) * com + xi;
     coml(:,i) = rot(li) * com + xi;
     % Plot.
-    subplot(222);
+%     subplot(222);
     cla; hold on; axis equal; grid on;
     Vo = rot(X(3,1))*V + repmat(X(1:2,1),[1,n_vert]);
     Vx = [Vo(1,K(:,1)); Vo(1,K(:,2))];
