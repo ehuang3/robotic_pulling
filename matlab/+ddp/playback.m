@@ -66,6 +66,7 @@ comu = zeros([2,n_steps]);
 coml = zeros([2,n_steps]);
 for i = 1:n_steps
     %% Draw object.
+
     % Compute poses.
     xi = X(1:2,i);
     ui = X(3,i);
@@ -74,6 +75,9 @@ for i = 1:n_steps
     Vl = rot(li) * V + repmat(xi,[1,n_vert]);
     comu(:,i) = rot(ui) * com + xi;
     coml(:,i) = rot(li) * com + xi;
+    if U(1,i) < 0.00001 && i < n_steps
+        continue
+    end
     % Plot.
 %     subplot(222);
     cla; hold on; axis equal; grid on;
@@ -91,6 +95,7 @@ for i = 1:n_steps
     plot(coml(1,1:i),coml(2,1:i),'color',blue)
     plot(cp(1)+xi(1),cp(2)+xi(2),'r*')
     plot(X(1,1:i),X(2,1:i),'r-.')
+
     pause(0.1)
 end
 
