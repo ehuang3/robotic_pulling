@@ -1,4 +1,5 @@
 %% Autogenerate dynamics functions for DDP.
+import ddp.*
 
 n_dft = 100;
 
@@ -78,7 +79,7 @@ fclose(fid);
 %% Autogenerate final loss.
 Lf_path = fullfile(autogen_path,'autoLf.m');
 
-E = ['function [ val, Lfx, Lfxx ] = autoLf( x_n, i, para, x_f, del )' char(10)];
+E = ['function [ val, Lfx, Lfxx ] = autoLf( x_n, i, para, x_f, del, kel )' char(10)];
 E = [E 'x = x_n(1);' char(10)];
 E = [E 'y = x_n(2);' char(10)];
 E = [E 'u = x_n(3);' char(10)];
@@ -91,6 +92,10 @@ E = [E 'd1 = del(1);' char(10)];
 E = [E 'd2 = del(2);' char(10)];
 E = [E 'd3 = del(3);' char(10)];
 E = [E 'd4 = del(4);' char(10)];
+E = [E 'kf1 = kel(1);' char(10)];
+E = [E 'kf2 = kel(2);' char(10)];
+E = [E 'kf3 = kel(3);' char(10)];
+E = [E 'kf4 = kel(4);' char(10)];
 E = [E 'val = ' sym2exp(Lf) char(10)];
 E = [E 'Lfx = ' sym2exp(Lfx) char(10)];
 E = [E 'Lfxx = ' sym2exp(Lfxx) char(10)];

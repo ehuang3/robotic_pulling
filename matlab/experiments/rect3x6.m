@@ -61,7 +61,7 @@ if do_plot
     hold on; grid on;
     plot(rect.T, rect.L,'color',blue);
     plot(rect.T, rect.U,'color',orange);
-    title('phase'); xlabel('\theta'); ylabel('\theta''')
+    title('phase'); xlabel('\theta'); ylabel('\theta''');
 end
 
 %% Start and end poses.
@@ -98,6 +98,7 @@ if do_plot
     plot(X1,Y1,'r');
     plot(cp1(1),cp1(2),'r*');
     title('workspace'); xlabel('x'); ylabel('y')
+    axis equal
     axis([0 work_l 0 work_w]);
 end
 
@@ -116,13 +117,15 @@ f = 1/(2*pi);
 
 %% Parameters.
 total_time = 5;
-N = 50;
+N = 100;
 dt = total_time/N;
-del = 1000*[5 5 1 1];%5 * [1 1 1 1];
+del = [0.001 0.001 0.01 0.01];%5 * [1 1 1 1];
+kel = 10000 * [5 5 1 1];
 para = DDP_getDefaultPara;
+para.maxIter = 500;
 F = @(x,u,i) autoF(x,u,i,para,ua,ub,la,lb,f,dt);
 L = @(x,u,i) autoL(x,u,i,para,dt);
-Lf = @(x) autoLf(x,i,para,X1,del);
+Lf = @(x) autoLf(x,i,para,X1,del,kel);
 H = @(x,u,lambda,i,param) autoH(x,u,lambda,i,para,ua,ub,la,lb,f,dt);
 
 % Initialize controls.
@@ -131,11 +134,11 @@ u0 = [norm(v0); atan2(v0(2),v0(1))];
 u_nom = repmat(u0, [1 N]);
 % u_nom = zeros([2,N]);
 
-uLB = repmat([-1; -2*pi],[1,N]);
-uUB = repmat([1; 2*pi],[1,N]);
+uLB = repmat([-0.1; -2*pi],[1,N]);
+uUB = repmat([0.1; 2*pi],[1,N]);
 
 %% DDP.
-[xnom,unom,alpha_,beta_,info] = DDP(X0,N,u_nom,F,L,Lf,H,para,uLB,uUB)
+[xnom,unom,alpha_,beta_,info] = DDP(X0,N,u_nom,F,L,Lf,H,para,uLB,uUB);
 
 %% Plot.
 if do_plot

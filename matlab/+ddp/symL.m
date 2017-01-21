@@ -5,7 +5,8 @@ function [ L, Lval ] = symL( x, u, dt )
 %% 
 
 vi = sym('v','real');
-L = (vi*dt)^2;
+% L = (vi*dt)^2;
+L = 0*vi;
 if ~isempty(u)
     Lval = double(subs(L,vi,u(1)));
 else
