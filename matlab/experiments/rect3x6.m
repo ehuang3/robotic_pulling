@@ -85,9 +85,9 @@ V1 = rot(T1(3))*V + repmat(T1(1:2),[1,n_v]);
 com1 = rot(T1(3))*com + T1(1:2);
 cp1 = rot(T1(3))*cp + T1(1:2);
 
-% Plot.
+%% Plot.
 if do_plot
-    figure(2); clf; hold on; grid on;
+    figure(3); hold on; grid on;
     plot([0 0 work_l work_l 0],[0 work_w work_w 0 0],'k.-')
     X0 = [V0(1,K(:,1)); V0(1,K(:,2))]; 
     Y0 = [V0(2,K(:,1)); V0(2,K(:,2))];
@@ -119,8 +119,8 @@ f = 1/(2*pi);
 total_time = 5;
 N = 100;
 dt = total_time/N;
-del = [0.001 0.001 0.01 0.01];%5 * [1 1 1 1];
-kel = 10000 * [5 5 1 1];
+del = [0.01 0.01 0.01 0.01];%5 * [1 1 1 1];
+kel = 10000 * [1 1 0 0];
 para = DDP_getDefaultPara;
 para.maxIter = 500;
 F = @(x,u,i) autoF(x,u,i,para,ua,ub,la,lb,f,dt);
@@ -129,12 +129,12 @@ Lf = @(x) autoLf(x,i,para,X1,del,kel);
 H = @(x,u,lambda,i,param) autoH(x,u,lambda,i,para,ua,ub,la,lb,f,dt);
 
 % Initialize controls.
-v0 = (X0(1:2) - X1(1:2))/total_time;
-u0 = [norm(v0); atan2(v0(2),v0(1))];
+v0 = (X1(1:2) - X0(1:2))/total_time;
+u0 = [norm(v0); atan2(v0(2),v0(1))]
 u_nom = repmat(u0, [1 N]);
 % u_nom = zeros([2,N]);
 
-uLB = repmat([-0.1; -2*pi],[1,N]);
+uLB = repmat([0.0001;-2*pi],[1,N]);
 uUB = repmat([0.1; 2*pi],[1,N]);
 
 %% DDP.
@@ -142,7 +142,27 @@ uUB = repmat([0.1; 2*pi],[1,N]);
 
 %% Plot.
 if do_plot
+    figure(3);
     playback(rect,cp,xnom,unom,[]);
 end
 
-
+%% Plot
+if do_plot
+    
+    xnom(:,24)
+    unom(:,24)
+    
+    figure(4);
+    
+    subplot(311)
+    cla; hold on; grid on;
+    plot(xnom(3,:),'-*')
+    plot(xnom(4,:),'-*')
+    subplot(312)
+    cla; hold on; grid on;
+    plot(unom(2,:),'b-*')
+    subplot(313)
+    cla; hold on; grid on;
+%     plot(rect.T,rect.U
+    plot(unom(1,:),'r-*')
+end

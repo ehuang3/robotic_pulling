@@ -59,7 +59,7 @@ orange = [216 82 24]/255;
 % % axis([-4 4 -4 4])
 
 %% 
-figure(3)
+% figure(3)
 
 n_steps = size(X,2);
 comu = zeros([2,n_steps]);
