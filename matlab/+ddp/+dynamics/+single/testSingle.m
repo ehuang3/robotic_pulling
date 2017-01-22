@@ -33,16 +33,17 @@ rect = rectangle(rect_l/2, rect_w/2);
 % Interpolate CoM.
 total_mass = mass + zforce / g;
 rect.com = (mass/total_mass)*rect.com + (zforce/g/total_mass)*contact_point;
-% Compute bounds.
+% Compute omega.
 rect.R = fillScanLines2DGrid2(rect.K,rect.V(1,:),rect.V(2,:),3e-3);
-[L,U,T] = computeBounds(rect, contact_point);
-rect.L = L;
-rect.U = U;
+rect.P = 1/size(rect.R,2) * mass * ones([1,size(rect.R,2)]);
+rect.R = [rect.R contact_point];
+rect.P = [rect.P zforce/g/total_mass];
+[W,T] = computeOmega(rect,contact_point);
+rect.W = W;
 rect.T = T;
-% Fit bounds.
+% Fit omega.
 f = 1/(2*pi);
-[ua,ub] = dft(rect.U,rect.T,f,100);
-[la,lb] = dft(rect.L,rect.T,f,100);
+[wa,wb] = dft(rect.W,rect.T,f,100);
 %% Random start and end poses.
 % Sample from left and right strips.
 T0 = [(work_l/2)*rand + work_l/2;...
@@ -86,18 +87,18 @@ w1 = wrapTo2Pi(atan2(cp(2),cp(1)) + T1(3) + pi);
 x1 = [cp1; w1];
 
 % Parameters.
-N = 50;
+N = 100;
 p = [0.01 0.01 0.02];
 k = 1000 * [5 5 1];
 para = DDP_getDefaultPara;
 para.maxIter = 500;
-F = @(x,u,i) autoF(x,u,i,para,ua,ub,la,lb,f);
+F = @(x,u,i) autoF(x,u,i,para,wa,wb,f);
 L = @(x,u,i) autoL(x,u,i,para);
 Lf = @(x) autoLf(x,[],para,x1,p,k);
-H = @(x,u,lambda,i) autoH(x,u,lambda,i,para,ua,ub,la,lb,f);
+H = @(x,u,lambda,i) autoH(x,u,lambda,i,para,wa,wb,f);
 
 uLB = repmat([ 0.0 ;-2*pi],[1,N]);
-uUB = repmat([ 0.02; 2*pi],[1,N]);
+uUB = repmat([ 0.01; 2*pi],[1,N]);
 
 % Initialize controls.
 v = (x1(1:2) - x0(1:2)) / N;
@@ -113,9 +114,9 @@ u_nom = repmat(u0,[1,N]);
 %% Playback solution.
 if do_plot
     figure(2);
-    playback(rect,cp,xnom,unom,[]);
+%     playback(rect,cp,xnom,unom,[]);
     XYfunc = @(Vin,Kin) [Vin(1,Kin(:,1)); Vin(1,Kin(:,2)); Vin(2,Kin(:,1)); Vin(2,Kin(:,2))];
-    hold on; grid on;
+    cla; hold on; grid on;
     plot([0 0 work_l work_l 0],[0 work_w work_w 0 0],'k.-')
     XY = XYfunc(V0,rect.K);
     plot(XY(1:2,:),XY(3:4,:),'b');
@@ -127,6 +128,7 @@ if do_plot
     title('workspace'); xlabel('x'); ylabel('y')
     axis equal
     axis([0 work_l 0 work_w]);
+    plot(xnom(1,:),xnom(2,:))
 end
 %% Plot controls.
 if do_plot
@@ -134,7 +136,7 @@ if do_plot
     subplot(311)
     cla; hold on; grid on;
     plot(xnom(3,:),'-*')
-    plot(xnom(4,:),'-*')
+%     plot(xnom(4,:),'-*')
     subplot(312)
     cla; hold on; grid on;
     plot(unom(2,:),'b-*')
