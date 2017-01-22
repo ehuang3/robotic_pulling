@@ -36,6 +36,13 @@
 %default radius will be 1pt.
 cross/.default={2pt}}
 
+\let\labelindent\relax
+\usepackage{enumitem}
+% \newenvironment{enum}{\begin{enumerate}[wide, labelwidth=!, labelindent=0pt]}{\end{enumerate}}
+\newlist{inparaenum}{enumerate}{2}% allow two levels of nesting in an enumerate-like environment
+\setlist[inparaenum]{nosep,wide,labelwidth=!,labelindent=0pt}% compact spacing for all nesting levels
+\setlist[inparaenum,1]{label=\bfseries\arabic*)}% labels for top level
+\setlist[inparaenum,2]{label=\arabic{inparaenumi}{\alph*})}% labels for second level
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{proposition}{Proposition}
@@ -505,12 +512,6 @@ compute bounds on feasible angular velocities and centers of pressure.
 
 \section{Methods}
 
-
-
-\subsection{Center of Pressure}\label{sec:cop}
-
-We compute the center of pressure for a 
-
 \subsection{Exact Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
 \begin{proposition}
@@ -822,10 +823,77 @@ constant unit velocity.
 \section{Implementation}
 
 \subsection{Hardware}
+\begin{inparaenum}
+\item ABB 120
+\item 3D printed objects
+\item Simple point finger
+\end{inparaenum}
 
-\subsection{MATLAB}
+\subsection{Point In Convex Set}
+
+\begin{inparaenum}
+\item The exact angular velocity bound algorithm in Section
+  \ref{sec:exact-angular-velocity-bounds} relies on having a submethod
+  for computing whether a point is contained in a convex set.
+\item As a reminder, the significance of this submethod is that, given
+  an angular velocity, it allows us to check for the existence of a
+  pressure distribution such that
+  \begin{inparaenum}
+  \item the specified center of pressure is achieved,
+  \item the pulled body generates zero moment at the contact point.
+  \end{inparaenum}
+\item Below, we describe our choice of implementation which offers
+  several important advantages:
+  \begin{inparaenum}
+  \item It is efficient,
+  \item The user can \textbf{restrict} the class of candidate pressure
+    distributions. This has the effect of tightening the angular
+    velocity bounds.
+  \end{inparaenum}
+\item The linear program below directly solves for an assignment of
+  discrete pressures such that the pulled body has center of pressure
+  $[x_0,y_0]^T$ and generates zero moment at the contact point
+  \begin{equation}
+    \begin{aligned}
+      & \underset{\mathbf{p}}{\text{minimize}}
+      & & \mathbf{0} \\
+      & \text{subject to}
+      & & A\mathbf{p} = [x_0,y_0,0]^T,\; \mathbf{1}\cdot\mathbf{p} = 1, \\
+      & & & L \leq \mathbf{p} \leq U.
+    \end{aligned} \label{eq:lin-prog-PiCH}
+  \end{equation}
+  \begin{inparaenum}
+  \item $\mathbf{p}$ is a candidate (normalized) pressure distribution,
+  \item $A$ is the moment surface function $G$ computed over
+    discretized contact region $R$,
+  \item $L$ and $U$ are bounds on $\mathbf{p}$.
+  \end{inparaenum}
+\item The upper and lower bounds $U$ have nice physical interpretation 
+  \begin{inparaenum}
+  \item Let $N$ be the number of points in the discretization of the
+    contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
+    principle, the candidate pressure distributions are those such
+    that at least 50\% of the object is in contact with the surface.
+  \item Or set $L$ to $0.1/N$. Then at least 10\% of object weight is
+    uniformly distributed.
+  \item Undoubtedly, additional tricks can be played to further modify
+    the candidate pressure distributions.
+  \end{inparaenum}
+\item Solved using \texttt{Gurobi} \cite{gurobi}.
+\end{inparaenum}
+
+\subsection{Discretized Dynamics for DDP}
+
+\begin{inparaenum}
+\item 
+\end{inparaenum}
 
 \section{Experiments}
+
+\begin{inparaenum}
+\item 
+\end{inparaenum}
+
 
 \subsection{Exact Bounds vs Peshkin's Bound}
 \begin{enumerate}
