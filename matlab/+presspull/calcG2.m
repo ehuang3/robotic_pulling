@@ -1,4 +1,4 @@
-function [ G, Rx, Ry ] = calcG2( R, xr, w, mu, f0, V, k )
+function [ G, Rx, Ry, LB, UB ] = calcG2( R, xr, w, mu, f0, V, k, LB, UB )
 %CALCG2 Compute moment surface.
 %   
 %   Version 2 - Add indeterminant points (numerical stability).
@@ -13,6 +13,13 @@ X = R(1,:);
 Y = R(2,:);
 dR = [];
 dG = [];
+dLB = [];
+dUB = [];
+
+if nargin < 8
+    LB = zeros([1,size(R,2)]);
+    UB = ones([1,size(R,2)]);
+end
 
 % Check if rotation center is located within the object.
 if ~isempty(V) && ~isempty(k)
@@ -33,6 +40,8 @@ if ~isempty(V) && ~isempty(k)
         % If in object, then add the indeterminant point G(x_r) to G and R.
         dR = [ xr xr; 0  0 ];
         dG = [-xr xr];
+        dLB = [mode(LB) mode(LB)];
+        dUB = [mean(UB) mean(UB)];
         % Also remove points epsilon close to x_r.
     end
 end
@@ -45,5 +54,7 @@ R = [R dR];
 Rx = R(1,:);
 Ry = R(2,:);
 G = [G dG];
+LB = [LB dLB];
+UB = [UB dUB];
 
 end

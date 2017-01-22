@@ -1,4 +1,4 @@
-function [ L, U, T ] = computeBounds( object, contact_point, options )
+function [ L, U, T ] = computeBounds( object, contact_point )
 %COMPUTEBOUNDS Compute angular velocity bounds.
 %   
 
@@ -19,6 +19,13 @@ if isfield(object, 'R')
     R0 = object.R;
 else
     R0 = fillScanLines2DGrid2(K,V0(1,:),V0(2,:),step);
+end
+if isfield(object,'LB') && isfield(object,'UB')
+    LB = object.LB;
+    UB = object.UB;
+else
+    LB = zeros([1,size(R0,2)]);
+    UB = ones([1,size(R0,2)]);
 end
 
 cp0 = contact_point;
@@ -44,7 +51,7 @@ for i = 1:length(T)
     Vt = rot(T(i)) * V;
     comt = rot(T(i)) * com;
     Rt = rot(T(i)) * R;
-    [wl, wu] = computeAngularVelocityBounds(Rt,comt(1),comt(2),1,Vt,K);
+    [wl, wu] = computeAngularVelocityBounds(Rt,comt(1),comt(2),1,Vt,K,LB,UB);
     U(i) = wu;
     L(i) = wl;
 end

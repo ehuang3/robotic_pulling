@@ -1,5 +1,5 @@
 %% Test angular velocity bounds.
-clc
+% clc
 clear
 
 import presspull.*
@@ -7,6 +7,7 @@ import presspull.*
 % Generate tetrapod.
 [X, Y, K] = generate2DTetrapod(0.5,0.7,0);
 X = X + 0.5;
+V = [X';Y'];
 
 t = pi/3;
 x0 = 0.5;
@@ -26,4 +27,11 @@ CoP = rot*CoP;
 x0 = CoP(1);
 y0 = CoP(2);
 
-[wl wu] = computeAngularVelocityBounds(R, x0, y0, 1)
+% Create pressure bounds.
+LB = zeros([1,size(R,2)]);
+UB = 0.000125*ones([1,size(R,2)]);
+% UB = ones([1,size(R,2)]);
+
+[wl wu] = computeAngularVelocityBounds(R, x0, y0, 1, V, K, LB, UB)
+
+

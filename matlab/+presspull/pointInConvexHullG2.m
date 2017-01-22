@@ -24,7 +24,7 @@ Aeq = [X; ones([1,x_dim])];
 beq = [pt; 1];
 
 % options = optimset('Display','none');
-[x,~,flag] = glinprog(f,A,b,Aeq,beq,LB,UB)
+[x,~,flag] = glinprog(f,A,b,Aeq,beq,LB,UB);
 in_cvhull = (flag > 0);
 
 end

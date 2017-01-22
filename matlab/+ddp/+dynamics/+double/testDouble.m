@@ -34,7 +34,11 @@ rect = rectangle(rect_l/2, rect_w/2);
 total_mass = mass + zforce / g;
 rect.com = (mass/total_mass)*rect.com + (zforce/g/total_mass)*contact_point;
 % Compute bounds.
-rect.R = fillScanLines2DGrid2(rect.K,rect.V(1,:),rect.V(2,:),3e-3);
+R = fillScanLines2DGrid2(rect.K,rect.V(1,:),rect.V(2,:),2e-3);
+rect.R = R;
+rect.LB = zeros([1,size(R,2)]);
+rect.UB = 1 / (0.65 * size(R,2)) * ones([1,size(R,2)]);
+% rect.UB = ones([1,size(R,2)]);
 [L,U,T] = computeBounds(rect, contact_point);
 rect.L = L;
 rect.U = U;
