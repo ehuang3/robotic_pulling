@@ -3,7 +3,7 @@ function [ xnew, Fx, Fu ] = symF( x, u, wa, wb, f )
 %   
 
 %% 
-import ddp.dynamics.double.symIDFT
+import ddp.dynamics.single.symIDFT
 
 w = x(3)-u(2)+pi;
 omega = symIDFT(w,wa,wb,f);

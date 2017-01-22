@@ -3,7 +3,7 @@ clc
 clear
 clear import
 
-dynamics_namespace = 'double';
+dynamics_namespace = 'single';
 
 import presspull.*
 import data.*
@@ -81,14 +81,14 @@ end
 %% DDP inputs.
 cp = contact_point;
 w0 = wrapTo2Pi(atan2(cp(2),cp(1)) + T0(3) + pi);
-x0 = [cp0; w0; w0];
+x0 = [cp0; w0];
 w1 = wrapTo2Pi(atan2(cp(2),cp(1)) + T1(3) + pi);
-x1 = [cp1; w1; w1];
+x1 = [cp1; w1];
 
 % Parameters.
 N = 50;
-p = [0.01 0.01 0.02 0.02];
-k = 1000 * [5 5 1 1];
+p = [0.01 0.01 0.02];
+k = 1000 * [5 5 1];
 para = DDP_getDefaultPara;
 para.maxIter = 500;
 F = @(x,u,i) autoF(x,u,i,para,ua,ub,la,lb,f);

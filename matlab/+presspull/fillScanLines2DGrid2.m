@@ -1,4 +1,4 @@
-function [ pts ] = fillScanLines2DGrid2( k, x, y, step )
+function [ pts ] = fillScanLines2DGrid2( k, x, y, step, add_bd )
 %FILLSCANLINES2DGRID2 
 %   
 
@@ -11,6 +11,9 @@ assert(size(k,2)==2,'Dimension mismatch');
 
 if nargin == 3
     step = 1e-2;
+end
+if nargin == 4
+    add_bd = true;
 end
 
 %% Find min and max X,Y.
@@ -55,15 +58,17 @@ for xp = x_pts
 end
 
 %% Add polygon boundary as additional points.
-d = 0;
-for i = 1:size(k,1)
-                A = [x(k(i,1)), y(k(i,1))]';
-            B = [x(k(i,2)), y(k(i,2))]';
-    d = d + norm(B-A);
+if add_bd
+    d = 0;
+    for i = 1:size(k,1)
+        A = [x(k(i,1)), y(k(i,1))]';
+        B = [x(k(i,2)), y(k(i,2))]';
+        d = d + norm(B-A);
+    end
+    n_cp = ceil(d/step);
+    bd = getSpacedContactPoints([x;y],k,n_cp);
+    pts = [pts bd];
 end
-n_cp = ceil(d/step);
-bd = getSpacedContactPoints([x;y],k,n_cp);
-pts = [pts bd];
 
 end
 
