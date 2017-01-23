@@ -121,9 +121,9 @@ cross/.default={2pt}}
 % 2. 
 % 3. 
 
-Planar pulling is the manipulation skill where
-the robot contacts a rigid body at a point and pulls that contact
-point along a trajectory.
+  Robotic pulling is the manipulation skill where the robot contacts a
+  rigid body at a point and pulls that contact point along a
+  trajectory.
 
 Major contributions:
   \begin{enumerate}
@@ -147,29 +147,91 @@ Major contributions:
 
 \section{Introduction}
 
+% \TODO{
 % Items that an introduction should address:
-% 1. 
-% 2. 
+% \begin{enumerate}
+% \item What is the problem?
+% \item Why should people care?
+% \item What are the major contributions?
+% \item What is the structure of this paper?
+% \end{enumerate}
+% }
 
-In this paper, we demonstrate the value of 
+% In this paper, we demonstrate the value of 
 
-\begin{enumerate}
-\item Looking at pushing from a different perspective
-\item contributions
-\item open-loop stable with convergence guarantees
-\item easy to use
-\item Outline of sections
-\end{enumerate}
+% \begin{enumerate}
+% \item Looking at pushing from a different perspective
+% \item contributions
+% \item open-loop stable with convergence guarantees
+% \item easy to use
+% \item Outline of sections
+% \end{enumerate}
 
-\section{Related Work}
+% \begin{inparaenum}
+% \item 
+
+Dealing with uncertainty is a fundamental challenge in robotic
+manipulation. Uncertainty arises from several sources including
+sensing, modeling, and taking actions. In this paper, we introduce
+robotic pulling as a method of robotic manipulation that remains
+stable in the presence of uncertainty.
+
+Robotic pulling is the manipulation skill where the robot contacts a
+rigid body at a point and pulls that contact point along a
+trajectory. Pulling is a general-purpose skill for positioning and
+orienting objects. It is especially useful for objects that are too
+large or heavy to be picked or objects that are tucked away and hard
+to reach.
+
+The overall contribution of this paper is the theoretical and
+practical formulation of pulling as a primitive action for positioning
+and orienting objects under uncertainty. The crowning achievement of
+our approach is that, even during open-loop control, the system
+uncertainty remains input-output (Lyapunov) stable. Next, we highlight
+the results that enable us to create our primitive action planner for
+pulling.
+
+The insight that motivated this work was our recognition, and
+subsequent proof, of the stability of pulling. If an object is pulled
+in a straight line along a surface, the frictional forces cause the
+object to rotate around the contact point until the object's center of
+mass aligns with the line of motion. Our algorithms takes advantage of
+this stability to guarantee the object has been pulled into the
+correct position and orientation.
+
+Though necessary, stability by itself does not enable planning to
+guarantee convergence. A practical planner also requires knowledge of
+the object's rate of convergence to the stable configuration. To that
+end, we develop the first known algorithm that computes exact angular
+velocity bounds on the motion of a pushed or pulled object. The bounds
+can be made arbitrarily tight by specifying a convex set of candidate
+pressure distributions over which to compute them. Moreover, we prove
+that the angular velocity bounds can be integrated into orientation
+bounds, which can be used for planning convergent trajectories.
+
+In this work, we use Differential Dynamic Programming (DDP) as our
+locally optimal planner for computing pulling trajectories. By
+augmenting the dynamics with the orientation bounds, we allow DDP to
+track the convergence of the pulled object. Our methods were verified
+on a real robotic system.
+% \end{inparaenum}
+
+% \begin{inparaenum}
+% \item Section \ref{sec:related-work}
+% \item Section \ref{sec:theory}
+% \item Section \ref{sec:methods}
+% \item Section \ref{sec:experiments}
+% \end{inparaenum}
+
+\section{Related Work}\label{sec:related-work}
 
 \TODO{
-Items that a related works section should address:
-\begin{enumerate}
-\item What were the prior works?
-\item What were the limitations of the prior works?
-\item What are the advantages of our work?
-\end{enumerate}
+  Items that a related works section should address:
+  \begin{enumerate}
+  \item What were the prior works?
+  \item What were the limitations of the prior works?
+  \item What are the advantages of our work?
+  \end{enumerate}
 }
 
 
@@ -197,6 +259,8 @@ Items that a related works section should address:
 
   two-point stable pushing of Lynch et al. \cite{}.
 
+  Though Lynch and Mason Pulling from Pushing \cite{lynch1995pulling}
+
   mechanical components robust to variations in the friction
 
 \item Pushing Bounds
@@ -214,13 +278,11 @@ Items that a related works section should address:
 \item Stability
 \end{enumerate}
 
-
-
-
-
-
-
-The problem of finding exact angular velocity bounds for a pushed
+\begin{inparaenum}
+\item Pressure distributions are highly indeterminant.
+\item Their indeterminacy leads to uncertainty in the resultant
+  velocity of the pushed object.
+\item The problem of finding exact angular velocity bounds for a pushed
 object with an indeterminant pressure distribution was first raised in
 Mason's seminal thesis on robotic pushing \cite{Mason1982}. Since
 then, various inexact angular velocity bounds have been published.
@@ -235,10 +297,12 @@ the minimum object-enclosing disk centered at the object's center of
 pressure \cite{peshkin1988motion}.  In contrast to the prior art, our
 algorithm is the first to find \textit{exact} angular velocity bounds
 for a pushed object.
+\item Our method can also restrict the set of feasible pressure
+  distributions. This allows our method to obtain an
+  order-of-magnitude improvement over previous bounds.
+\end{inparaenum}
 
-
-
-\section{Theory}
+\section{Theory}\label{sec:theory}
 
 \subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
 
@@ -510,7 +574,7 @@ The frictional force and moment envelopes are employed in Sections
 \ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
 compute bounds on feasible angular velocities and centers of pressure.
 
-\section{Methods}
+\section{Methods}\label{sec:methods}
 
 \subsection{Exact Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
@@ -888,7 +952,7 @@ constant unit velocity.
 \item 
 \end{inparaenum}
 
-\section{Experiments}
+\section{Experiments}\label{sec:experiments}
 
 \begin{inparaenum}
 \item 
