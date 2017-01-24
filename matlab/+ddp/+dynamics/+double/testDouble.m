@@ -34,7 +34,7 @@ rect = rectangle(rect_l/2, rect_w/2);
 total_mass = mass + zforce / g;
 rect.com = (mass/total_mass)*rect.com + (zforce/g/total_mass)*contact_point;
 % Compute bounds.
-R = fillScanLines2DGrid2(rect.K,rect.V(1,:),rect.V(2,:),2e-3);
+R = fillScanLines2DGrid2(rect.K,rect.V(1,:),rect.V(2,:),2.5e-3);
 rect.R = R;
 rect.LB = zeros([1,size(R,2)]);
 rect.UB = 1 / (0.65 * size(R,2)) * ones([1,size(R,2)]);
@@ -51,10 +51,10 @@ f = 1/(2*pi);
 % Sample from left and right strips.
 T0 = [(work_l/2)*rand + work_l/2;...
       (work_w-rect_w)*rand + rect_w/2;...
-      pi];
+      2*rand*pi];
 T1 = [(work_l/2)*rand;...
       (work_w-rect_w)*rand + rect_w/2;...
-      pi];
+      2*rand*pi];
 % Object poses.
 rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
 V = rect.V; n_v = size(V,2);
@@ -101,14 +101,14 @@ Lf = @(x) autoLf(x,[],para,x1,p,k);
 H = @(x,u,lambda,i) autoH(x,u,lambda,i,para,ua,ub,la,lb,f);
 
 uLB = repmat([ 0.0 ;-2*pi],[1,N]);
-uUB = repmat([ 0.02; 2*pi],[1,N]);
+uUB = repmat([ 0.04; 2*pi],[1,N]);
 
 % Initialize controls.
 v = (x1(1:2) - x0(1:2)) / N;
 distance = norm(v) * N
 t = wrapTo2Pi(atan2(v(2),v(1)));
 u0 = [norm(v); t];
-% u0 = [0; pi];
+% u0 = [0; 0];
 u_nom = repmat(u0,[1,N]);
 
 %% DDP.

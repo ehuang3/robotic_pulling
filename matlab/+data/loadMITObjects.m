@@ -1,4 +1,4 @@
-function [ Obj ] = loadMITObjects( mit_path )
+function [ objects ] = loadMITObjects( mit_path )
 %LOADMITOBJECTS
 %   
 
@@ -24,7 +24,7 @@ p4 = [a;-b];
 o = struct;
 o.V = [p1 p2 p3 p4 p1];
 o.K = [(1:4)' (2:5)'];
-o.com = computeCoMPolygon(o.V);
+o.com = [0;0];
 o.name = 'rect1';
 Obj('rect1') = o;
 
@@ -131,6 +131,12 @@ Obj('hex') = o;
 
 % Add butter.
 warning('WARNING: Missing BUTTER object');
+
+% Convert map to struct.
+keys = Obj.keys;
+for i = 1:length(keys)
+    objects(i) = Obj(keys{i});
+end
 
 end
 
