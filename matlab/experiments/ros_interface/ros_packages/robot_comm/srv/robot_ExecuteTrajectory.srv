@@ -1,0 +1,5 @@
+#Service to Execute the trajectory buffer on the robot
+
+---
+int64 ret
+string msg

@@ -44,7 +44,7 @@ percent_in_contact = 0.50;
 % 3x6 rectangle.
 rect_w = 0.0762;
 rect_l = 0.1524;
-mass = 0.188;
+mass = 0.188; 0
 % Robot.
 g = 9.807;
 zforce = g * 0.0;
@@ -83,11 +83,22 @@ if do_plot
     ylabel('\theta''')
     axis tight
 end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% INITIALIZE ROS COMMUNICATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+rosinit
+
+mocap = rossubscriber('/Mocap',rostype.mocap_frame);
+%robot = robotSubscriber();
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% READ MOCAP AND ROBOT POSES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting pose.
+
+initial_pose = getObjectPose2D(mocap,obj_tform);
+
 T0 = [  2*AB_side*(rand-0.5) + A(1) ; ...
         2*AB_side*(rand-0.5) + A(2) ; ...
         2*rand*pi                   ];
@@ -124,7 +135,7 @@ if do_plot
     figure(1);
     subplot(4,4,[1 2 5 6 9 10])
     cla; hold on; grid on;
-    plot([0 0 work_l work_l 0],[0 work_w work_w 0 0],'k.-')
+    plot([x_work_min x_work_min x_work_max x_work_max 0],[y_work_min y_work_max y_work_max y_work_min 0],'k.-')
     XY = XYfunc(V0,rect.K);
     plot(XY(1:2,:),XY(3:4,:),'b');
     plot(cp0(1),cp0(2),'b.');
@@ -134,7 +145,7 @@ if do_plot
     plot(cp1(1),cp1(2),'r.');
     title('workspace'); xlabel('x'); ylabel('y')
     axis equal
-    axis([0 work_l 0 work_w]);
+    axis([x_work_min x_work_max y_work_max y_work_min]);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -215,7 +226,7 @@ if do_plot
     playback(rect,cp,xnom,unom,[]);
     XYfunc = @(Vin,Kin) [Vin(1,Kin(:,1)); Vin(1,Kin(:,2)); Vin(2,Kin(:,1)); Vin(2,Kin(:,2))];
     hold on; grid on;
-    plot([0 0 work_l work_l 0],[0 work_w work_w 0 0],'k.-')
+    plot([x_work_min x_work_min x_work_max x_work_max 0],[y_work_min y_work_max y_work_max y_work_min 0],'k.-')
     XY = XYfunc(V0,rect.K);
     plot(XY(1:2,:),XY(3:4,:),'b');
     plot(cp0(1),cp0(2),'b.');
@@ -245,3 +256,8 @@ if do_plot
     stem(unom(1,:),'r.')
     title('\nabla d'); ylabel('m')
 end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% RUN TRAJECTORY ON ROBOT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

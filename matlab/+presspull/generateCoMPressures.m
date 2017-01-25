@@ -26,9 +26,9 @@ b = [];
 Aeq = [X; ones([1,x_dim])];
 beq = [com; 1];
 options = optimset('Display','none');
-[P,~,flag,out] = linprog(f,A,b,Aeq,beq,LB,UB,[],options);
+[P,~,flag] = linprog(f,A,b,Aeq,beq,LB,UB);
 if flag < -2
-    warning(out.message);
+    %warning(out.message);
 end
 P = P';
 

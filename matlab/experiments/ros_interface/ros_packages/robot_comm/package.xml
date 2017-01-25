@@ -1,0 +1,25 @@
+<package>
+  <name>robot_comm</name>
+  <version>0.0.0</version>
+  <description>
+     robot_comm
+  </description>
+  <maintainer email="ankitb@cmu.edu">Ankit Bhatia</maintainer>
+  <author>Alberto Rodriguez</author>
+  <license>BSD</license>
+  <url>http://ros.org/wiki/robot_comm</url>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>matvec</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>message_generation</build_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>matvec</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>message_runtime</run_depend>
+  <export>
+    <cpp cflags="-I${prefix}/include" lflags="-L${prefix}/lib -lrobot_comm"/>
+  </export>
+</package>
+
+
