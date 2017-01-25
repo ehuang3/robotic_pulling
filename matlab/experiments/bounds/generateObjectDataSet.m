@@ -42,7 +42,8 @@ mit_bounds_file = fullfile(bounds_path,'mit_bounds.mat');
 
 %% Bounds.
 clear bounds;
-for i = 1:length(objects)
+load('/home/eric/src/presspull/data/bounds/mit_bounds.mat')
+for i = 8:length(objects)
     obj = objects(i)
     % Exact bounds.
     [L,U,T] = computeBounds(obj,obj.cp);
@@ -83,6 +84,39 @@ for i = 1:length(objects)
     bounds(i) = obj;
     % Save.
     save(mit_bounds_file,'bounds');
+end
+
+%% 
+for i = 1:length(bounds)
+    i
+    obj = bounds(i);
+    figure(1);
+    subplot(211)
+    cla; hold on; axis equal; grid on;
+    V = obj.V;
+    com = obj.com;
+    cp = obj.cp;
+    plot(V(1,:),V(2,:),'k')
+    plot(cp(1),cp(2),'r*')
+    plot(com(1),com(2),'k*')
+    subplot(212)
+    cla; hold on; grid on;
+    T = obj.exact.T;
+    L = obj.exact.L;
+    U = obj.exact.U;
+    plot(T,L,'r');
+    plot(T,U,'r');
+    T = obj.fifty.T;
+    L = obj.fifty.L;
+    U = obj.fifty.U;
+    plot(T,L,'b');
+    plot(T,U,'b');
+    T = obj.peshkin.T;
+    L = obj.peshkin.L;
+    U = obj.peshkin.U;
+    plot(T,L,'g');
+    plot(T,U,'g');
+    waitforbuttonpress
 end
 
 %% 
