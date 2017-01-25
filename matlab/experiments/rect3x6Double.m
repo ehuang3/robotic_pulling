@@ -140,11 +140,11 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DDP PARAMETERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Slope of pseudo-Huber loss - [x, y, u, l]
-k = 1000 * [5 5 1 1];
+% Slope of pseudo-Huber loss - [x, y, u, l, d] <- d is quadratic.
+k = [1000 * [5 5 1 1], 40];
 
 % Convergence width of pseudo-Huber loss - [x, y, u, l]
-p = [0.01 0.01 0.02 0.02];
+p = [0.01 0.01 0.02 0.02 0.00];
 
 % Max DDP iterations.
 max_iters = 300;
@@ -178,9 +178,9 @@ end
 %% DDP inputs.
 cp = rect.cp;
 w0 = wrapTo2Pi(atan2(cp(2),cp(1)) + T0(3) + pi);
-x0 = [cp0; w0; w0];
+x0 = [cp0; w0; w0; 0];
 w1 = wrapTo2Pi(atan2(cp(2),cp(1)) + T1(3) + pi);
-x1 = [cp1; w1; w1];
+x1 = [cp1; w1; w1; 0];
 
 % Parameters.
 N = size(u_nom,2);
@@ -206,6 +206,7 @@ uUB = repmat([ dmax; 2*pi],[1,N]);
 
 %% DDP.
 [xnom,unom,alpha_,beta_,info] = DDP(x0,N,u_nom,F,L,Lf,H,para,uLB,uUB);
+ferror = abs(x1 - xnom(:,end))
 
 %% Playback solution.
 if do_plot
@@ -242,5 +243,5 @@ if do_plot
     subplot(4,4,7)
     cla; hold on; grid on; axis tight;
     stem(unom(1,:),'r.')
-    title('d'); ylabel('m')
+    title('\nabla d'); ylabel('m')
 end

@@ -3,7 +3,7 @@ clc
 clear
 clear import
 
-dynamics_namespace = 'single';
+dynamics_namespace = 'double';
 
 import data.*
 import ddp.dynamics.sym2exp
@@ -20,10 +20,10 @@ vars_func = ['ddp.dynamics.' dynamics_namespace '.vars'];
 eval(vars_func)
 
 % Symbolic functions.
-[xnew,Fx,Fu] = symF(x,u,wa,wb,f);
+[xnew,Fx,Fu] = symF(x,u,ua,ub,la,lb,f);
 [L] = symL(x,u);
 [Lf,Lfx,Lfxx] = symLf(x,xf,p,k);
-[H,Hx,Hxx,Hu,Hux,Huu] = symH(x,u,lambda,wa,wb,f);
+[H,Hx,Hxx,Hu,Hux,Huu] = symH(x,u,lambda,ua,ub,la,lb,f);
 O = struct('xnew',xnew,'Fx',Fx,'Fu',Fu,'L',L,'Lf',Lf,'Lfx',Lfx,'Lfxx',Lfxx, ...
     'H',H,'Hx',Hx,'Hxx',Hxx,'Hu',Hu,'Hux',Hux,'Huu',Huu);
 
