@@ -1,0 +1,19 @@
+# Service to add a trajectory point to the robot's buffer
+
+# Cartesian Pose
+float64 x
+float64 y
+float64 z
+float64 q0
+float64 qx
+float64 qy
+float64 qz
+
+# Time in seconds for the robot to execute this part of the path
+float64 time
+
+# The zone number, as defined in robot_comm
+int64 zone
+---
+int64 ret
+string msg
