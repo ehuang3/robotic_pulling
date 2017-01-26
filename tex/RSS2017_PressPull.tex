@@ -302,7 +302,7 @@ for a pushed object.
   order-of-magnitude improvement over previous bounds.
 \end{inparaenum}
 
-\section{Theory}\label{sec:theory}
+\section{Background}\label{sec:theory}
 
 \subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
 
@@ -392,8 +392,6 @@ We prefer the principle of minimal dissipation in our theoretical
 analysis because the frictional dissipation equation is continuous and
 convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
-\subsection{Quasi-static Stability}
-
 % Press-pull stability theorem figure.
 \begin{figure}
   \centering
@@ -420,56 +418,6 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:presspull-motion}
 \end{figure}
 
-\begin{theorem}
-  For pulling of a rigid body in the plane, the line from the pulling
-  contact point to the body's center of pressure converges to the line
-  of motion.
-\end{theorem}
-
-\begin{proof}
-  % TODO Shorten this proof. Rewrite to use generalized velocities.
-  Let the $y$-axis of the coordinate frame be aligned with the line of
-  motion of the press-pull contact point (see Figure
-  \ref{fig:presspull-motion} for an example). Then the instantaneous
-  rotation center of the body must fall on the $x$-axis, and we can
-  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
-
-  Suppose the center of pressure is strictly to the right of the line
-  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
-  7.4 in \cite{Mason}, the rotation center lies on the positive
-  $x$-axis and has negative rotation. The velocity of a point on the
-  rigid body is given by
-  $\mathbf{v}(\mathbf{r}) =
-  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
-  \mathbf{r}_\text{IC})$.
-  We can compute the motion of the body relative to the contact point
-  by
-  \begin{align*}
-    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
-    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
-  \end{align*}
-  where $\mathbf{v}_c$ is the velocity of the contact point. In other
-  words, the body is rotating clockwise relative to the
-  contact point with angular velocity
-  \begin{equation}
-    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
-  \end{equation}
-
-  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
-  pressure in the frame of the contact point. When the line of motion
-  passes through the center of pressure, a pure translation takes
-  place (Theorem 7.4 in \cite{Mason}). This implies that
-  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
-  $\theta$ is monotonically decreasing, we see that it must converge
-  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
-
-  The case when the center of pressure is strictly to the left of the
-  line of motion follows from symmetry about the $y$-axis.
-\end{proof}
-
-Note that the above proof holds for \textit{all pressure
-  distributions} of the body on the support
-surface.
 
 % \begin{proposition}
 %   When pressing down on a point contact on a rigid body, the center of
@@ -574,9 +522,62 @@ The frictional force and moment envelopes are employed in Sections
 \ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
 compute bounds on feasible angular velocities and centers of pressure.
 
-\section{Methods}\label{sec:methods}
+\section{Theory}\label{sec:methods}
 
-\subsection{Exact Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
+\subsection{Quasi-static Stability}
+
+\begin{theorem}
+  For pulling of a rigid body in the plane, the line from the pulling
+  contact point to the body's center of pressure converges to the line
+  of motion.
+\end{theorem}
+
+\begin{proof}
+  % TODO Shorten this proof. Rewrite to use generalized velocities.
+  Let the $y$-axis of the coordinate frame be aligned with the line of
+  motion of the press-pull contact point (see Figure
+  \ref{fig:presspull-motion} for an example). Then the instantaneous
+  rotation center of the body must fall on the $x$-axis, and we can
+  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+
+  Suppose the center of pressure is strictly to the right of the line
+  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+  7.4 in \cite{Mason}, the rotation center lies on the positive
+  $x$-axis and has negative rotation. The velocity of a point on the
+  rigid body is given by
+  $\mathbf{v}(\mathbf{r}) =
+  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+  \mathbf{r}_\text{IC})$.
+  We can compute the motion of the body relative to the contact point
+  by
+  \begin{align*}
+    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+  \end{align*}
+  where $\mathbf{v}_c$ is the velocity of the contact point. In other
+  words, the body is rotating clockwise relative to the
+  contact point with angular velocity
+  \begin{equation}
+    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+  \end{equation}
+
+  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+  pressure in the frame of the contact point. When the line of motion
+  passes through the center of pressure, a pure translation takes
+  place (Theorem 7.4 in \cite{Mason}). This implies that
+  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+  $\theta$ is monotonically decreasing, we see that it must converge
+  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+
+  The case when the center of pressure is strictly to the left of the
+  line of motion follows from symmetry about the $y$-axis.
+\end{proof}
+
+Note that the above proof holds for \textit{all pressure
+  distributions} of the body on the support
+surface.
+
+\subsection{Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
 \begin{proposition}
   The constrained frictional dissipation equation
@@ -700,70 +701,9 @@ set of pressure distributions.  % Note, the set of pressure
   body translates and $\Omega = \{0\}$ \cite{Mason}.
 \end{proof}
 
-Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
-velocity bounds for a given support region $R$ and center of pressure
-$[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
-$\Omega$. To initialize, the bisection search first finds feasible
-pressure distribution using linear programming and then finds feasible
-rotation center using the root-finding method in \cite{Mason1982}. The
-bisection search tests the feasibility of an angular velocity $\omega$
-by checking whether the point $[x_0,y_0,0]^T$ is contained in the
-associated frictional moment envelope (see Section
-\ref{sec:frictional-envelope}). In quasi-static terminology, this is
-equivalent to checking whether there exists a pressure distribution
-with center of pressure $[x_0,y_0]^T$ such that the velocity
-$\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
-about the contact point (Equation \ref{eq:moment-at-contact}).
-
-The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
-$d$ is the number of significant digits returned and $n$ is the number
-of points in the discretization of $R$.
-
-\begin{algorithm}
-\caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
-\begin{algorithmic}[1]
-\Function{Find Extrema}{$R$, $x_0$, $y_0$}
-\If {$x_0$ is $0$} \Return {$[0,0]$}
-\EndIf
-% \BState \emph{min}:
-\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  \mathbf{0} \leq \mathbf{x} \leq \mathbf{1}$
-\State $x_r \gets \Call{Compute Rotation Center}{R,P}$
-\State $l \gets 0$
-\State $u \gets -\lVert\mathbf{v}_c\rVert/x_r$
-\State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
-% \BState \emph{max}:
-\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/x_r$
-\Do% {$u \gets 2u$}
-\State {$l \gets 2l$}
-\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, l]^T$
-\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
-\DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$}
-\State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
-% \BState \emph{return}:
-\State $l \gets \Call{Min}{\omega_1,\omega_2}$
-\State $u \gets \Call{Max}{\omega_1,\omega_2}$
-\State \Return {$[l, u]$}
-\EndFunction
-% 
-\Function{Bisection Search}{$R$, $x_0$, $y_0$, $l$, $u$}
-\While{$\varepsilon < |u-l|$}
-\State $\omega \gets (u+l)/2$
-\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, \omega]^T$
-\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
-\If {$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$} 
-\State $u \gets \omega$
-\Else{} 
-\State $l \gets \omega$
-\EndIf
-\EndWhile
-\State \Return $(u+l)/2$
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
 \subsection{Integrated Position Bounds}\label{sec:cop-bounds}
 
-\begin{figure}[th]
+\begin{figure}[t]
   \centering
     \includegraphics[width=1\linewidth]{fig/omega_bounds}
     \caption{Example angular velocity bounds for the 2D tetrapod from
@@ -867,33 +807,11 @@ constant unit velocity.
 % \end{proof}
 
 
-\subsection{Differential Dynamic Programming}
 
-\begin{proposition}
-  $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
 
-\begin{align*}
-  \dot x &= x \\
-  \dot y &= y \\
-  \dot\ell &= \alpha() \\
-  \dot u &= \beta() 
-\end{align*}
+\section{Methods}
 
-  $\dot{\theta}_u = u()$
-
-  $\dot{\theta}_\ell = \ell()$
-\end{proposition}
-
-\section{Implementation}
-
-\subsection{Hardware}
-\begin{inparaenum}
-\item ABB 120
-\item 3D printed objects
-\item Simple point finger
-\end{inparaenum}
-
-\subsection{Point In Convex Set}
+\subsection{Point In Moment Hull}
 
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
@@ -945,6 +863,107 @@ constant unit velocity.
   \end{inparaenum}
 \item Solved using \texttt{Gurobi} \cite{gurobi}.
 \end{inparaenum}
+
+\subsection{Exact Angular Velocity Bounds}
+
+Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
+velocity bounds for a given support region $R$ and center of pressure
+$[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
+$\Omega$. To initialize, the bisection search first finds feasible
+pressure distribution using linear programming and then finds feasible
+rotation center using the root-finding method in \cite{Mason1982}. The
+bisection search tests the feasibility of an angular velocity $\omega$
+by checking whether the point $[x_0,y_0,0]^T$ is contained in the
+associated frictional moment envelope (see Section
+\ref{sec:frictional-envelope}). In quasi-static terminology, this is
+equivalent to checking whether there exists a pressure distribution
+with center of pressure $[x_0,y_0]^T$ such that the velocity
+$\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
+about the contact point (Equation \ref{eq:moment-at-contact}).
+
+The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
+$d$ is the number of significant digits returned and $n$ is the number
+of points in the discretization of $R$.
+
+\begin{algorithm}
+\caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
+\begin{algorithmic}[1]
+\Function{Find Extrema}{$R$, $x_0$, $y_0$}
+\If {$x_0$ is $0$} \Return {$[0,0]$}
+\EndIf
+% \BState \emph{min}:
+\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  \mathbf{0} \leq \mathbf{x} \leq \mathbf{1}$
+\State $x_r \gets \Call{Compute Rotation Center}{R,P}$
+\State $l \gets 0$
+\State $u \gets -\lVert\mathbf{v}_c\rVert/x_r$
+\State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+% \BState \emph{max}:
+\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/x_r$
+\Do% {$u \gets 2u$}
+\State {$l \gets 2l$}
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, l]^T$
+\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
+\DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$}
+\State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+% \BState \emph{return}:
+\State $l \gets \Call{Min}{\omega_1,\omega_2}$
+\State $u \gets \Call{Max}{\omega_1,\omega_2}$
+\State \Return {$[l, u]$}
+\EndFunction
+% 
+\Function{Bisection Search}{$R$, $x_0$, $y_0$, $l$, $u$}
+\While{$\varepsilon < |u-l|$}
+\State $\omega \gets (u+l)/2$
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, \omega]^T$
+\State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
+\If {$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$} 
+\State $u \gets \omega$
+\Else{} 
+\State $l \gets \omega$
+\EndIf
+\EndWhile
+\State \Return $(u+l)/2$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Differential Dynamic Programming}
+
+We use the following first order approximation to the discretized
+dynamics 
+
+We use the following cost functions 
+
+
+
+\begin{proposition}
+  $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
+
+\begin{align*}
+  \dot x &= x \\
+  \dot y &= y \\
+  \dot\ell &= \alpha() \\
+  \dot u &= \beta() 
+\end{align*}
+
+  $\dot{\theta}_u = u()$
+
+  $\dot{\theta}_\ell = \ell()$
+\end{proposition}
+
+
+
+\section{Implementation}
+
+\subsection{Hardware}
+\begin{inparaenum}
+\item ABB 120
+\item 3D printed objects
+\item Simple point finger
+\end{inparaenum}
+
+
 
 \subsection{Discretized Dynamics for DDP}
 
