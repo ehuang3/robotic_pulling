@@ -67,6 +67,9 @@ object_transform = [        0.934847617898597        -0.354817300112436         
 % Plot.
 do_plot = 1;
 
+% Robot Height Parameters:
+safe_z = 400;
+interact_z = 326;
 %% Initialize dynamic system for rectangles x contacts.
 n_cp = size(contact_point_list,2);
 for i = 1:n_cp
@@ -124,7 +127,7 @@ end
 rosinit
 %%
 mocap = rossubscriber('/Mocap');
-%robot = robotSubscriber();
+robot = robotSubscriber();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -287,3 +290,19 @@ end
 %% RUN TRAJECTORY ON ROBOT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%Convert Trajectory to row major and in millimeters
+%
+trajectory = 1000*xbest(1:2,:)';
+sendAndExecuteTrajectory(trajectory,robot,safe_z,interact_z);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% GET FINAL POSE FROM MOCAP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+final_pose = getObjectPose2D(mocap,object_transform)
+Tf = getObjectPose2D(mocap,object_transform)'
+
+Tf(3) = Tf(3) + pi/2;
+rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
+offset = [rect_l/2; rect_w/2];
+Tf(1:2) = Tf(1:2) + rot(Tf(3))*offset;

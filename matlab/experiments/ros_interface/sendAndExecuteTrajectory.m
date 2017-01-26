@@ -1,12 +1,11 @@
-function out = sendAndExecuteTrajectory(trajectory,robot)
-  Constants();
+function out = sendAndExecuteTrajectory(trajectory,robot,safe_z,hole_z)
 
   % Go to the first trajectory point at SAFE_Z
 
   request = rosmessage(robot.setcartesian_client);
   request.x = trajectory(1,1);
   request.y = trajectory(1,2);
-  request.z = SAFE_Z;
+  request.z = safe_z;
   request.q0 = 0;
   request.qx = 1;
   request.qy = 0;
@@ -20,8 +19,8 @@ function out = sendAndExecuteTrajectory(trajectory,robot)
 
     add_request = rosmessage(robot.addtrajpt_client);
 
-    add_request.x = trajectory(i,1) + HOLE_LOCATION(1);
-    add_request.y = trajectory(i,2) + HOLE_LOCATION(2);
+    add_request.x = trajectory(i,1);
+    add_request.y = trajectory(i,2);
     add_request.z = SAFE_Z;
     add_request.q0 = 0;
     add_request.qx = 1;
@@ -40,5 +39,5 @@ function out = sendAndExecuteTrajectory(trajectory,robot)
 
   exec_response = call(robot_exectraj_client,exec_request);
 
-  out = exec_response
+  out = exec_response;
 end
