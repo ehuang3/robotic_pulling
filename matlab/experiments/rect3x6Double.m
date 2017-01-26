@@ -135,6 +135,39 @@ T1 = [  2*AB_side*(rand-0.5) + C(1) ; ...
         2*AB_side*(rand-0.5) + C(2) ; ...
         rand*(B_theta(2) - B_theta(1)) + B_theta(1)];
 
+% Object poses.
+rect = rectxcp(1);
+rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
+V = rect.V; n_v = size(V,2);
+com = rect.com;
+cp = rect.cp;
+V0 = rot(T0(3))*V + repmat(T0(1:2),[1,n_v]);
+com0 = rot(T0(3))*com + T0(1:2);
+cp0 = rot(T0(3))*cp + T0(1:2);
+V1 = rot(T1(3))*V + repmat(T1(1:2),[1,n_v]);
+com1 = rot(T1(3))*com + T1(1:2);
+cp1 = rot(T1(3))*cp + T1(1:2);
+
+% Plot start and end poses.
+if do_plot
+    XYfunc = @(Vin,Kin) [Vin(1,Kin(:,1)); Vin(1,Kin(:,2)); Vin(2,Kin(:,1)); Vin(2,Kin(:,2))];
+    figure(1);
+    subplot(4,4,[1 2 5 6 9 10])
+    cla; hold on; grid on;
+    xn = work.xmin; xm = work.xmax; yn = work.ymin; ym = work.ymax;
+    plot([xn xn xm xm xn],[yn ym ym yn yn],'k.-')
+    XY = XYfunc(V0,rect.K);
+    plot(XY(1:2,:),XY(3:4,:),'b');
+    plot(cp0(1),cp0(2),'b.');
+    plot(cp0(1),cp0(2),'b.');
+    XY = XYfunc(V1,rect.K);
+    plot(XY(1:2,:),XY(3:4,:),'r');
+    plot(cp1(1),cp1(2),'r.');
+    title('workspace'); xlabel('x'); ylabel('y')
+    axis equal
+    axis([xn xm yn ym]);
+end
+
 %% Get a rectangle.
 fmin = inf;
 xbest = []; ubest = [];
