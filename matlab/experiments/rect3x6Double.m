@@ -31,6 +31,12 @@ A = [0.30; 0.3];
 B = [0.60; 0.3];
 AB_side = 0.05;
 
+% Object Frame
+object_transform = [0.049 -0.999 -0.0128 105.4928;
+                    -0.9357 -0.0001 -0.3529 -42.1040;
+                    0.3529 0.0137 -0.9359 16.3921;
+                    0 0 0 1];
+
 % TODO: List of contact points relative to object frame.
 % contact_point_list = [0.065; 0];
 
@@ -97,7 +103,7 @@ mocap = rossubscriber('/Mocap',rostype.mocap_frame);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting pose.
 
-initial_pose = getObjectPose2D(mocap,obj_tform);
+initial_pose = getObjectPose2D(mocap,object_transform);
 
 T0 = [  2*AB_side*(rand-0.5) + A(1) ; ...
         2*AB_side*(rand-0.5) + A(2) ; ...
