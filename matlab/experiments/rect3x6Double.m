@@ -22,10 +22,10 @@ import ddp.planCSC
 %% SYSTEM PARAMETERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Workspace bounds.
-x_work_min = 0;
-x_work_max = 0.91;
-y_work_min = 0;
-y_work_max = 0.61;
+x_work_min = 0.26;
+x_work_max = 0.76;
+y_work_min =-0.25;
+y_work_max = 0.43;
 work = struct('xmin',x_work_min,'xmax',x_work_max,'ymin',y_work_min,'ymax',y_work_max);
 
 % A-B target locations. Robot will pull between A and B.
@@ -59,10 +59,10 @@ contact_point_list = CP;
 percent_in_contact = 0.50;
 
 % Object Frame
-object_transform = [0.049 -0.999 -0.0128 105.4928;
-                    -0.9357 -0.0001 -0.3529 -42.1040;
-                    0.3529 0.0137 -0.9359 16.3921;
-                    0 0 0 1];
+object_transform = [        0.934847617898597        -0.354817300112436         0.012830231885651          79.9554719491778;
+                            0.0133231301968747      -0.00105403389144328        -0.999910687618806          2.54721157684607;
+                            0.354799134033717         0.934935063281658       0.00374191601290136         -82.4080912060258;
+                                            0                         0                         0                         1;];
 
 % Plot.
 do_plot = 1;
@@ -122,8 +122,8 @@ end
 %% INITIALIZE ROS COMMUNICATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 rosinit
-
-mocap = rossubscriber('/Mocap',rostype.mocap_frame);
+%%
+mocap = rossubscriber('/Mocap');
 %robot = robotSubscriber();
 
 
@@ -131,12 +131,21 @@ mocap = rossubscriber('/Mocap',rostype.mocap_frame);
 %% READ MOCAP AND ROBOT POSES
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting pose.
+initial_pose = getObjectPose2D(mocap,object_transform)
+T0 = getObjectPose2D(mocap,object_transform)'
 
-initial_pose = getObjectPose2D(mocap,object_transform);
+T0(3) = T0(3) + pi/2;
+rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
+offset = [rect_l/2; rect_w/2];
+T0(1:2) = T0(1:2) + rot(T0(3))*offset;
 
-T0 = [  2*AB_side*(rand-0.5) + A(1) ; ...
-        2*AB_side*(rand-0.5) + A(2) ; ...
-        rand*(A_theta(2) - A_theta(1)) + A_theta(1)];
+% T0(1) = T0(1) - rect_w/2
+% T0(2) = T0(2) + rect_l/2
+
+%
+% T0 = [  2*AB_side*(rand-0.5) + A(1) ; ...
+%         2*AB_side*(rand-0.5) + A(2) ; ...
+%         rand*(A_theta(2) - A_theta(1)) + A_theta(1)];
 
 % TODO: Angle needs to be in [0, 2pi).
 
@@ -151,6 +160,7 @@ end
 T1 = [  2*AB_side*(rand-0.5) + C(1) ; ...
         2*AB_side*(rand-0.5) + C(2) ; ...
         rand*(B_theta(2) - B_theta(1)) + B_theta(1)];
+T1 = [0.35; 0.35; pi]
 
 % Object poses.
 rect = rectxcp(1);
@@ -182,8 +192,26 @@ if do_plot
     plot(cp1(1),cp1(2),'r.');
     title('workspace'); xlabel('x'); ylabel('y')
     axis equal
-    axis([xn xm yn ym]);
+%     axis([xn xm yn ym]);
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DDP PARAMETERS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Slope of pseudo-Huber loss - [x, y, u, l]
+param.k = [1000 * [5 5 1 1] 40];
+
+% Convergence width of pseudo-Huber loss - [x, y, u, l]
+param.p = [0.01 0.01 0.02 0.02 0.0];
+
+% Max DDP iterations.
+param.max_iters = 300;
+
+% Step-size for Dubin's paths.
+param.dubin_step = 1.5e-2;
+
+% Steering angle for computing Dubin's paths.
+param.steering_angle = 45/180 * pi;
 
 %% Get a rectangle.
 fmin = inf;
@@ -242,7 +270,7 @@ if do_plot
     playback(rect,cp,xbest,ubest,[]);
     XYfunc = @(Vin,Kin) [Vin(1,Kin(:,1)); Vin(1,Kin(:,2)); Vin(2,Kin(:,1)); Vin(2,Kin(:,2))];
     hold on; grid on;
-    plot([x_work_min x_work_min x_work_max x_work_max 0],[y_work_min y_work_max y_work_max y_work_min 0],'k.-')
+    plot([x_work_min x_work_min x_work_max x_work_max x_work_min],[y_work_min y_work_max y_work_max y_work_min y_work_min],'k.-')
     XY = XYfunc(V0,rect.K);
     plot(XY(1:2,:),XY(3:4,:),'b');
     plot(cp0(1),cp0(2),'b.');
@@ -252,7 +280,7 @@ if do_plot
     plot(cp1(1),cp1(2),'r.');
     title('workspace'); xlabel('x'); ylabel('y')
     axis equal
-    axis([0 work_l 0 work_w]);
+    axis([x_work_min x_work_max y_work_min y_work_max]);
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

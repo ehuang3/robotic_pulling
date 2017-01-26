@@ -9,7 +9,7 @@ function [ P ] = generateCoMPressures( R, com, LB, UB )
 % K = convhull(R');
 % X = R(:,K);
 X = R;
-
+import presspull.*
 assert(size(com,1)==size(X,1),'Dimension mismatch');
 assert(size(com,2)==1,'Point dimension error');
 
@@ -26,7 +26,7 @@ b = [];
 Aeq = [X; ones([1,x_dim])];
 beq = [com; 1];
 options = optimset('Display','none');
-[P,~,flag] = linprog(f,A,b,Aeq,beq,LB,UB);
+[P,~,flag] = glinprog(f,A,b,Aeq,beq,LB,UB);
 if flag < -2
     %warning(out.message);
 end
