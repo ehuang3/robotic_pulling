@@ -198,10 +198,12 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% DDP PARAMETERS
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Slope of pseudo-Huber loss - [x, y, u, l]
+% Slope of pseudo-Huber loss - [x, y, u, l, d]
 param.k = [1000 * [5 5 1 1] 40];
 
-% Convergence width of pseudo-Huber loss - [x, y, u, l]
+% u = [d, w] - distance traveled, angle to travel at
+
+% Convergence width of pseudo-Huber loss - [x, y, u, l, d]
 param.p = [0.01 0.01 0.02 0.02 0.0];
 
 % Max DDP iterations.
