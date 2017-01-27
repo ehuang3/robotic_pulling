@@ -58,6 +58,8 @@ cross/.default={2pt}}
 \DeclareMathOperator{\intr}{int}
 \DeclareMathOperator{\dom}{dom}
 
+\newcommand{\BB}[1]{{\color{red} {Byron: {#1}}}}
+
 \newcommand{\EH}[1]{{\color{blue} {Eric: {#1}}  }}
 \newcommand{\TODO}[1]{{\color{red} {{#1}}  }}
 
@@ -175,50 +177,49 @@ Major contributions:
 % \begin{inparaenum}
 % \item 
 
-Dealing with uncertainty is a fundamental challenge in robotic
-manipulation. Uncertainty arises from several sources including
-sensing, modeling, and taking actions. In this paper, we introduce
+Contending with uncertainty is a fundamental challenge in robotic
+manipulation. Uncertainty can arise from many sources including
+limited sensors, incomplete models, and the stochastic effect of executing actions. In this work, we introduce
 robotic pulling as a method of robotic manipulation that remains
 stable in the presence of uncertainty.
 
-Robotic pulling is the manipulation skill where the robot contacts a
+Robotic pulling is a general-purpose manipulation skill for positioning and
+orienting objects where the robot contacts a
 rigid body at a point and pulls that contact point along a
-trajectory. Pulling is a general-purpose skill for positioning and
-orienting objects. It is especially useful for objects that are too
-large or heavy to be picked or objects that are tucked away and hard
+trajectory. Pulling is especially useful for manipulating objects that are too
+large or heavy to be picked or objects that are tucked away and difficult
 to reach.
 
-The overall contribution of this paper is the theoretical and
+In this paper, we introduce the theoretical and
 practical formulation of pulling as a primitive action for positioning
-and orienting objects under uncertainty. The crowning achievement of
-our approach is that, even during open-loop control, the system
-uncertainty (error) remains Lyapunov stable. Next, we highlight the
-results that enable us to create our primitive action planner for
-pulling.
-
-The insight that motivated this work was our recognition, and
-subsequent proof, of the stability of pulling. If an object is pulled
+and orienting objects under uncertainty. An important contribution of
+our approach is showing that, when pulling, %, even during open-loop control, 
+the system uncertainty (error) remains Lyapunov stable. %Next, we highlight the results that enable us to create our primitive action planner for pulling.
+%
+%The insight that motivated this work was our recognition, and
+%subsequent proof, of the stability of pulling. 
+Consider the following example: if an object is pulled
 in a straight line along a surface, the frictional forces cause the
 object to rotate around the contact point until the object's center of
-mass aligns with the line of motion. Our algorithms takes advantage of
-this stability to guarantee the object has been pulled into the
+mass aligns with the line of motion. We show how algorithms can take advantage of
+this kind of stability to guarantee the object has been pulled into the
 correct position and orientation.
 
-Though necessary, stability by itself does not enable planning to
-guarantee convergence. A practical planner also requires knowledge of
-the object's rate of convergence to the stable configuration. To that
+Stability alone is not a sufficient for planning with convergence guarantees. % to enable planning to guarantee convergence. 
+A practical planner also requires knowledge of
+the object's rate of convergence to the stable configuration. Toward this
 end, we develop the first known algorithm that computes exact angular
 velocity bounds on the motion of a pushed or pulled object. The bounds
 can be made arbitrarily tight by specifying a convex set of candidate
-pressure distributions over which to compute them. Moreover, we prove
+pressure distributions over which to compute them. In addition, we prove
 that the angular velocity bounds can be integrated into orientation
 bounds, which can be used for planning convergent trajectories.
 
-In this work, we use Differential Dynamic Programming (DDP) as our
+To show the practical benefit of our approach, we use Differential Dynamic Programming (DDP) as a
 locally optimal planner for computing pulling trajectories. By
 augmenting the dynamics with the orientation bounds, we allow DDP to
-track the convergence of the pulled object. Our methods were verified
-on a real robotic system.
+track the convergence of the pulled object. In Section~\ref{} we verify this approach 
+both in simulation and on a real robotic system.
 % \end{inparaenum}
 
 % \begin{inparaenum}

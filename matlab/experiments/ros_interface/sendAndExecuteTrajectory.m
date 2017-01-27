@@ -1,16 +1,15 @@
-function out = sendAndExecuteTrajectory(trajectory,robot)
-  Constants();
+function out = sendAndExecuteTrajectory(trajectory,robot,safe_z,interact_z)
 
   % Go to the first trajectory point at SAFE_Z
 
   request = rosmessage(robot.setcartesian_client);
-  request.x = trajectory(1,1);
-  request.y = trajectory(1,2);
-  request.z = SAFE_Z;
-  request.q0 = 0;
-  request.qx = 1;
-  request.qy = 0;
-  request.qz = 0;
+  request.X = trajectory(1,1);
+  request.Y = trajectory(1,2);
+  request.Z = safe_z;
+  request.Q0 = 0;
+  request.Qx = 0;
+  request.Qy = -1;
+  request.Qz = 0;
 
   response = call(robot.setcartesian_client,request);
 
@@ -18,27 +17,43 @@ function out = sendAndExecuteTrajectory(trajectory,robot)
 
   for i=1:size(trajectory,1)
 
-    add_request = rosmessage(robot.addtrajpt_client);
+    add_request = rosmessage(robot.setcartesian_client);
 
-    add_request.x = trajectory(i,1) + HOLE_LOCATION(1);
-    add_request.y = trajectory(i,2) + HOLE_LOCATION(2);
-    add_request.z = SAFE_Z;
-    add_request.q0 = 0;
-    add_request.qx = 1;
-    add_request.qy = 0;
-    add_request.qz = 0;
-    add_request.time = 0.1;
-    add_request.zone = 1;
+    add_request.X = trajectory(i,1);
+    add_request.Y = trajectory(i,2);
+    add_request.Z = interact_z;
+    add_request.Q0 = 0;
+    add_request.Qx = 0;
+    add_request.Qy = -1;
+    add_request.Qz = 0;
+    %add_request.Time = 0.1;
+    %add_request.Zone = 1;
 
     response = call(robot.setcartesian_client,add_request);
   end
+  
+  request = rosmessage(robot.setcartesian_client);
+  request.X = trajectory(end,1);
+  request.Y = trajectory(end,2);
+  request.Z = safe_z;
+  request.Q0 = 0;
+  request.Qx = 0;
+  request.Qy = -1;
+  request.Qz = 0;
 
+  response = call(robot.setcartesian_client,request);
+  
+  
+  request = rosmessage(robot.setcartesian_client);
+  request.X = 450;
+  request.Y = 0;
+  request.Z = 647;
+  request.Q0 = 0;
+  request.Qx = 0;
+  request.Qy = -1;
+  request.Qz = 0;
 
-  %% Execute Trajectory:
+  response = call(robot.setcartesian_client,request);
+  
 
-  exec_request = rosmessage(robot.exectraj_client);
-
-  exec_response = call(robot_exectraj_client,exec_request);
-
-  out = exec_response
 end
