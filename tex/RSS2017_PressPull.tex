@@ -309,13 +309,12 @@ for a pushed object.
 \end{inparaenum}
 
 \section{Background}\label{sec:theory}
-
+\BB{Briefly describe why this background is necessary. }
 \subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
-
-We present a preliminary quasi-static analysis of planar pulling
-subject to friction. Planar pulling is the manipulation skill where
+ Planar pulling is a manipulation skill where
 the robot contacts a rigid body at a point and pulls that contact
-point along a trajectory.
+point along a trajectory. Here we present a preliminary quasi-static analysis of planar pulling
+subject to friction. \BB{Maybe describe why this is important}
 
 Let the \textit{generalized velocity} of a planar rigid body be
 $\mathbf{v}^+ = [v_x, v_y, \omega]^T$, where $v_x$ and $v_y$ are the
@@ -323,7 +322,7 @@ linear velocities of a reference point and $\omega$ is the angular
 velocity about that point. Taking the origin as the reference point,
 the velocity of a point $\mathbf{x}$ on the body is then given by
 $\mathbf{v}(\mathbf{x}) = [v_x, v_y]^T + \omega\hat{\mathbf{k}} \times
-\mathbf{x}$ and can be written in matrix notation as
+\mathbf{x}$ \BB{define k} and can be written in matrix notation as
 \begin{equation} \label{eq:generalized-velocity}
 \mathbf{v}(\mathbf{x}) = A(\mathbf{x})\mathbf{v}^+,
 \end{equation}
@@ -335,7 +334,8 @@ where
     0 & 1 &  x_1
   \end{bmatrix*}.
 \end{equation}
-
+%
+\BB{define $x_1$ and $x_2$}
 In this analysis, we choose a coordinate frame such that the origin is
 the contact point and the $y$-axis aligns with the contact point
 velocity (see Figure \ref{fig:presspull-motion} for an example). Then
@@ -351,7 +351,7 @@ the total frictional force and moment of the body at the origin are
   % \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact}
 \end{align}
 where $\mu$ is the coefficient of friction, $R$ is the region of the
-rigid body in contact with the plane, $\mathbf{v}(\mathbf{r})$ is the
+rigid body in contact with the plane, \BB{define r} $\mathbf{v}(\mathbf{r})$ is the
 body point velocity given by (\ref{eq:generalized-velocity}) and
 $p(\mathbf{r})$ is a pressure distribution over $R$.
 
@@ -386,16 +386,16 @@ and set gradient of $\mathrm{L}$ with respect to $\mathbf{v}^+$,
 \begin{equation}
   \nabla\mathrm{L}(\mathbf{v}^+,\mathbf{\lambda}) = \mu\int_R\frac{A(\mathbf{r})^TA(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA + \begin{bmatrix}\lambda_1, \lambda_2, 0\end{bmatrix}^T,
 \end{equation}
-to zero. After some work, we end up with the following first order
-conditions on the force and the moment
+to zero. \BB{possibly define $\lambda$s, though its fairly obvious what they are. Be careful with subscripts for v: 1 and 2 (as above) or x and y as in second paragraph} After some work, we end up with the following first order
+conditions on the force and the moment \BB{Maybe add the derivation of the first order conditions to an appendix and point forward here}
 \begin{align}
   \mathbf{f}_f &= \begin{bmatrix}\lambda_1, \lambda_2\end{bmatrix}^T\\
   \mathbf{m}_f &= 0,
 \end{align}
 that is, the quasi-static motion model.
 
-We prefer the principle of minimal dissipation in our theoretical
-analysis because the frictional dissipation equation is continuous and
+We prefer the principle of minimal dissipation \BB{prefer to what?} in our theoretical
+analysis \BB{point to a forward section here} because the frictional dissipation equation (\ref{eq:constrained-frictional-dissipation}) is continuous and
 convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
 % Press-pull stability theorem figure.
@@ -420,7 +420,7 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
     \fill (0,0) circle [radius=1.pt];
     \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
   \end{tikzpicture}
-  \caption{Motion of a press-pulled slider.}
+  \caption{Motion of a press-pulled slider. \BB{Define variables and provide a short explanation of the figure.}}
   \label{fig:presspull-motion}
 \end{figure}
 
