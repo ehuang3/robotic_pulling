@@ -26,7 +26,10 @@
 \makeatother
 \algdef{SE}[DOWHILE]{Do}{DoWhile}[1]{\algorithmicdo\ #1}[1]{\algorithmicwhile\ #1}
 
-\newcommand{\m}{{\text{m}}}
+\usepackage{booktabs}
+\newcommand\Tstrut{\rule{0pt}{2.5ex}}       % "top" strut
+\newcommand\Bstrut{\rule[-0.9ex]{0pt}{0pt}} % "bottom" strut
+\newcommand{\TBstrut}{\Tstrut\Bstrut} % top&bottom struts
 
 \usepackage{tabstackengine}
 \stackMath
@@ -470,6 +473,8 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:moment-envelope}
 \end{figure}
 
+\TODO{TODO: Remove force hull}
+
 The frictional force and moment envelopes provide a nice geometric
 model of the constraints between the center of pressure, force and
 moment \cite{Mason}. A frictional envelope has as its parameters the
@@ -894,7 +899,7 @@ of points in the discretization of $R$.
 \If {$x_0$ is $0$} \Return {$[0,0]$}
 \EndIf
 % \BState \emph{min}:
-\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  \mathbf{0} \leq \mathbf{x} \leq \mathbf{1}$
+\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  L \leq \mathbf{x} \leq U$
 \State $x_r \gets \Call{Compute Rotation Center}{R,P}$
 \State $l \gets 0$
 \State $u \gets -\lVert\mathbf{v}_c\rVert/x_r$
@@ -931,9 +936,26 @@ of points in the discretization of $R$.
 
 \subsection{Differential Dynamic Programming}
 
-We use the following first order approximation to the discretized
-dynamics 
+\begin{inparaenum}
+\item contact point(s)
+\item initialization
+\item discretized dynamics
+\item cost functions
+\item Yifan's DDP code
+\end{inparaenum}
 
+
+
+We use the following first order approximation to the discretized
+dynamics for DDP
+\begin{align}
+  x_{i+1} &= x_i + d_i\cdot\cos(\phi_i) \\
+  y_{i+1} &= y_i + d_i\cdot\sin(\phi_i)\\
+  u_{i+1} &= u_i + d_i\cdot\hat{\alpha}(u_i - \phi_i + \pi) \\
+  \ell_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(\ell_i - \phi_i + \pi)\\
+  h_{i+1} &= h_i + d_i,
+\end{align}
+where the controls at index $i$ are the distance $d_i$ and heading $\phi_i$.
 We use the following cost functions 
 
 \begin{proposition}
@@ -955,9 +977,10 @@ We use the following cost functions
 
 % \subsection{Hardware}
 \begin{inparaenum}
-\item ABB 120
-\item 3D printed objects
-\item Simple point finger
+\item ABB 140
+\item Optitrack mocap
+% \item laser cut acrylic objects with holes for dragging
+\item simple point finger
 \end{inparaenum}
 
 \section{Experiments}\label{sec:experiments}
@@ -971,7 +994,7 @@ bound \cite{peshkin1988motion}. We test the bounds over the objects in
 the MIT Pushing Dataset \cite{} and randomly generated bipods,
 tripods, and quadrapods. The generated $n$-pods were chosen to have
 circumcircle diameters similar to the MIT objects, roughly
-$0.16$m.
+$0.16$m. 
 
 We compute distance-to-convergence in the following manner. Let
 $\gamma$ be an angular velocity bound (can be upper or lower). We
@@ -982,6 +1005,13 @@ within 1 degree of the stable configuration. The distance travelled is
 the distance-to-convergence\footnote{Note that this distance is
   independent of the pulling velocity, see Equation
   (\ref{eq:rot-to-ang}).}.
+
+\begin{inparaenum}
+\item MIT objects
+\item Generated 30 random $n$-pods for each $n$
+\item We sampled $10$ contact points and computed distance to
+  convergence for each point.
+\end{inparaenum}
 
 The experimental results are collected in Table
 \ref{table:convergence-distance}. 
@@ -1003,19 +1033,21 @@ bounds are required for smaller tables.
 
 \begin{table}
   \begin{center}
-    \begin{tabular}[c]{|c|c|c|c|}
-      \hline
-       & Exact & Exact-50\% & Peshkin \\
-      \hline
-      MIT & $\begin{matrix}0.670\\0.172\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.141\\ 0.047\end{matrix}$ & $\begin{matrix}\mathbf{0.362}\\\mathbf{0.243}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.073\\ 0.053\end{matrix}$ & $\begin{matrix}1.354\\0.162\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.501\\ 0.041\end{matrix}$ \\\hline
-      Bipod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\\hline
-      Tripod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
-      \hline
-      Quadpod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
-      \hline
-    \end{tabular}
+      \begin{tabular}[c]{cccc}
+        \toprule
+        & Exact & Exact-50\% & Peshkin \\
+        \midrule
+        MIT & $\begin{matrix}0.670\\0.172\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.141\\ 0.047\end{matrix}$ & $\begin{matrix}\mathbf{0.362}\\\mathbf{0.243}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.073\\ 0.053\end{matrix}$ & $\begin{matrix}1.354\\0.162\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.501\\ 0.041\end{matrix}$ \\
+        \midrule
+        Bipod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        \midrule
+        Tripod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        \midrule
+        Quadpod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        \bottomrule
+      \end{tabular}
   \end{center}
-  \caption{Comparison of distance-to-convergence (in meters) for different objects and angular velocity bounds. The top and bottom values in each cell correspond to the upper and lower angular velocity bounds, respectively. See Section \ref{sec:bound-comparison} for the experimental setup.}
+  \caption{Comparison of distance-to-convergence (in meters) for different objects and angular velocity bounds. The top and bottom values in each cell correspond to distances from the upper and lower angular velocity bounds, respectively. See Section \ref{sec:bound-comparison} for the experimental setup.}
   \label{table:convergence-distance}
 \end{table}
 
