@@ -119,13 +119,16 @@ for i = 1:length(bounds)
     waitforbuttonpress
 end
 
+%% Compute timings.
+
+
 %% 
 r_max = 0;
-Objects = loadMITObjects
-keys = Objects.keys;
-r = zeros([1, length(keys)]);
-for i = 1:length(keys)
-    obj = Objects(keys{i});
+Objects = loadMITObjects()
+% keys = Objects.keys;
+r = zeros([1, length(Objects)]);
+for i = 1:length(Objects)
+    obj = Objects(i);
     V = obj.V;
     K = obj.K;
     com = obj.com;
