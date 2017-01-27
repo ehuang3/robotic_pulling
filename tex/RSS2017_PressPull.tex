@@ -728,22 +728,27 @@ orientation of the pulled body in the world frame. Let the function
 $\omega$ map from the pulling angle to the true angular
 velocity. Likewise, let $u$ and $l$ be upper and lower bounds on the
 true orientation, and let the functions $\alpha$ and $\beta$ map from
-the pulling angle to the upper and lower angular velocity bounds. An
-example plot of $u$ and $l$ is illustrated in Figure
-\ref{fig:omega-bounds}.
+the angular deviation\footnote{Angular deviation from the stable
+  pulling configuration, in the frame of the contact point. A
+  deviation of 0 degrees corresponds to the center of pressure
+  dragging behind the contact point.} to the upper and lower angular
+velocity bound. An example plot of $u$ and $l$ is illustrated in
+Figure \ref{fig:omega-bounds}.
 
 We assume that the pulling trajectory
 $\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
 finite number of straight line segments of equal length. Given such a
 $\gamma$, the pulling angle
 $\phi(t) = \tan^{-1}(\gamma_y(t),\gamma_x(t))$ is a piece-wise
-constant (step) function. As the planar rigid body is pulled along
-$\gamma$, the variables $\theta$, $u$, $\ell$ change according to the
-dynamical system
+constant (step) function. Let $v(t) = \lVert\dot{\gamma}(t)\rVert$. As
+the planar rigid body is pulled along $\gamma$, the state and bounds
+change according to the dynamical system
 \begin{align}
-  \dot{\theta} &= \omega(\theta - \phi(t))\\
-  \dot{u} &=  \alpha(u - \phi(t)) \label{eq:u-ode}\\ 
-  \dot{\ell} &=  \beta(\ell - \phi(t)). 
+  \dot{x} &= v(t)\cdot\cos(\phi(t))\\
+  \dot{y} &= v(t)\cdot\sin(\phi(t))\\
+  \dot{\theta} &= v(t)\cdot\omega(\theta - \phi(t) + \pi)\\
+  \dot{u} &=  v(t)\cdot\alpha(u - \phi(t) + \pi) \label{eq:u-ode}\\ 
+  \dot{\ell} &=  v(t)\cdot\beta(\ell - \phi(t) + \pi). 
 \end{align}
 Without loss of generality, we assume that the body is pulled at a
 constant unit velocity.
@@ -814,9 +819,6 @@ constant unit velocity.
 %   }
 % \end{proof}
 
-
-
-
 \section{Methods}
 
 \subsection{Point In Moment Hull}
@@ -874,25 +876,6 @@ constant unit velocity.
 
 \subsection{Exact Angular Velocity Bounds}
 
-Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
-velocity bounds for a given support region $R$ and center of pressure
-$[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
-$\Omega$. To initialize, the bisection search first finds feasible
-pressure distribution using linear programming and then finds feasible
-rotation center using the root-finding method in \cite{Mason1982}. The
-bisection search tests the feasibility of an angular velocity $\omega$
-by checking whether the point $[x_0,y_0,0]^T$ is contained in the
-associated frictional moment envelope (see Section
-\ref{sec:frictional-envelope}). In quasi-static terminology, this is
-equivalent to checking whether there exists a pressure distribution
-with center of pressure $[x_0,y_0]^T$ such that the velocity
-$\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
-about the contact point (Equation \ref{eq:moment-at-contact}).
-
-The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
-$d$ is the number of significant digits returned and $n$ is the number
-of points in the discretization of $R$.
-
 \begin{algorithm}
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
 \begin{algorithmic}[1]
@@ -935,6 +918,25 @@ of points in the discretization of $R$.
 \end{algorithmic}
 \end{algorithm}
 
+Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
+velocity bounds for a given support region $R$ and center of pressure
+$[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
+$\Omega$. To initialize, the bisection search first finds feasible
+pressure distribution using linear programming and then finds feasible
+rotation center using the root-finding method in \cite{Mason1982}. The
+bisection search tests the feasibility of an angular velocity $\omega$
+by checking whether the point $[x_0,y_0,0]^T$ is contained in the
+associated frictional moment envelope (see Section
+\ref{sec:frictional-envelope}). In quasi-static terminology, this is
+equivalent to checking whether there exists a pressure distribution
+with center of pressure $[x_0,y_0]^T$ such that the velocity
+$\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
+about the contact point (Equation \ref{eq:moment-at-contact}).
+
+The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
+$d$ is the number of significant digits returned and $n$ is the number
+of points in the discretization of $R$.
+
 \subsection{Differential Dynamic Programming}
 
 \begin{inparaenum}
@@ -943,21 +945,25 @@ of points in the discretization of $R$.
 \item discretized dynamics
 \item cost functions
 \item Yifan's DDP code
+\item Which ddp algorithm was used
 \end{inparaenum}
 
-
-
-We use the following first order approximation to the discretized
-dynamics for DDP
+We use control-limited Differential Dynamic Programming (DDP)
+\cite{tassa2014control} to plan trajectories for robotic pulling.  Our
+implementation uses the following first order approximation of the
+discretized dynamics
 \begin{align}
   x_{i+1} &= x_i + d_i\cdot\cos(\phi_i) \\
   y_{i+1} &= y_i + d_i\cdot\sin(\phi_i)\\
   u_{i+1} &= u_i + d_i\cdot\hat{\alpha}(u_i - \phi_i + \pi) \\
   \ell_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(\ell_i - \phi_i + \pi)\\
-  h_{i+1} &= h_i + d_i,
+  h_{i+1} &= h_i + d_i.
 \end{align}
-where the controls at index $i$ are the distance $d_i$ and heading $\phi_i$.
-We use the following cost functions 
+In this system, the controls at index $i$ are the distance $d_i$ and
+heading $\phi_i$. The functions $\hat{\alpha}$ and $\hat{\beta}$ are
+Fourier series approximations of the upper and lower bounds $\alpha$
+and $\beta$. The state variable $h_i$ measures the cumulative distance
+pulled.
 
 \begin{proposition}
   $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
@@ -968,9 +974,7 @@ We use the following cost functions
   \dot\ell &= \alpha() \\
   \dot u &= \beta() 
 \end{align*}
-
   $\dot{\theta}_u = u()$
-
   $\dot{\theta}_\ell = \ell()$
 \end{proposition}
 
