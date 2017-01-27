@@ -26,6 +26,8 @@
 \makeatother
 \algdef{SE}[DOWHILE]{Do}{DoWhile}[1]{\algorithmicdo\ #1}[1]{\algorithmicwhile\ #1}
 
+\newcommand{\m}{{\text{m}}}
+
 \usepackage{tabstackengine}
 \stackMath
 
@@ -691,7 +693,7 @@ set of pressure distributions.  % Note, the set of pressure
   to our coordinate frame (Section \ref{sec:planar-pulling}), we see
   that $\Omega$ is bounded above (below) by 
   \begin{equation}
-    \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*},
+    \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*}, \label{eq:rot-to-ang}
   \end{equation}
   where $x^*$, strictly positive (negative), is the intersection of
   the bisector line and the $x$-axis. Therefore, $\Omega$ is a
@@ -927,15 +929,12 @@ of points in the discretization of $R$.
 \end{algorithmic}
 \end{algorithm}
 
-
 \subsection{Differential Dynamic Programming}
 
 We use the following first order approximation to the discretized
 dynamics 
 
 We use the following cost functions 
-
-
 
 \begin{proposition}
   $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
@@ -952,38 +951,77 @@ We use the following cost functions
   $\dot{\theta}_\ell = \ell()$
 \end{proposition}
 
+\section{Hardware}
 
-
-\section{Implementation}
-
-\subsection{Hardware}
+% \subsection{Hardware}
 \begin{inparaenum}
 \item ABB 120
 \item 3D printed objects
 \item Simple point finger
 \end{inparaenum}
 
-
-
-\subsection{Discretized Dynamics for DDP}
-
-\begin{inparaenum}
-\item 
-\end{inparaenum}
-
 \section{Experiments}\label{sec:experiments}
 
-\begin{inparaenum}
-\item 
-\end{inparaenum}
+\subsection{Comparison of
+  Angular Velocity Bounds}\label{sec:bound-comparison}
+
+In this experiment, we compare distance-to-convergence for our exact
+angular velocity bounds and the previous best bound, i.e. the Peshkin
+bound \cite{peshkin1988motion}. We test the bounds over the objects in
+the MIT Pushing Dataset \cite{} and randomly generated bipods,
+tripods, and quadrapods. The generated $n$-pods were chosen to have
+circumcircle diameters similar to the MIT objects, roughly
+$0.16$m.
+
+We compute distance-to-convergence in the following manner. Let
+$\gamma$ be an angular velocity bound (can be upper or lower). We
+orient the object such that the center of pressure is 90 degrees away
+from the stable configuration. Next, we simulate a pulling trajectory
+while integrating $\gamma$ and stop when the integral converges to
+within 1 degree of the stable configuration. The distance travelled is
+the distance-to-convergence\footnote{Note that this distance is
+  independent of the pulling velocity, see Equation
+  (\ref{eq:rot-to-ang}).}.
+
+The experimental results are collected in Table
+\ref{table:convergence-distance}. 
+% When interpreting the table, remember that an angular velocity bound
+% $\gamma$ is, in general, not symmetric about the origin, that is
+% $\gamma(\theta - \pi) \neq \gamma(\theta)$, and that $\gamma$ is
+% negative when $\theta$ is 90 degrees (see Figure
+% \ref{fig:omega-bounds}).
+The Peshkin bound computes the feasible angular velocities for the
+circumcircle enclosing the object. As a result, it underestimates the
+slowest angular velocity bound and its distance-to-convergence can be
+twice are far as compared to the exact bound.  When feasible pressure
+distribution are restricted such that at least 50\% of the object is
+in contact with the surface, the distance-to-convergence of the exact
+bound is reduced by another factor of two. Because the exact bound
+converges within $3/4$ a meter, it is serviceable for manipulating the
+MIT objects on a large table. Naturally, smaller objects or tighter
+bounds are required for smaller tables.
+
+\begin{table}
+  \begin{center}
+    \begin{tabular}[c]{|c|c|c|c|}
+      \hline
+       & Exact & Exact-50\% & Peshkin \\
+      \hline
+      MIT & $\begin{matrix}0.670\\0.172\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.141\\ 0.047\end{matrix}$ & $\begin{matrix}\mathbf{0.362}\\\mathbf{0.243}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.073\\ 0.053\end{matrix}$ & $\begin{matrix}1.354\\0.162\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.501\\ 0.041\end{matrix}$ \\\hline
+      Bipod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\\hline
+      Tripod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+      \hline
+      Quadpod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+      \hline
+    \end{tabular}
+  \end{center}
+  \caption{Comparison of distance-to-convergence (in meters) for different objects and angular velocity bounds. The top and bottom values in each cell correspond to the upper and lower angular velocity bounds, respectively. See Section \ref{sec:bound-comparison} for the experimental setup.}
+  \label{table:convergence-distance}
+\end{table}
+
+\subsection{Robotic Pulling on a Tabletop}
 
 
-\subsection{Exact Bounds vs Peshkin's Bound}
-\begin{enumerate}
-\item MIT Dataset objects' aspect ratios are lacking.
-\item Alexander and Maddock omitted because...
-\item Turn faster for smaller objects?
-\end{enumerate}
 
 \section{Discussion}
 
