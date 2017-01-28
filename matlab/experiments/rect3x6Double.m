@@ -44,8 +44,8 @@ A_theta = [-pi/2 pi/2];
 B_theta = [-pi/2 pi/2];
 
 % 3x6 rectangle.
-rect_w = 0.05113;
-rect_l = 0.0762;
+rect_w = 0.050;
+rect_l = 0.075;
 mass = 0.064;
 
 % List of contact points relative to object frame.
@@ -60,6 +60,15 @@ mass = 0.064;
 %List of contact points for small rect:
 cp1 = [0.019315;0];
 cp2 = -cp1;
+%List of contact points for small acrylic rect:
+cp1 = [-34.5;22];
+cp2 = [-34.5;0];
+cp3 = [-34.5;-22];
+cp4 = [0;22];
+cp5 = -cp4;
+cp6 = -cp3;
+cp7 = -cp2;
+cp8 = -cp1;
 CP = [cp1 cp2];% cp3 cp4 cp5 cp6 cp7 cp8];
 %cpoff = [0.01508 + 0.0042; 0.01508 + 0.0042];
 %CP = CP + repmat(cpoff,[1,8]);
