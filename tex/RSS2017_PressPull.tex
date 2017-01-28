@@ -477,7 +477,7 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:moment-envelope}
 \end{figure}
 
-\TODO{TODO: Remove force hull}
+\EH{TODO: Remove force hull}
 
 The frictional force and moment envelopes provide a nice geometric
 model of the constraints between the center of pressure, force and
@@ -537,6 +537,8 @@ compute bounds on feasible angular velocities and centers of pressure.
 
 \subsection{Quasi-static Stability}
 
+\EH{TODO: Simplify proof. Should be like two lines.}
+
 \begin{theorem}
   For pulling of a rigid body in the plane, the line from the pulling
   contact point to the body's center of pressure converges to the line
@@ -588,8 +590,12 @@ Note that the above proof holds for \textit{all pressure
   distributions} of the body on the support
 surface.
 
+\EH{TODO: Add quick corollary on Lyapunov stability.}
+
 \subsection{Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
+\EH{Comment: First proposition probably very unnecessary. Removable or
+  shortened.}
 \begin{proposition}
   The constrained frictional dissipation equation
   $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
@@ -826,6 +832,8 @@ constant unit velocity.
 
 \subsection{Point In Moment Hull}
 
+
+
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
   \ref{sec:exact-angular-velocity-bounds} relies on having a submethod
@@ -921,6 +929,8 @@ constant unit velocity.
 \end{algorithmic}
 \end{algorithm}
 
+\EH{TODO: Explain correctness of algorithm using theoretical results}
+
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
 $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
@@ -949,6 +959,8 @@ of points in the discretization of $R$.
 % \item Yifan's DDP code
 % \item Which ddp algorithm was used
 % \end{inparaenum}
+\EH{TODO: Tie in theoretical results on uncertainty into DDP} 
+
 We use control-limited Differential Dynamic Programming (DDP)
 \cite{tassa2014control} to plan trajectories for robotic pulling.  Our
 implementation uses the following first order approximation of the
