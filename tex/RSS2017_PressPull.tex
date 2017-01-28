@@ -9,6 +9,7 @@
 % \usepackage[standard]{ntheorem}
 \usepackage{amsthm}
 \usepackage{mathtools}
+\usepackage{bm}
 \usepackage{graphicx}
 % \usepackage{caption}
 % \usepackage{figure}
@@ -57,6 +58,8 @@ cross/.default={2pt}}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator{\intr}{int}
 \DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\rot}{\text{rot}}
+
 
 \newcommand{\BB}[1]{{\color{red} {Byron: {#1}}}}
 
@@ -474,7 +477,7 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:moment-envelope}
 \end{figure}
 
-\TODO{TODO: Remove force hull}
+\EH{TODO: Remove force hull}
 
 The frictional force and moment envelopes provide a nice geometric
 model of the constraints between the center of pressure, force and
@@ -534,6 +537,8 @@ compute bounds on feasible angular velocities and centers of pressure.
 
 \subsection{Quasi-static Stability}
 
+\EH{TODO: Simplify proof. Should be like two lines.}
+
 \begin{theorem}
   For pulling of a rigid body in the plane, the line from the pulling
   contact point to the body's center of pressure converges to the line
@@ -585,8 +590,12 @@ Note that the above proof holds for \textit{all pressure
   distributions} of the body on the support
 surface.
 
+\EH{TODO: Add quick corollary on Lyapunov stability.}
+
 \subsection{Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
 
+\EH{Comment: First proposition probably very unnecessary. Removable or
+  shortened.}
 \begin{proposition}
   The constrained frictional dissipation equation
   $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
@@ -823,6 +832,8 @@ constant unit velocity.
 
 \subsection{Point In Moment Hull}
 
+
+
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
   \ref{sec:exact-angular-velocity-bounds} relies on having a submethod
@@ -918,6 +929,8 @@ constant unit velocity.
 \end{algorithmic}
 \end{algorithm}
 
+\EH{TODO: Explain correctness of algorithm using theoretical results}
+
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
 $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
@@ -938,15 +951,15 @@ $d$ is the number of significant digits returned and $n$ is the number
 of points in the discretization of $R$.
 
 \subsection{Differential Dynamic Programming}
-
-\begin{inparaenum}
-\item contact point(s)
-\item initialization
-\item discretized dynamics
-\item cost functions
-\item Yifan's DDP code
-\item Which ddp algorithm was used
-\end{inparaenum}
+% \begin{inparaenum}
+% \item contact point(s)
+% \item initialization
+% \item discretized dynamics
+% \item cost functions
+% \item Yifan's DDP code
+% \item Which ddp algorithm was used
+% \end{inparaenum}
+\EH{TODO: Tie in theoretical results on uncertainty into DDP} 
 
 We use control-limited Differential Dynamic Programming (DDP)
 \cite{tassa2014control} to plan trajectories for robotic pulling.  Our
@@ -962,21 +975,46 @@ discretized dynamics
 In this system, the controls at index $i$ are the distance $d_i$ and
 heading $\phi_i$. The functions $\hat{\alpha}$ and $\hat{\beta}$ are
 Fourier series approximations of the upper and lower bounds $\alpha$
-and $\beta$. The state variable $h_i$ measures the cumulative distance
+and $\beta$. The variable $h_i$ measures the cumulative distance
 pulled.
 
-\begin{proposition}
-  $\mathcal{u}\mathcal{L} \times \mathcal{U}$ $\Omega \Phi$ $u \ell U L \alpha \beta A B $
+Let $\mathbf{x}_i = [x_i,y_i,u_i,l_i]^T$ and
+$\mathbf{u}_i = [d_i,\phi_i]^T$, with $i\in[1,N]$. In our DDP planner,
+we set the running cost $\mathcal{L}(\mathbf{x}_i,\mathbf{u}_i)$ to
+zero. We set the final cost to be
+\begin{equation}
+\mathcal{L}_F(\mathbf{x}_N,h_N) = \mathbf{k}^T\mathcal{L}_{\bm{\delta}}(\mathbf{x}_N-\mathbf{x}_F) + \lambda h_N^2,
+\end{equation}
+where $\mathcal{L}_{\bm{\delta}}$ is the vectorized version of the
+Pseudo-Huber loss function \footnote{This function approximates an
+  $\ell_1$ norm for $a > \delta$.}
+\begin{equation}
+\mathcal{L}_{\delta}(a) = \sqrt{a^2+\delta^2}-\delta,
+\end{equation}
+$\mathbf{x}_F$ is the goal configuration, and $\mathbf{k}$ and
+$\lambda$ are penalty coefficients. 
 
-\begin{align*}
-  \dot x &= x \\
-  \dot y &= y \\
-  \dot\ell &= \alpha() \\
-  \dot u &= \beta() 
-\end{align*}
-  $\dot{\theta}_u = u()$
-  $\dot{\theta}_\ell = \ell()$
-\end{proposition}
+We initialize our optimizer using paths generated from Dubin's curves
+\cite{dubins1957curves} because pulling with sticking contact shares
+similar dynamics with the simple car \cite{lavalle1999planning}.
+Dubin's curves are time-optimal paths for simple cars. The curves
+consist of constant curvature turns and straight line segments. To
+apply these curves to our system, we need two pieces of information:
+the minimum turning radius and the effective rear axle center. 
+
+Given a heading $\omega \in (-\pi/2,\pi/2) $ and resultant angular velocity
+$\alpha(\omega)$ in the frame of the contact point, the minimum
+turning radius is equivalent to the distance from the center of
+rotation to the line between the contact point and the center of
+pressure $\mathbf{p}_0 = [x_0,y_0]^T$, that is
+\begin{equation}
+  r_{\text{min}} = \frac{\sign y_0}{\alpha(\omega)},
+\end{equation}
+and the effective rear axle center is the projection of the rotation center onto that line, i.e.
+\begin{equation}
+  \mathbf{c}_{\text{rear}} = -\frac{x_0}{\alpha(\omega)}\cdot\frac{\mathbf{p}_0}{\lVert \mathbf{p}_0 \rVert^2}.
+\end{equation}
+% From these, we can compute Dubin's curves for our initialization.
 
 \section{Hardware}
 
