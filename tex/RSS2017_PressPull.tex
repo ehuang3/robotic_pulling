@@ -60,7 +60,6 @@ cross/.default={2pt}}
 \DeclareMathOperator{\dom}{dom}
 \DeclareMathOperator{\rot}{\text{rot}}
 
-
 \newcommand{\BB}[1]{{\color{red} {Byron: {#1}}}}
 
 \newcommand{\EH}[1]{{\color{blue} {Eric: {#1}}  }}
@@ -77,7 +76,8 @@ cross/.default={2pt}}
 \begin{document}
 
 % paper title
-\title{Robotic Pulling}
+\title{\huge Exact Bounds on the Contact Driven Motion of a Sliding
+  Object, With Applications to Robotic Pulling}
 
 % You will get a Paper-ID when submitting a pdf file to the conference system
 % \author{Author Names Omitted for Anonymous Review. Paper-ID [add your ID here]}
@@ -99,10 +99,8 @@ cross/.default={2pt}}
 %Telephone: (800) 555--1212\\
 %Fax: (888) 555--1212}}
 
-
 % avoiding spaces at the end of the author lines is not a problem with
 % conference papers because we don't use \thanks or \IEEEmembership
-
 
 % for over three affiliations, or if they all won't fit within the width
 % of the page, use this alternative format:
@@ -180,11 +178,11 @@ Major contributions:
 % \begin{inparaenum}
 % \item 
 
-Contending with uncertainty is a fundamental challenge in robotic
-manipulation. Uncertainty can arise from many sources including
-limited sensors, incomplete models, and the stochastic effect of executing actions. In this work, we introduce
-robotic pulling as a method of robotic manipulation that remains
-stable in the presence of uncertainty.
+Dealing with uncertainty is a fundamental challenge in robotic
+manipulation. Uncertainty arises from many sources including limited
+sensors, incomplete models, and stochastic actions. In this work, we
+introduce robotic pulling as a method of robotic manipulation that
+remains stable in the presence of uncertainty.
 
 Robotic pulling is a general-purpose manipulation skill for positioning and
 orienting objects where the robot contacts a
@@ -243,7 +241,6 @@ both in simulation and on a real robotic system.
   \end{enumerate}
 }
 
-
 \begin{enumerate}
 \item Planar Robotic Manipulation
   \begin{enumerate}
@@ -261,6 +258,9 @@ both in simulation and on a real robotic system.
   \item Quasi-static motion model
   \item Stable pushing
   \end{enumerate}
+
+  Alberto -- \cite{YuBFR16}
+
 
   Our work is most closely related to robotic pushing.
 
@@ -831,8 +831,6 @@ constant unit velocity.
 \section{Methods}
 
 \subsection{Point In Moment Hull}
-
-
 
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
