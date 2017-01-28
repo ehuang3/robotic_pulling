@@ -1,0 +1,35 @@
+2 : trajectory
+3 : trajectory
+9 : trajectory
+11: trajectory
+15: trajectory
+17: trajectory
+18: trajectory
+19: trajectory
+20: trajectory
+27: trajectory
+30: trajectory
+40: trajectory
+44: trajectory
+47: vision
+49: trajectory
+50: trajectory
+51: trajectory
+52: vision
+53: trajectory
+56: trajectory
+57: trajectory
+59: trajectory
+60: trajectory
+61: trajectory
+66: trajectory
+71: trajectory
+72: trajectory
+73: trajectory
+78: trajectory
+83: trajectory
+84: trajectory
+87: trajectory
+89: trajectory
+98: trajectory
+100:trajectory
