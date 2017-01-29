@@ -468,7 +468,7 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 %   accuracy using at most two press-pulls.
 % \end{proposition}
 
-\subsection{Frictional Force \& Moment Envelopes}\label{sec:frictional-envelope}
+\subsection{Frictional Moment Envelopes}\label{sec:frictional-envelope}
 
 \begin{figure}[t]
   \centering
@@ -501,25 +501,23 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:moment-envelope}
 \end{figure}
 
-\EH{TODO: Remove force hull}
+% \EH{TODO: Remove force hull}
 
-The frictional force and moment envelopes provide a nice geometric
-model of the constraints between the center of pressure, force and
-moment \cite{Mason}. A frictional envelope has as its parameters the
-support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be the
-total pressure. Then the functions
-\begin{align}
-  \mathbf{f}(\mathbf{x}) &= -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert},\\
-  g(\mathbf{x}) &= -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x}
-\end{align}
-evaluate the frictional force and frictional torque that would result
-from a unit normalized pressure at $\mathbf{x}$. For this exposition,
-we will focus on how to generate the frictional moment envelope
-illustrated in Figure \ref{fig:moment-envelope}.
+The frictional moment envelopes provide a nice geometric model of the
+constraints between the center of pressure and moment at the contact
+point \cite{Mason}. An example frictional moment envelope illustrated
+in Figure \ref{fig:moment-envelope}.
 
-Let $G$ map $R$ into a surface in $\mathbb{R}^3$ by associating each
-point $\mathbf{x} \in R$ with its maximum potential moment
-$g(\mathbf{x})$, i.e.
+A frictional moment envelope has as its parameters
+the support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be
+the total pressure. Then the function
+\begin{equation}
+  \mathbf{f}(\mathbf{x}) = -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert}\label{eq:unit-moment-at-x}
+\end{equation}
+evaluates the frictional torque that would result from a unit
+normalized pressure at $\mathbf{x}$. Let $G$ map $R$ into a surface in
+$\mathbb{R}^3$ by associating each point $\mathbf{x} \in R$ with its
+maximum potential moment $g(\mathbf{x})$, i.e.
 \begin{equation}
 G(\mathbf{x}) =
 \begin{bmatrix*}
@@ -550,12 +548,7 @@ convex hull of $G(R)$ satisfies
 \end{align*}
 Thus, the convex hull of $G(R)$ is the set of all feasible centers of
 pressure and frictional moments for a given support region $R$ and
-velocity $\mathbf{v}^+$. An identical procedure generates the
-frictional force envelope, i.e. the convex hull of $F(R)$.
-
-The frictional force and moment envelopes are employed in Sections
-\ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
-compute bounds on feasible angular velocities and centers of pressure.
+velocity $\mathbf{v}^+$. 
 
 \section{Theory}\label{sec:methods}
 
