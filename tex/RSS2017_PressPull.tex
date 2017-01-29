@@ -232,14 +232,52 @@ both in simulation and on a real robotic system.
 
 \section{Related Work}\label{sec:related-work}
 
-\TODO{
-  Items that a related works section should address:
-  \begin{enumerate}
-  \item What were the prior works?
-  \item What were the limitations of the prior works?
-  \item What are the advantages of our work?
-  \end{enumerate}
-}
+Pushing (or pulling) planar objects with fixed contact is difficult to
+model in both theory and practice. First, pressure distributions of
+objects are statically indeterminant (barring the case of three-point
+support with known center of mass). Second, surface imperfections lead
+to spatial variability in both the pressure distribution and
+coefficient of friction \cite{YuBFR16}. Though several force-motion
+models for pushing exist
+\cite{zhou2016convex,howe1996practical,goyal1991planar}, the above
+sources of indeterminacy ultimately lead to errors in the predicted
+velocity of the pushed object.
+
+If the motion cannot be predicted, then another option is to find
+bounds on the velocity of the pushed object. This problem was first
+raised in Mason's seminal thesis on robotic pushing
+\cite{Mason1982}. In the case of fixed contact pushing, this is
+equivalent to finding bounds on angular velocity of the object as it
+is pushed through the contact point.
+% Mason's seminal thesis on robotic pushing \cite{Mason1982} was the
+% first to raise the problem of bounding the motion of a pushed object
+% as an alternative to the errors associated with exact models.
+% The problem of bounding the motion 
+% ``If the [motion] cannot be predicted, then the next best thing is to
+% determine the range of possible [motions].''
+Since then, various inexact angular velocity bounds have been
+published. The bisector bound restricts the feasible rotation centers
+to a half-space delimited by the perpendicular bisector between the
+contact point and center of pressure \cite{Mason}.  Alexander and
+Maddock bounded the set of feasible rotation centers to lie within the
+minimum object-enclosing vertical strip perpendicular to the wrench
+applied by the pusher \cite{alexander1993bounds}.  Peshkin bounded the
+motion of a pushed object by computing the set of feasible rotation
+centers of the minimum object-enclosing disk centered at the object's
+center of pressure \cite{peshkin1988motion}.
+
+In contrast to the prior art, our algorithm is the first to find
+\textit{exact} angular velocity bounds for a pushed object. 
+
+
+
+Our work facilitates a new class of pressure distribution assumptions 
+
+All-or-nothing approaches to modeling. 
+
+Our method can also restrict the set of feasible pressure
+distributions. This allows our method to obtain an order-of-magnitude
+improvement over previous bounds.
 
 \begin{enumerate}
 \item Planar Robotic Manipulation
@@ -287,33 +325,44 @@ both in simulation and on a real robotic system.
 \item Stability
 \end{enumerate}
 
-\begin{inparaenum}
-\item Pressure distributions are highly indeterminant.
-\item Their indeterminacy leads to uncertainty in the resultant
-  velocity of the pushed object.
-\item The problem of finding exact angular velocity bounds for a pushed
-object with an indeterminant pressure distribution was first raised in
-Mason's seminal thesis on robotic pushing \cite{Mason1982}. Since
-then, various inexact angular velocity bounds have been published.
-The bisector bound restricts the feasible rotation centers to a
-half-space delimited by the perpendicular bisector between the contact
-point and center of pressure \cite{Mason}.  Alexander and Maddock
-bounded the set of feasible rotation centers to lie within the minimum
-object-enclosing vertical strip perpendicular to the wrench applied by
-the pusher \cite{alexander1993bounds}.  Peshkin bounded the motion of
-a pushed object by computing the set of feasible rotation centers of
-the minimum object-enclosing disk centered at the object's center of
-pressure \cite{peshkin1988motion}.  In contrast to the prior art, our
-algorithm is the first to find \textit{exact} angular velocity bounds
-for a pushed object.
-\item Our method can also restrict the set of feasible pressure
-  distributions. This allows our method to obtain an
-  order-of-magnitude improvement over previous bounds.
-\end{inparaenum}
+
 
 \section{Background}\label{sec:theory}
 \BB{Briefly describe why this background is necessary. }
+
+The frictional moment envelope is employed in Sections
+\ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
+compute bounds on feasible angular velocities.
+
 \subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
+
+% Press-pull figure.
+\begin{figure}[t]
+  \centering
+  \def\iangle{35} % Angle of the inclined plane
+  \begin{tikzpicture}[
+    scale=1.25, every node/.style={scale=1.25},
+    force/.style={>=latex,draw=black,fill=black},
+    axis/.style={densely dashed,draw=gray,font=\small},
+    ]
+    \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
+    \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
+    \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
+    {[axis,->]
+      \draw (0,0) -- (2.5,0) node[right] {$x$};
+      \draw (0,0) -- (0,2.5) node[above] {$y$};
+    }
+    {[force,->]
+      \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
+    }
+    \fill (0,0) circle [radius=1.pt];
+    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+  \end{tikzpicture}
+  \caption{Motion of a press-pulled slider. \BB{Define variables and provide a short explanation of the figure.}}
+  \label{fig:presspull-motion}
+\end{figure}
+
+
  Planar pulling is a manipulation skill where
 the robot contacts a rigid body at a point and pulls that contact
 point along a trajectory. Here we present a preliminary quasi-static analysis of planar pulling
@@ -401,31 +450,6 @@ We prefer the principle of minimal dissipation \BB{prefer to what?} in our theor
 analysis \BB{point to a forward section here} because the frictional dissipation equation (\ref{eq:constrained-frictional-dissipation}) is continuous and
 convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
-% Press-pull stability theorem figure.
-\begin{figure}
-  \centering
-  \def\iangle{35} % Angle of the inclined plane
-  \begin{tikzpicture}[
-    scale=1.25, every node/.style={scale=1.25},
-    force/.style={>=latex,draw=black,fill=black},
-    axis/.style={densely dashed,draw=gray,font=\small},
-    ]
-    \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
-    \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
-    \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
-    {[axis,->]
-      \draw (0,0) -- (2.5,0) node[right] {$x$};
-      \draw (0,0) -- (0,2.5) node[above] {$y$};
-    }
-    {[force,->]
-      \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
-    }
-    \fill (0,0) circle [radius=1.pt];
-    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
-  \end{tikzpicture}
-  \caption{Motion of a press-pulled slider. \BB{Define variables and provide a short explanation of the figure.}}
-  \label{fig:presspull-motion}
-\end{figure}
 
 
 % \begin{proposition}
@@ -444,7 +468,7 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 %   accuracy using at most two press-pulls.
 % \end{proposition}
 
-\subsection{Frictional Force \& Moment Envelopes}\label{sec:frictional-envelope}
+\subsection{Frictional Moment Envelopes}\label{sec:frictional-envelope}
 
 \begin{figure}[t]
   \centering
@@ -477,25 +501,23 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
   \label{fig:moment-envelope}
 \end{figure}
 
-\EH{TODO: Remove force hull}
+% \EH{TODO: Remove force hull}
 
-The frictional force and moment envelopes provide a nice geometric
-model of the constraints between the center of pressure, force and
-moment \cite{Mason}. A frictional envelope has as its parameters the
-support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be the
-total pressure. Then the functions
-\begin{align}
-  \mathbf{f}(\mathbf{x}) &= -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert},\\
-  g(\mathbf{x}) &= -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x}
-\end{align}
-evaluate the frictional force and frictional torque that would result
-from a unit normalized pressure at $\mathbf{x}$. For this exposition,
-we will focus on how to generate the frictional moment envelope
-illustrated in Figure \ref{fig:moment-envelope}.
+The frictional moment envelopes provide a nice geometric model of the
+constraints between the center of pressure and moment at the contact
+point \cite{Mason}. An example frictional moment envelope illustrated
+in Figure \ref{fig:moment-envelope}.
 
-Let $G$ map $R$ into a surface in $\mathbb{R}^3$ by associating each
-point $\mathbf{x} \in R$ with its maximum potential moment
-$g(\mathbf{x})$, i.e.
+A frictional moment envelope has as its parameters
+the support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be
+the total pressure. Then the function
+\begin{equation}
+  \mathbf{f}(\mathbf{x}) = -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert}\label{eq:unit-moment-at-x}
+\end{equation}
+evaluates the frictional torque that would result from a unit
+normalized pressure at $\mathbf{x}$. Let $G$ map $R$ into a surface in
+$\mathbb{R}^3$ by associating each point $\mathbf{x} \in R$ with its
+maximum potential moment $g(\mathbf{x})$, i.e.
 \begin{equation}
 G(\mathbf{x}) =
 \begin{bmatrix*}
@@ -526,120 +548,72 @@ convex hull of $G(R)$ satisfies
 \end{align*}
 Thus, the convex hull of $G(R)$ is the set of all feasible centers of
 pressure and frictional moments for a given support region $R$ and
-velocity $\mathbf{v}^+$. An identical procedure generates the
-frictional force envelope, i.e. the convex hull of $F(R)$.
-
-The frictional force and moment envelopes are employed in Sections
-\ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
-compute bounds on feasible angular velocities and centers of pressure.
+velocity $\mathbf{v}^+$. 
 
 \section{Theory}\label{sec:methods}
 
-\subsection{Quasi-static Stability}
+This section covers our theoretical
+contributions. \ref{sec:prop-angular-velocity-bounds} lays the
+theoretical groundwork necessary for proving the correctness of the
+exact angular velocity bound algorithm introduced in
+\ref{sec:exact-ang-vel-bound-alg}. Subsection
+\ref{sec:orientation-bounds} extends the angular velocity bounds to
+orientation bounds. Lastly, \ref{sec:stability} contains an proof of
+the existence and uniqueness of a stable equilibrium when pulling an
+object. These last two subsections are mainly to establish convergence
+guarantees for robotic pulling trajectories.
 
-\EH{TODO: Simplify proof. Should be like two lines.}
+\subsection{Properties of Angular Velocities Bounds}\label{sec:prop-angular-velocity-bounds}
 
-\begin{theorem}
-  For pulling of a rigid body in the plane, the line from the pulling
-  contact point to the body's center of pressure converges to the line
-  of motion.
-\end{theorem}
+% \EH{Comment: First proposition probably very unnecessary. Removable or
+%   shortened.}
+% \begin{proposition}
+%   The constrained frictional dissipation equation
+%   $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
+%   pressure distributions with some support force off of the
+%   $x$-axis. When otherwise, the equation admits an interval of
+%   minimizers.
+% \end{proposition}
 
-\begin{proof}
-  % TODO Shorten this proof. Rewrite to use generalized velocities.
-  Let the $y$-axis of the coordinate frame be aligned with the line of
-  motion of the press-pull contact point (see Figure
-  \ref{fig:presspull-motion} for an example). Then the instantaneous
-  rotation center of the body must fall on the $x$-axis, and we can
-  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+% \begin{proof}
+%   The work of \cite{Mason1982} was the first to prove the above
+%   observation for finite pressure distributions. For the case of
+%   infinite (discrete) pressure distributions, we can appeal to the
+%   convexity properties of $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$.
 
-  Suppose the center of pressure is strictly to the right of the line
-  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
-  7.4 in \cite{Mason}, the rotation center lies on the positive
-  $x$-axis and has negative rotation. The velocity of a point on the
-  rigid body is given by
-  $\mathbf{v}(\mathbf{r}) =
-  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
-  \mathbf{r}_\text{IC})$.
-  We can compute the motion of the body relative to the contact point
-  by
-  \begin{align*}
-    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
-    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
-  \end{align*}
-  where $\mathbf{v}_c$ is the velocity of the contact point. In other
-  words, the body is rotating clockwise relative to the
-  contact point with angular velocity
-  \begin{equation}
-    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
-  \end{equation}
+%   Minkowski's inequality gives
+%   $\lVert x + y \rVert \leq \lVert x \rVert + \lVert y \rVert$ with
+%   equality if and only if $x$ and $y$ are positively linearly
+%   dependent. For two generalized velocities
+%   $\mathbf{v}^+_1,\mathbf{v}^+_2\in \mathcal{C}$, the resulting body
+%   point velocities are linearly dependent if and only if the
+%   determinant
+%   \begin{align}
+%     \det A(\mathbf{x})
+%       \begin{bmatrix*}
+%         \mathbf{v}^+_1 & \mathbf{v}^+_2
+%       \end{bmatrix*}
+%     &= \det
+%      \begin{bmatrix*}
+%        -x_2\omega_1 & -x_2\omega_2 \\
+%        1 + x_1\omega_1 & 1 + x_1\omega_2 
+%      \end{bmatrix*}\\
+%     &= -x_2(\omega_1 - \omega_2)
+%   \end{align}
+%   is zero. We immediately see that
+%   $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$ is strictly convex
+%   relative to $\mathcal{C}$ if and only if the body point $\mathbf{x}$
+%   lies off of the $x$-axis. The proposition follows from the fact that
+%   the positive sum of convex functions and a strictly convex function
+%   is strictly convex.
+% \end{proof}
 
-  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
-  pressure in the frame of the contact point. When the line of motion
-  passes through the center of pressure, a pure translation takes
-  place (Theorem 7.4 in \cite{Mason}). This implies that
-  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
-  $\theta$ is monotonically decreasing, we see that it must converge
-  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+% An object whose contact region is two discrete points, e.g. a spoon,
+% can have multiple minimizing angular velocities when aligned with the
+% $x$-axis.
 
-  The case when the center of pressure is strictly to the left of the
-  line of motion follows from symmetry about the $y$-axis.
-\end{proof}
-
-Note that the above proof holds for \textit{all pressure
-  distributions} of the body on the support
-surface.
-
-\EH{TODO: Add quick corollary on Lyapunov stability.}
-
-\subsection{Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
-
-\EH{Comment: First proposition probably very unnecessary. Removable or
-  shortened.}
-\begin{proposition}
-  The constrained frictional dissipation equation
-  $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
-  pressure distributions with some support force off of the
-  $x$-axis. When otherwise, the equation admits an interval of
-  minimizers.
-\end{proposition}
-
-\begin{proof}
-  The work of \cite{Mason1982} was the first to prove the above
-  observation for finite pressure distributions. For the case of
-  infinite (discrete) pressure distributions, we can appeal to the
-  convexity properties of $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$.
-
-  Minkowski's inequality gives
-  $\lVert x + y \rVert \leq \lVert x \rVert + \lVert y \rVert$ with
-  equality if and only if $x$ and $y$ are positively linearly
-  dependent. For two generalized velocities
-  $\mathbf{v}^+_1,\mathbf{v}^+_2\in \mathcal{C}$, the resulting body
-  point velocities are linearly dependent if and only if the
-  determinant
-  \begin{align}
-    \det A(\mathbf{x})
-      \begin{bmatrix*}
-        \mathbf{v}^+_1 & \mathbf{v}^+_2
-      \end{bmatrix*}
-    &= \det
-     \begin{bmatrix*}
-       -x_2\omega_1 & -x_2\omega_2 \\
-       1 + x_1\omega_1 & 1 + x_1\omega_2 
-     \end{bmatrix*}\\
-    &= -x_2(\omega_1 - \omega_2)
-  \end{align}
-  is zero. We immediately see that
-  $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$ is strictly convex
-  relative to $\mathcal{C}$ if and only if the body point $\mathbf{x}$
-  lies off of the $x$-axis. The proposition follows from the fact that
-  the positive sum of convex functions and a strictly convex function
-  is strictly convex.
-\end{proof}
-
-An object whose contact region is two discrete points, e.g. a spoon,
-can have multiple minimizing angular velocities when aligned with the
-$x$-axis.
+In general, Theorem \ref{thm:angular-velocities} holds for any convex
+set of pressure distributions. 
 
 \begin{proposition}\label{prop:var-analysis}
   Suppose $P(u) := \argmin_x f(x,u)$ with
@@ -718,7 +692,7 @@ set of pressure distributions.  % Note, the set of pressure
   body translates and $\Omega = \{0\}$ \cite{Mason}.
 \end{proof}
 
-\subsection{Integrated Position Bounds}\label{sec:cop-bounds}
+\subsection{Integrated Orientation Bounds}\label{sec:orientation-bounds}
 
 \begin{figure}[t]
   \centering
@@ -731,7 +705,7 @@ set of pressure distributions.  % Note, the set of pressure
 \end{figure}
 
 The angular velocity bounds derived in section
-\ref{sec:exact-angular-velocity-bounds} can be integrated into bounds
+\ref{sec:prop-angular-velocity-bounds} can be integrated into bounds
 on the position of the pulled body.  Let $\theta$ be the true
 orientation of the pulled body in the world frame. Let the function
 $\omega$ map from the pulling angle to the true angular
@@ -828,13 +802,74 @@ constant unit velocity.
 %   }
 % \end{proof}
 
+\subsection{Quasi-static Stability}\label{sec:stability}
+
+\EH{TODO: Simplify proof. Should be like two lines.}
+
+\begin{theorem}
+  For pulling of a rigid body in the plane, the line from the pulling
+  contact point to the body's center of pressure converges to the line
+  of motion.
+\end{theorem}
+
+\begin{proof}
+  % TODO Shorten this proof. Rewrite to use generalized velocities.
+  Let the $y$-axis of the coordinate frame be aligned with the line of
+  motion of the press-pull contact point (see Figure
+  \ref{fig:presspull-motion} for an example). Then the instantaneous
+  rotation center of the body must fall on the $x$-axis, and we can
+  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+
+  Suppose the center of pressure is strictly to the right of the line
+  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+  7.4 in \cite{Mason}, the rotation center lies on the positive
+  $x$-axis and has negative rotation. The velocity of a point on the
+  rigid body is given by
+  $\mathbf{v}(\mathbf{r}) =
+  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+  \mathbf{r}_\text{IC})$.
+  We can compute the motion of the body relative to the contact point
+  by
+  \begin{align*}
+    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+  \end{align*}
+  where $\mathbf{v}_c$ is the velocity of the contact point. In other
+  words, the body is rotating clockwise relative to the
+  contact point with angular velocity
+  \begin{equation}
+    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+  \end{equation}
+
+  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+  pressure in the frame of the contact point. When the line of motion
+  passes through the center of pressure, a pure translation takes
+  place (Theorem 7.4 in \cite{Mason}). This implies that
+  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+  $\theta$ is monotonically decreasing, we see that it must converge
+  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+
+  The case when the center of pressure is strictly to the left of the
+  line of motion follows from symmetry about the $y$-axis.
+\end{proof}
+
+Note that the above proof holds for \textit{all pressure
+  distributions} of the body on the support
+surface.
+
+\EH{TODO: Add quick corollary on Lyapunov stability.}
+
 \section{Methods}
+
+
 
 \subsection{Point In Moment Hull}
 
+
+
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
-  \ref{sec:exact-angular-velocity-bounds} relies on having a submethod
+  \ref{sec:prop-angular-velocity-bounds} relies on having a submethod
   for computing whether a point is contained in a convex set.
 \item As a reminder, the significance of this submethod is that, given
   an angular velocity, it allows us to check for the existence of a
@@ -846,11 +881,16 @@ constant unit velocity.
 \item Below, we describe our choice of implementation which offers
   several important advantages:
   \begin{inparaenum}
-  \item It is efficient,
   \item The user can \textbf{restrict} the class of candidate pressure
     distributions. This has the effect of tightening the angular
     velocity bounds.
   \end{inparaenum}
+\end{inparaenum}
+h
+
+
+
+\begin{inparaenum}
 \item The linear program below directly solves for an assignment of
   discrete pressures such that the pulled body has center of pressure
   $[x_0,y_0]^T$ and generates zero moment at the contact point
@@ -883,7 +923,7 @@ constant unit velocity.
 \item Solved using \texttt{Gurobi} \cite{gurobi}.
 \end{inparaenum}
 
-\subsection{Exact Angular Velocity Bounds}
+\subsection{Exact Angular Velocity Bounds}\label{sec:exact-ang-vel-bound-alg}
 
 \begin{algorithm}
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
