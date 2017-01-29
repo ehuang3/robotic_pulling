@@ -6,6 +6,9 @@ function [  ] = plotTrajectory(data,i)
           -w/2  -w/2  w/2 w/2];
   rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
 
+  xbest = data.dat(i).xbest;
+
+
   plot(data.dat(i).xbest(1,:),data.dat(i).xbest(2,:),'r','LineWidth',2);
   hold on;
   T0_rect= rot(data.dat(i).t0(3))*rect + repmat(data.dat(i).t0(1:2),1,4);
