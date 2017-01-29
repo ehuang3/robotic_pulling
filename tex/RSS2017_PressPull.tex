@@ -870,30 +870,31 @@ surface.
 
 \section{Methods}
 
-Bring it together.
+In this section, we synthesize the materials in Sections
+\ref{sec:background} and \ref{sec:theory} into an algorithm for
+computing exact angular velocity bounds and a method for planning
+convergent trajectories using the computed bounds. The former is
+detailed in Subsections \ref{sec:point-in-moment-hull} and
+\ref{sec:exact-ang-vel-bound-alg} and the latter in Subsection
+\ref{sec:diff-dynam-progr}.
 
-\begin{inparaenum}
-\item 
-\item Subsection \ref{sec:diff-dynam-progr} 
-\end{inparaenum}
+% The first subsection, \ref{sec:point-in-moment-hull}, details the
+% changes to the moment hull (Subsection \ref{sec:frictional-envelope})
+% that facilitate computations over a new class of pressure-distribution
+% assumptions.
 
-The 
-
-In this section, the materials  are synthesized into 
-
-It is a synthesis of the material in Sections \ref{sec:background} and
-\ref{sec:theory}.
-
-The first subsection, \ref{sec:point-in-moment-hull}, details the
-changes to the moment hull (Subsection \ref{sec:frictional-envelope})
-that facilitate computations over a new class of pressure-distribution
-assumptions.
-
-Subsection \ref{sec:diff-dynam-progr} applies the exact angular
-velocity bounds to planning pulling trajectories using Differential
-Dynamic Programming (DDP).
+% Subsection \ref{sec:diff-dynam-progr} applies the exact angular
+% velocity bounds to planning pulling trajectories using Differential
+% Dynamic Programming (DDP).
 
 \subsection{Point In Moment Hull}\label{sec:point-in-moment-hull}
+
+\begin{inparaenum}
+\item Why compute point in moment hull (lots of blah)
+\item Extension to convex sets of pressure distributions
+\end{inparaenum}
+
+Unlike prior methods, 
 
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
@@ -914,7 +915,6 @@ Dynamic Programming (DDP).
     velocity bounds.
   \end{inparaenum}
 \end{inparaenum}
-h
 
 We explain our method by 
 
@@ -951,7 +951,8 @@ We explain our method by
 \item Solved using \texttt{Gurobi} \cite{gurobi}.
 \end{inparaenum}
 
-\subsection{Exact Angular Velocity Bounds}\label{sec:exact-ang-vel-bound-alg}
+\subsection{Exact Angular Velocity Bound
+  Algorithm}\label{sec:exact-ang-vel-bound-alg}
 
 \begin{algorithm}
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
@@ -1016,7 +1017,8 @@ The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
 $d$ is the number of significant digits returned and $n$ is the number
 of points in the discretization of $R$.
 
-\subsection{Differential Dynamic Programming}\label{sec:diff-dynam-progr}
+\subsection{Planning Convergent Trajectories for Robotic
+  Pulling}\label{sec:diff-dynam-progr}
 % \begin{inparaenum}
 % \item contact point(s)
 % \item initialization
