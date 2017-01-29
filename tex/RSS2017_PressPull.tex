@@ -19,6 +19,7 @@
 \usepackage{dblfloatfix}
 \usepackage{fixltx2e}
 % \usepackage{subfig}
+\usepackage{mathrsfs}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
 \usepackage[noend]{algpseudocode}
@@ -505,8 +506,9 @@ convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
 The frictional moment envelopes provide a nice geometric model of the
 constraints between the center of pressure and moment at the contact
-point \cite{Mason}. An example frictional moment envelope illustrated
-in Figure \ref{fig:moment-envelope}.
+point \cite{Mason}. \EH{Add explanation of what this is used for
+  later} An example frictional moment envelope illustrated in Figure
+\ref{fig:moment-envelope}.
 
 A frictional moment envelope has as its parameters
 the support region $R$ and the velocity $\mathbf{v}^+$.  Let $f_0$ be
@@ -548,7 +550,7 @@ convex hull of $G(R)$ satisfies
 \end{align*}
 Thus, the convex hull of $G(R)$ is the set of all feasible centers of
 pressure and frictional moments for a given support region $R$ and
-velocity $\mathbf{v}^+$. 
+velocity $\mathbf{v}^+$.
 
 \section{Theory}\label{sec:methods}
 
@@ -559,9 +561,9 @@ exact angular velocity bound algorithm introduced in
 \ref{sec:exact-ang-vel-bound-alg}. Subsection
 \ref{sec:orientation-bounds} extends the angular velocity bounds to
 orientation bounds. Lastly, \ref{sec:stability} contains an proof of
-the existence and uniqueness of a stable equilibrium when pulling an
-object. These last two subsections are mainly to establish convergence
-guarantees for robotic pulling trajectories.
+the existence and uniqueness (modulo $2\pi$) of a stable equilibrium
+when pulling an object. These last two subsections are mainly to
+establish convergence guarantees for robotic pulling trajectories.
 
 \subsection{Properties of Angular Velocities Bounds}\label{sec:prop-angular-velocity-bounds}
 
@@ -612,9 +614,14 @@ guarantees for robotic pulling trajectories.
 % can have multiple minimizing angular velocities when aligned with the
 % $x$-axis.
 
-In general, Theorem \ref{thm:angular-velocities} holds for any convex
-set of pressure distributions. 
+We prove that the set of feasible angular velocities for an object
+with known center of pressure is connected and bounded. These two
+properties facilitate the use of a bisection search to locate the
+minimum and maximum angular velocities in Subsection
+\ref{sec:exact-ang-vel-bound-alg}.
 
+We begin by citing a proposition from variation analysis used in our
+proofs of the main results.
 \begin{proposition}\label{prop:var-analysis}
   Suppose $P(u) := \argmin_x f(x,u)$ with
   $f:\mathcal{X}\times\mathcal{U}\rightarrow\mathbb{R}$ continuous and
@@ -663,8 +670,11 @@ set of pressure distributions.
   $\omega_2$. Because the choice of $\omega_1,\omega_2$ was arbitrary,
   $\Omega$ is connected.
 \end{proof}
-In general, Theorem \ref{thm:angular-velocities} holds for any convex
-set of pressure distributions.  % Note, the set of pressure
+
+In general, Theorem \ref{thm:angular-velocities} holds for any convex%
+set of pressure distributions with known center of pressure.
+
+% Note, the set of pressure
 % distributions with identical centers of pressure is convex.
 
 \begin{corollary}
@@ -679,8 +689,8 @@ set of pressure distributions.  % Note, the set of pressure
   bounded from below (above). The Bisector Bound \cite{Mason} states
   that the set of feasible rotation centers falls behind the line
   bisecting the contact point and the center of pressure. With respect
-  to our coordinate frame (Section \ref{sec:planar-pulling}), we see
-  that $\Omega$ is bounded above (below) by 
+  to our coordinate frame (Subsection \ref{sec:planar-pulling}), we
+  see that $\Omega$ is bounded above (below) by
   \begin{equation}
     \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*}, \label{eq:rot-to-ang}
   \end{equation}
@@ -704,7 +714,7 @@ set of pressure distributions.  % Note, the set of pressure
   \label{fig:omega-bounds}
 \end{figure}
 
-The angular velocity bounds derived in section
+The angular velocity bounds derived in Subsection
 \ref{sec:prop-angular-velocity-bounds} can be integrated into bounds
 on the position of the pulled body.  Let $\theta$ be the true
 orientation of the pulled body in the world frame. Let the function
@@ -804,7 +814,8 @@ constant unit velocity.
 
 \subsection{Quasi-static Stability}\label{sec:stability}
 
-\EH{TODO: Simplify proof. Should be like two lines.}
+\EH{TODO: Simplify proof. Should be like two lines. It kind of makes
+  the paper more schizophrenic, so might even remove it.}
 
 \begin{theorem}
   For pulling of a rigid body in the plane, the line from the pulling
@@ -857,15 +868,20 @@ Note that the above proof holds for \textit{all pressure
   distributions} of the body on the support
 surface.
 
-\EH{TODO: Add quick corollary on Lyapunov stability.}
-
 \section{Methods}
 
 
 
-\subsection{Point In Moment Hull}
+The first subsection, \ref{sec:point-in-moment-hull}, details the
+changes to the moment hull (Subsection \ref{sec:frictional-envelope})
+that facilitate computations over a new class of pressure-distribution
+assumptions.
 
+Subsection \ref{sec:diff-dynam-progr} applies the exact angular
+velocity bounds to planning pulling trajectories using Differential
+Dynamic Programming (DDP).
 
+\subsection{Point In Moment Hull}\label{sec:point-in-moment-hull}
 
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
@@ -888,7 +904,7 @@ surface.
 \end{inparaenum}
 h
 
-
+We explain our method by 
 
 \begin{inparaenum}
 \item The linear program below directly solves for an assignment of
@@ -988,7 +1004,7 @@ The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
 $d$ is the number of significant digits returned and $n$ is the number
 of points in the discretization of $R$.
 
-\subsection{Differential Dynamic Programming}
+\subsection{Differential Dynamic Programming}\label{sec:diff-dynam-progr}
 % \begin{inparaenum}
 % \item contact point(s)
 % \item initialization
