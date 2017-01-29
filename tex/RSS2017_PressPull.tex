@@ -329,7 +329,40 @@ improvement over previous bounds.
 
 \section{Background}\label{sec:theory}
 \BB{Briefly describe why this background is necessary. }
+
+The frictional moment envelope is employed in Sections
+\ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
+compute bounds on feasible angular velocities.
+
 \subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
+
+% Press-pull figure.
+\begin{figure}[t]
+  \centering
+  \def\iangle{35} % Angle of the inclined plane
+  \begin{tikzpicture}[
+    scale=1.25, every node/.style={scale=1.25},
+    force/.style={>=latex,draw=black,fill=black},
+    axis/.style={densely dashed,draw=gray,font=\small},
+    ]
+    \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
+    \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
+    \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
+    {[axis,->]
+      \draw (0,0) -- (2.5,0) node[right] {$x$};
+      \draw (0,0) -- (0,2.5) node[above] {$y$};
+    }
+    {[force,->]
+      \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
+    }
+    \fill (0,0) circle [radius=1.pt];
+    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+  \end{tikzpicture}
+  \caption{Motion of a press-pulled slider. \BB{Define variables and provide a short explanation of the figure.}}
+  \label{fig:presspull-motion}
+\end{figure}
+
+
  Planar pulling is a manipulation skill where
 the robot contacts a rigid body at a point and pulls that contact
 point along a trajectory. Here we present a preliminary quasi-static analysis of planar pulling
@@ -417,31 +450,6 @@ We prefer the principle of minimal dissipation \BB{prefer to what?} in our theor
 analysis \BB{point to a forward section here} because the frictional dissipation equation (\ref{eq:constrained-frictional-dissipation}) is continuous and
 convex in $\mu$, $p(\mathbf{x})$ and $\mathbf{v}^+$.
 
-% Press-pull stability theorem figure.
-\begin{figure}
-  \centering
-  \def\iangle{35} % Angle of the inclined plane
-  \begin{tikzpicture}[
-    scale=1.25, every node/.style={scale=1.25},
-    force/.style={>=latex,draw=black,fill=black},
-    axis/.style={densely dashed,draw=gray,font=\small},
-    ]
-    \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
-    \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
-    \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
-    {[axis,->]
-      \draw (0,0) -- (2.5,0) node[right] {$x$};
-      \draw (0,0) -- (0,2.5) node[above] {$y$};
-    }
-    {[force,->]
-      \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
-    }
-    \fill (0,0) circle [radius=1.pt];
-    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
-  \end{tikzpicture}
-  \caption{Motion of a press-pulled slider. \BB{Define variables and provide a short explanation of the figure.}}
-  \label{fig:presspull-motion}
-\end{figure}
 
 
 % \begin{proposition}
