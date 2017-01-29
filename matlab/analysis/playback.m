@@ -38,6 +38,8 @@ function [  ] = playback( data,index)
   comu = zeros([2,n_steps]);
   coml = zeros([2,n_steps]);
   tr = [];
+
+  set(gcf,'units','inches','pos',[0 0 4 3]);
   for i = 1:n_steps
     %% Draw object.
 
@@ -53,7 +55,7 @@ function [  ] = playback( data,index)
       continue
     end
     % Plot.
-    cla; hold on; axis equal; grid on;
+    cla; hold on; axis equal; grid on; box on;
     Vo = rot(X(3,1))*V + repmat(X(1:2,1),[1,n_vert]);
     Vx = [Vo(1,K(:,1)); Vo(1,K(:,2))];
     Vy = [Vo(2,K(:,1)); Vo(2,K(:,2))];
@@ -70,7 +72,8 @@ function [  ] = playback( data,index)
     hc = plot(coml(1,1:i),coml(2,1:i),'color',blue,'DisplayName','Lower Bound','LineWidth',2);
     plot(cp(1)+xi(1),cp(2)+xi(2),'r*')
     hl = plot(X(1,1:i),X(2,1:i),'r-.','LineWidth',2,'DisplayName','Contact Point');
-    legend([hu hc hl]);
+    h_leg = legend([hu hc hl]);
+    set(h_leg,'FontSize',8);
     drawnow;
 
   end
@@ -96,4 +99,7 @@ function [  ] = playback( data,index)
   bottom_right = cat(1,bottom_right.Position);
   plot(top_left(:,1),top_left(:,2),'color',orange,'LineStyle','--','Linewidth',3);
   plot(bottom_right(:,1),bottom_right(:,2),'color',blue,'LineStyle','--','Linewidth',3);
+  xlabel('x');
+  ylabel('y');
+  ylim
 end
