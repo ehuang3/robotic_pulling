@@ -328,7 +328,7 @@ improvement over previous bounds.
 
 
 
-\section{Background}\label{sec:theory}
+\section{Background}\label{sec:background}
 \BB{Briefly describe why this background is necessary. }
 
 The frictional moment envelope is employed in Sections
@@ -552,7 +552,7 @@ Thus, the convex hull of $G(R)$ is the set of all feasible centers of
 pressure and frictional moments for a given support region $R$ and
 velocity $\mathbf{v}^+$.
 
-\section{Theory}\label{sec:methods}
+\section{Theory}\label{sec:theory}
 
 This section covers our theoretical
 contributions. \ref{sec:prop-angular-velocity-bounds} lays the
@@ -870,7 +870,19 @@ surface.
 
 \section{Methods}
 
+Bring it together.
 
+\begin{inparaenum}
+\item 
+\item Subsection \ref{sec:diff-dynam-progr} 
+\end{inparaenum}
+
+The 
+
+In this section, the materials  are synthesized into 
+
+It is a synthesis of the material in Sections \ref{sec:background} and
+\ref{sec:theory}.
 
 The first subsection, \ref{sec:point-in-moment-hull}, details the
 changes to the moment hull (Subsection \ref{sec:frictional-envelope})
@@ -1046,7 +1058,7 @@ Pseudo-Huber loss function \footnote{This function approximates an
 \mathcal{L}_{\delta}(a) = \sqrt{a^2+\delta^2}-\delta,
 \end{equation}
 $\mathbf{x}_F$ is the goal configuration, and $\mathbf{k}$ and
-$\lambda$ are penalty coefficients. 
+$\lambda$ are penalty coefficients.
 
 We initialize our optimizer using paths generated from Dubin's curves
 \cite{dubins1957curves} because pulling with sticking contact shares
@@ -1090,10 +1102,11 @@ and the effective rear axle center is the projection of the rotation center onto
 
 
 \section{Experiments}\label{sec:experiments}
+\EH{Spin the experiments: We chose experiments that underscore the
+  practical benefits of our theoretical contributions.}
 
 \subsection{Comparison of
   Angular Velocity Bounds}\label{sec:bound-comparison}
-
 In this experiment, we compare distance-to-convergence for our exact
 angular velocity bounds and the previous best bound, i.e. the Peshkin
 bound \cite{peshkin1988motion}. We test the bounds over the objects in
