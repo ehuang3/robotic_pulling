@@ -232,15 +232,6 @@ both in simulation and on a real robotic system.
 
 \section{Related Work}\label{sec:related-work}
 
-% \TODO{
-%   Items that a related works section should address:
-%   \begin{enumerate}
-%   \item What were the prior works?
-%   \item What were the limitations of the prior works?
-%   \item What are the advantages of our work?
-%   \end{enumerate}
-% }
-
 Pushing (or pulling) planar objects with fixed contact is difficult to
 model in both theory and practice. First, pressure distributions of
 objects are statically indeterminant (barring the case of three-point
@@ -277,6 +268,10 @@ center of pressure \cite{peshkin1988motion}.
 
 In contrast to the prior art, our algorithm is the first to find
 \textit{exact} angular velocity bounds for a pushed object. 
+
+
+
+Our work facilitates a new class of pressure distribution assumptions 
 
 All-or-nothing approaches to modeling. 
 
@@ -551,69 +546,23 @@ velocity $\mathbf{v}^+$. An identical procedure generates the
 frictional force envelope, i.e. the convex hull of $F(R)$.
 
 The frictional force and moment envelopes are employed in Sections
-\ref{sec:exact-angular-velocity-bounds} and \ref{sec:cop-bounds} to
+\ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
 compute bounds on feasible angular velocities and centers of pressure.
 
 \section{Theory}\label{sec:methods}
 
-\subsection{Quasi-static Stability}
+This section covers our theoretical
+contributions. \ref{sec:prop-angular-velocity-bounds} lays the
+theoretical groundwork necessary for proving the correctness of the
+exact angular velocity bound algorithm introduced in
+\ref{sec:exact-ang-vel-bound-alg}. Subsection
+\ref{sec:orientation-bounds} extends the angular velocity bounds to
+orientation bounds. Lastly, \ref{sec:stability} contains an proof of
+the existence and uniqueness of a stable equilibrium when pulling an
+object. These last two subsections are mainly to establish convergence
+guarantees for robotic pulling trajectories.
 
-\EH{TODO: Simplify proof. Should be like two lines.}
-
-\begin{theorem}
-  For pulling of a rigid body in the plane, the line from the pulling
-  contact point to the body's center of pressure converges to the line
-  of motion.
-\end{theorem}
-
-\begin{proof}
-  % TODO Shorten this proof. Rewrite to use generalized velocities.
-  Let the $y$-axis of the coordinate frame be aligned with the line of
-  motion of the press-pull contact point (see Figure
-  \ref{fig:presspull-motion} for an example). Then the instantaneous
-  rotation center of the body must fall on the $x$-axis, and we can
-  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
-
-  Suppose the center of pressure is strictly to the right of the line
-  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
-  7.4 in \cite{Mason}, the rotation center lies on the positive
-  $x$-axis and has negative rotation. The velocity of a point on the
-  rigid body is given by
-  $\mathbf{v}(\mathbf{r}) =
-  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
-  \mathbf{r}_\text{IC})$.
-  We can compute the motion of the body relative to the contact point
-  by
-  \begin{align*}
-    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
-    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
-  \end{align*}
-  where $\mathbf{v}_c$ is the velocity of the contact point. In other
-  words, the body is rotating clockwise relative to the
-  contact point with angular velocity
-  \begin{equation}
-    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
-  \end{equation}
-
-  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
-  pressure in the frame of the contact point. When the line of motion
-  passes through the center of pressure, a pure translation takes
-  place (Theorem 7.4 in \cite{Mason}). This implies that
-  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
-  $\theta$ is monotonically decreasing, we see that it must converge
-  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
-
-  The case when the center of pressure is strictly to the left of the
-  line of motion follows from symmetry about the $y$-axis.
-\end{proof}
-
-Note that the above proof holds for \textit{all pressure
-  distributions} of the body on the support
-surface.
-
-\EH{TODO: Add quick corollary on Lyapunov stability.}
-
-\subsection{Angular Velocities Bounds}\label{sec:exact-angular-velocity-bounds}
+\subsection{Properties of Angular Velocities Bounds}\label{sec:prop-angular-velocity-bounds}
 
 \EH{Comment: First proposition probably very unnecessary. Removable or
   shortened.}
@@ -739,7 +688,7 @@ set of pressure distributions.  % Note, the set of pressure
   body translates and $\Omega = \{0\}$ \cite{Mason}.
 \end{proof}
 
-\subsection{Integrated Position Bounds}\label{sec:cop-bounds}
+\subsection{Integrated Orientation Bounds}\label{sec:orientation-bounds}
 
 \begin{figure}[t]
   \centering
@@ -752,7 +701,7 @@ set of pressure distributions.  % Note, the set of pressure
 \end{figure}
 
 The angular velocity bounds derived in section
-\ref{sec:exact-angular-velocity-bounds} can be integrated into bounds
+\ref{sec:prop-angular-velocity-bounds} can be integrated into bounds
 on the position of the pulled body.  Let $\theta$ be the true
 orientation of the pulled body in the world frame. Let the function
 $\omega$ map from the pulling angle to the true angular
@@ -849,13 +798,74 @@ constant unit velocity.
 %   }
 % \end{proof}
 
+\subsection{Quasi-static Stability}\label{sec:stability}
+
+\EH{TODO: Simplify proof. Should be like two lines.}
+
+\begin{theorem}
+  For pulling of a rigid body in the plane, the line from the pulling
+  contact point to the body's center of pressure converges to the line
+  of motion.
+\end{theorem}
+
+\begin{proof}
+  % TODO Shorten this proof. Rewrite to use generalized velocities.
+  Let the $y$-axis of the coordinate frame be aligned with the line of
+  motion of the press-pull contact point (see Figure
+  \ref{fig:presspull-motion} for an example). Then the instantaneous
+  rotation center of the body must fall on the $x$-axis, and we can
+  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+
+  Suppose the center of pressure is strictly to the right of the line
+  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+  7.4 in \cite{Mason}, the rotation center lies on the positive
+  $x$-axis and has negative rotation. The velocity of a point on the
+  rigid body is given by
+  $\mathbf{v}(\mathbf{r}) =
+  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+  \mathbf{r}_\text{IC})$.
+  We can compute the motion of the body relative to the contact point
+  by
+  \begin{align*}
+    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+  \end{align*}
+  where $\mathbf{v}_c$ is the velocity of the contact point. In other
+  words, the body is rotating clockwise relative to the
+  contact point with angular velocity
+  \begin{equation}
+    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+  \end{equation}
+
+  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+  pressure in the frame of the contact point. When the line of motion
+  passes through the center of pressure, a pure translation takes
+  place (Theorem 7.4 in \cite{Mason}). This implies that
+  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+  $\theta$ is monotonically decreasing, we see that it must converge
+  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+
+  The case when the center of pressure is strictly to the left of the
+  line of motion follows from symmetry about the $y$-axis.
+\end{proof}
+
+Note that the above proof holds for \textit{all pressure
+  distributions} of the body on the support
+surface.
+
+\EH{TODO: Add quick corollary on Lyapunov stability.}
+
 \section{Methods}
+
+
 
 \subsection{Point In Moment Hull}
 
+
+
 \begin{inparaenum}
 \item The exact angular velocity bound algorithm in Section
-  \ref{sec:exact-angular-velocity-bounds} relies on having a submethod
+  \ref{sec:prop-angular-velocity-bounds} relies on having a submethod
   for computing whether a point is contained in a convex set.
 \item As a reminder, the significance of this submethod is that, given
   an angular velocity, it allows us to check for the existence of a
@@ -867,11 +877,16 @@ constant unit velocity.
 \item Below, we describe our choice of implementation which offers
   several important advantages:
   \begin{inparaenum}
-  \item It is efficient,
   \item The user can \textbf{restrict} the class of candidate pressure
     distributions. This has the effect of tightening the angular
     velocity bounds.
   \end{inparaenum}
+\end{inparaenum}
+h
+
+
+
+\begin{inparaenum}
 \item The linear program below directly solves for an assignment of
   discrete pressures such that the pulled body has center of pressure
   $[x_0,y_0]^T$ and generates zero moment at the contact point
@@ -904,7 +919,7 @@ constant unit velocity.
 \item Solved using \texttt{Gurobi} \cite{gurobi}.
 \end{inparaenum}
 
-\subsection{Exact Angular Velocity Bounds}
+\subsection{Exact Angular Velocity Bounds}\label{sec:exact-ang-vel-bound-alg}
 
 \begin{algorithm}
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
