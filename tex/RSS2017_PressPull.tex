@@ -564,52 +564,55 @@ guarantees for robotic pulling trajectories.
 
 \subsection{Properties of Angular Velocities Bounds}\label{sec:prop-angular-velocity-bounds}
 
-\EH{Comment: First proposition probably very unnecessary. Removable or
-  shortened.}
-\begin{proposition}
-  The constrained frictional dissipation equation
-  $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
-  pressure distributions with some support force off of the
-  $x$-axis. When otherwise, the equation admits an interval of
-  minimizers.
-\end{proposition}
+% \EH{Comment: First proposition probably very unnecessary. Removable or
+%   shortened.}
+% \begin{proposition}
+%   The constrained frictional dissipation equation
+%   $\mathrm{D}_{\mathcal{C}}(\mathbf{v}^+)$ has a unique minimizer for
+%   pressure distributions with some support force off of the
+%   $x$-axis. When otherwise, the equation admits an interval of
+%   minimizers.
+% \end{proposition}
 
-\begin{proof}
-  The work of \cite{Mason1982} was the first to prove the above
-  observation for finite pressure distributions. For the case of
-  infinite (discrete) pressure distributions, we can appeal to the
-  convexity properties of $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$.
+% \begin{proof}
+%   The work of \cite{Mason1982} was the first to prove the above
+%   observation for finite pressure distributions. For the case of
+%   infinite (discrete) pressure distributions, we can appeal to the
+%   convexity properties of $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$.
 
-  Minkowski's inequality gives
-  $\lVert x + y \rVert \leq \lVert x \rVert + \lVert y \rVert$ with
-  equality if and only if $x$ and $y$ are positively linearly
-  dependent. For two generalized velocities
-  $\mathbf{v}^+_1,\mathbf{v}^+_2\in \mathcal{C}$, the resulting body
-  point velocities are linearly dependent if and only if the
-  determinant
-  \begin{align}
-    \det A(\mathbf{x})
-      \begin{bmatrix*}
-        \mathbf{v}^+_1 & \mathbf{v}^+_2
-      \end{bmatrix*}
-    &= \det
-     \begin{bmatrix*}
-       -x_2\omega_1 & -x_2\omega_2 \\
-       1 + x_1\omega_1 & 1 + x_1\omega_2 
-     \end{bmatrix*}\\
-    &= -x_2(\omega_1 - \omega_2)
-  \end{align}
-  is zero. We immediately see that
-  $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$ is strictly convex
-  relative to $\mathcal{C}$ if and only if the body point $\mathbf{x}$
-  lies off of the $x$-axis. The proposition follows from the fact that
-  the positive sum of convex functions and a strictly convex function
-  is strictly convex.
-\end{proof}
+%   Minkowski's inequality gives
+%   $\lVert x + y \rVert \leq \lVert x \rVert + \lVert y \rVert$ with
+%   equality if and only if $x$ and $y$ are positively linearly
+%   dependent. For two generalized velocities
+%   $\mathbf{v}^+_1,\mathbf{v}^+_2\in \mathcal{C}$, the resulting body
+%   point velocities are linearly dependent if and only if the
+%   determinant
+%   \begin{align}
+%     \det A(\mathbf{x})
+%       \begin{bmatrix*}
+%         \mathbf{v}^+_1 & \mathbf{v}^+_2
+%       \end{bmatrix*}
+%     &= \det
+%      \begin{bmatrix*}
+%        -x_2\omega_1 & -x_2\omega_2 \\
+%        1 + x_1\omega_1 & 1 + x_1\omega_2 
+%      \end{bmatrix*}\\
+%     &= -x_2(\omega_1 - \omega_2)
+%   \end{align}
+%   is zero. We immediately see that
+%   $\lVert A(\mathbf{x})\mathbf{v}^+ \rVert$ is strictly convex
+%   relative to $\mathcal{C}$ if and only if the body point $\mathbf{x}$
+%   lies off of the $x$-axis. The proposition follows from the fact that
+%   the positive sum of convex functions and a strictly convex function
+%   is strictly convex.
+% \end{proof}
 
-An object whose contact region is two discrete points, e.g. a spoon,
-can have multiple minimizing angular velocities when aligned with the
-$x$-axis.
+% An object whose contact region is two discrete points, e.g. a spoon,
+% can have multiple minimizing angular velocities when aligned with the
+% $x$-axis.
+
+In general, Theorem \ref{thm:angular-velocities} holds for any convex
+set of pressure distributions. 
 
 \begin{proposition}\label{prop:var-analysis}
   Suppose $P(u) := \argmin_x f(x,u)$ with
