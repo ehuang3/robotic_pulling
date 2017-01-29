@@ -232,40 +232,57 @@ both in simulation and on a real robotic system.
 
 \section{Related Work}\label{sec:related-work}
 
-\TODO{
-  Items that a related works section should address:
-  \begin{enumerate}
-  \item What were the prior works?
-  \item What were the limitations of the prior works?
-  \item What are the advantages of our work?
-  \end{enumerate}
-}
+% \TODO{
+%   Items that a related works section should address:
+%   \begin{enumerate}
+%   \item What were the prior works?
+%   \item What were the limitations of the prior works?
+%   \item What are the advantages of our work?
+%   \end{enumerate}
+% }
 
-\begin{inparaenum}
-\item Pressure distributions are highly indeterminant.
-\item Frictional coefficients are highly varied.
-\item Indeterminacy leads to uncertainty in the resultant velocity of
-  the pushed object.
+Pushing (or pulling) planar objects with fixed contact is difficult to
+model in both theory and practice. First, pressure distributions of
+objects are statically indeterminant (barring the case of three-point
+support with known center of mass). Second, surface imperfections lead
+to spatial variability in both the pressure distribution and
+coefficient of friction \cite{YuBFR16}. Though several force-motion
+models for pushing exist
+\cite{zhou2016convex,howe1996practical,goyal1991planar}, the above
+sources of indeterminacy ultimately lead to errors in the predicted
+velocity of the pushed object.
 
-\item The problem of finding exact angular velocity bounds for a pushed
-object with an indeterminant pressure distribution was first raised in
-Mason's seminal thesis on robotic pushing \cite{Mason1982}. Since
-then, various inexact angular velocity bounds have been published.
-The bisector bound restricts the feasible rotation centers to a
-half-space delimited by the perpendicular bisector between the contact
-point and center of pressure \cite{Mason}.  Alexander and Maddock
-bounded the set of feasible rotation centers to lie within the minimum
-object-enclosing vertical strip perpendicular to the wrench applied by
-the pusher \cite{alexander1993bounds}.  Peshkin bounded the motion of
-a pushed object by computing the set of feasible rotation centers of
-the minimum object-enclosing disk centered at the object's center of
-pressure \cite{peshkin1988motion}.  In contrast to the prior art, our
-algorithm is the first to find \textit{exact} angular velocity bounds
-for a pushed object.
-\item Our method can also restrict the set of feasible pressure
-  distributions. This allows our method to obtain an
-  order-of-magnitude improvement over previous bounds.
-\end{inparaenum}
+If the motion cannot be predicted, then another option is to find
+bounds on the velocity of the pushed object. This problem was first
+raised in Mason's seminal thesis on robotic pushing
+\cite{Mason1982}. In the case of fixed contact pushing, this is
+equivalent to finding bounds on angular velocity of the object as it
+is pushed through the contact point.
+% Mason's seminal thesis on robotic pushing \cite{Mason1982} was the
+% first to raise the problem of bounding the motion of a pushed object
+% as an alternative to the errors associated with exact models.
+% The problem of bounding the motion 
+% ``If the [motion] cannot be predicted, then the next best thing is to
+% determine the range of possible [motions].''
+Since then, various inexact angular velocity bounds have been
+published. The bisector bound restricts the feasible rotation centers
+to a half-space delimited by the perpendicular bisector between the
+contact point and center of pressure \cite{Mason}.  Alexander and
+Maddock bounded the set of feasible rotation centers to lie within the
+minimum object-enclosing vertical strip perpendicular to the wrench
+applied by the pusher \cite{alexander1993bounds}.  Peshkin bounded the
+motion of a pushed object by computing the set of feasible rotation
+centers of the minimum object-enclosing disk centered at the object's
+center of pressure \cite{peshkin1988motion}.
+
+In contrast to the prior art, our algorithm is the first to find
+\textit{exact} angular velocity bounds for a pushed object. 
+
+All-or-nothing approaches to modeling. 
+
+Our method can also restrict the set of feasible pressure
+distributions. This allows our method to obtain an order-of-magnitude
+improvement over previous bounds.
 
 \begin{enumerate}
 \item Planar Robotic Manipulation
