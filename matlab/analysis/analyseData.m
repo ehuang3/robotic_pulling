@@ -1,23 +1,14 @@
 close all;
 clear all;
 
-folder = '../../../data/';
+folder = '../../../data/4cp/';
 
 %% Constants
 
-w = 0.05113;
-l = 0.0762;
-
+w = 0.048;
+l = 0.073;
+%%
 data = loadFiles(folder,w,l);
-% plotErrorRectangles(data);
-% figure()
-% for i = 51:numel(data.dat)
-%   plotTrajectory(data,i);
-%   pause
-%   cla
-% end
-
-
-% err = sqrt(sum((e).^2,2)/numel(files));
-i = 38;
-playback(data,i);
+idx = findExclusion(data);
+plotErrorRectangles(data,idx);
+errorDistribution(data,idx)
