@@ -311,7 +311,7 @@ purposes. First, it defines the notation and terminology used
 throughout our paper. Second, it frames our work in the context of the
 quasi-static theory of planar pushing. Subsection
 \ref{sec:frictional-envelope} summarizes the moment envelope construct
-used for jointly reasoning about pressure and frictional torques. This
+used for jointly reasoniparticularizessure and frictional torques. This
 construct is particularly relevant for Subsection
 \ref{sec:point-in-moment-enve}, which introduces an algorithm that
 computes the feasibility of a given pushed object velocity.
@@ -550,7 +550,7 @@ G(\mathbf{x}) =
   x\\
   y\\
   g(\mathbf{x})
-\end{bmatrix*},
+\end{bmatrix*}, \label{eq:moment-surface-function}
 \end{equation}
 and let $\hat{p} = p/f_0$ be the normalized pressure. Then the set
 $\{\int_RG(\mathbf{r})\hat{p}(\mathbf{r})dA
@@ -700,7 +700,7 @@ proofs of the main results.
 \end{proof}
 
 In general, Theorem \ref{thm:angular-velocities} holds for any convex%
-set of pressure distributions with known center of pressure.
+set of pressure distributions with known center of pressure. 
 
 % Note, the set of pressure
 % distributions with identical centers of pressure is convex.
@@ -926,104 +926,37 @@ $[x_0,y_0,0]^T$, where $[x_0,y_0]^T$ is the object's center of
 pressure. 
 
 Implicitly, this method checks feasibility against the class of
-pressure distributions with shared center of pressure. 
+pressure distributions with shared center of pressure. However, this
+assumption is often too broad in practice. We cast the feasibility
+test as a linear program to facilitate checking against new classes of
+pressure distributions, including, for example, bounds on the pressure
+magnitude at various points.
 
-The class of pressure distributions 
+This linear program solves for an assignment of discrete, bounded
+pressures such that the pushed object has the correct center of
+pressure and generates zero moment
+\begin{equation}
+  \begin{aligned}
+    & \underset{\mathbf{p}}{\text{minimize}}
+    & & \mathbf{0} \\
+    & \text{subject to}
+    & & A\mathbf{p} = [x_0,y_0,0]^T,\; \mathbf{1}\cdot\mathbf{p} = 1, \\
+    & & & L \leq \mathbf{p} \leq U,
+  \end{aligned} \label{eq:lin-prog-PiCH}
+\end{equation}
+where $\mathbf{p}$ is a normalized pressure distribution, $A$ is the
+moment surface function (\ref{eq:moment-surface-function}) computed
+over the discretized support region $R$, and $L$ and $U$ are bounds on
+$\mathbf{p}$. The upper and lower bounds, $U$ and $L$, have a nice
+physical interpretation. Let $N$ be the number of points in the
+discretization of the contact region $R$. Set $U$ to $2/N$. Then by
+the pigeon-hole principle, at least 50\% the area of $R$ is always in
+contact with the surface.  Or set $L$ to $0.1/N$. Then at least 10\%
+of object weight is uniformly distributed.
 
-The pressure distribution assumption 
+We solve the linear program (\ref{eq:lin-prog-PiCH}) using
+\texttt{Gurobi} \cite{gurobi}.
 
-In the event this assumption is too broad or the class of pressure
-distributions can be tuned or learned,
-
-
-
-
-\begin{inparaenum}
-\item Why compute point in moment hull (lots of blah)
-\item What is it used for
-\item 
-\item Extension to convex sets of pressure distributions
-\item 
-\end{inparaenum}
-
-Recall from Section \ref{sec:background} that an angular velocity
-
-feasibility of a given angular velocity 
-
-In the quasi-static model 
-
-Given a support region $R$ and a velocity $\mathbf{v}^+$, with angular
-component $\omega$, at the contact point, the moment hull of $G(R)$ 
-
-Recall from Subsection \ref{sec:frictional-envelope} that the moment
-hull is the set of all feasible centers of pressure and frictional
-moments for a given support region $R$ and velocity $\mathbf{v}^+$.
-
-In the case of pushing with a single contact point, 
-
-
-Under the quasi-static model of pushing, 
-
-The moment hull is the set of all 
-
-The moment hull is the set of all feasible centers of 
-
-Unlike prior methods, 
-
-\begin{inparaenum}
-\item The exact angular velocity bound algorithm in Section
-  \ref{sec:prop-angular-velocity-bounds} relies on having a submethod
-  for computing whether a point is contained in a convex set.
-\item As a reminder, the significance of this submethod is that, given
-  an angular velocity, it allows us to check for the existence of a
-  pressure distribution such that
-  \begin{inparaenum}
-  \item the specified center of pressure is achieved,
-  \item the pulled body generates zero moment at the contact point.
-  \end{inparaenum}
-\item Below, we describe our choice of implementation which offers
-  several important advantages:
-  \begin{inparaenum}
-  \item The user can \textbf{restrict} the class of candidate pressure
-    distributions. This has the effect of tightening the angular
-    velocity bounds.
-  \end{inparaenum}
-\end{inparaenum}
-
-We explain our method by 
-
-\begin{inparaenum}
-\item The linear program below directly solves for an assignment of
-  discrete pressures such that the pulled body has center of pressure
-  $[x_0,y_0]^T$ and generates zero moment at the contact point
-  \begin{equation}
-    \begin{aligned}
-      & \underset{\mathbf{p}}{\text{minimize}}
-      & & \mathbf{0} \\
-      & \text{subject to}
-      & & A\mathbf{p} = [x_0,y_0,0]^T,\; \mathbf{1}\cdot\mathbf{p} = 1, \\
-      & & & L \leq \mathbf{p} \leq U.
-    \end{aligned} \label{eq:lin-prog-PiCH}
-  \end{equation}
-  \begin{inparaenum}
-  \item $\mathbf{p}$ is a candidate (normalized) pressure distribution,
-  \item $A$ is the moment surface function $G$ computed over
-    discretized contact region $R$,
-  \item $L$ and $U$ are bounds on $\mathbf{p}$.
-  \end{inparaenum}
-\item The upper and lower bounds $U$ have nice physical interpretation 
-  \begin{inparaenum}
-  \item Let $N$ be the number of points in the discretization of the
-    contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
-    principle, the candidate pressure distributions are those such
-    that at least 50\% of the object is in contact with the surface.
-  \item Or set $L$ to $0.1/N$. Then at least 10\% of object weight is
-    uniformly distributed.
-  \item Undoubtedly, additional tricks can be played to further modify
-    the candidate pressure distributions.
-  \end{inparaenum}
-\item Solved using \texttt{Gurobi} \cite{gurobi}.
-\end{inparaenum}
 
 \subsection{Exact Angular Velocity Bound
   Algorithm}\label{sec:exact-ang-vel-bound-alg}
