@@ -302,12 +302,10 @@ improvement over previous bounds.
 \item Holonomic Planning
 \end{enumerate}
 
-
-
 \section{Background}\label{sec:background}
 % \BB{Briefly describe why this background is necessary. }
 This section provides the relevant background needed to understand our
-contributions. Subsection \ref{sec:planar-pulling} serves two
+contributions. Subsection \ref{sec:plan-push-subj} serves two
 purposes. First, it defines the notation and terminology used
 throughout our paper. Second, it frames our work in the context of the
 quasi-static theory of planar pushing. Subsection
@@ -315,7 +313,7 @@ quasi-static theory of planar pushing. Subsection
 used for reasoning about frictional torques. This construct is
 particularly relevant for Subsection \ref{sec:point-in-moment-hull},
 which introduces an algorithm that computes the feasibility of a given
-angular velocity.
+pushed object velocity.
 
 % defines the notation used in this paper
 
@@ -326,7 +324,7 @@ angular velocity.
 % \ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
 % compute bounds on feasible angular velocities.
 
-\subsection{Planar Pushing Subject to Friction}\label{sec:planar-pulling}
+\subsection{Planar Pushing Subject to Friction}\label{sec:plan-push-subj}
 
 % Press-pull figure.
 \begin{figure}[t]
@@ -681,7 +679,7 @@ set of pressure distributions with known center of pressure.
   bounded from below (above). The Bisector Bound \cite{Mason} states
   that the set of feasible rotation centers falls behind the line
   bisecting the contact point and the center of pressure. With respect
-  to our coordinate frame (Subsection \ref{sec:planar-pulling}), we
+  to our coordinate frame (Subsection \ref{sec:plan-push-subj}), we
   see that $\Omega$ is bounded above (below) by
   \begin{equation}
     \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*}, \label{eq:rot-to-ang}
