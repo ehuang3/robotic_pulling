@@ -281,15 +281,6 @@ distributions. This allows our method to obtain an order-of-magnitude
 improvement over previous bounds.
 
 \begin{enumerate}
-\item Planar Robotic Manipulation
-  \begin{enumerate}
-  \item Pushing
-  \item Tapping
-  \item Throwing
-  \item Grasping
-  \item Pivoting
-  \item Why pulling over other planar manipulation skills
-  \end{enumerate}
 \item Robotic Pushing
   \begin{enumerate}
   \item Planning
@@ -297,9 +288,6 @@ improvement over previous bounds.
   \item Quasi-static motion model
   \item Stable pushing
   \end{enumerate}
-
-  Alberto -- \cite{YuBFR16}
-
 
   Our work is most closely related to robotic pushing.
 
@@ -311,31 +299,34 @@ improvement over previous bounds.
 
   mechanical components robust to variations in the friction
 
-\item Pushing Bounds
-
-  \begin{enumerate}
-  \item Bisector bound
-  \item Vertical strip bound
-  \item Alexander and Maddocks bound
-  \item Peshkin's bound
-  \end{enumerate}
-
 \item Holonomic Planning
-\item DDP
-\item Uncertainty reduction
-\item Stability
 \end{enumerate}
 
 
 
 \section{Background}\label{sec:background}
-\BB{Briefly describe why this background is necessary. }
+% \BB{Briefly describe why this background is necessary. }
+This section provides the relevant background needed to understand our
+contributions. Subsection \ref{sec:planar-pulling} serves two
+purposes. First, it defines the notation and terminology used
+throughout our paper. Second, it frames our work in the context of the
+quasi-static theory of planar pushing. Subsection
+\ref{sec:frictional-envelope} summarizes the moment envelope construct
+used for reasoning about frictional torques. This construct is
+particularly relevant for Subsection \ref{sec:point-in-moment-hull},
+which introduces an algorithm that computes the feasibility of a given
+angular velocity.
 
-The frictional moment envelope is employed in Sections
-\ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
-compute bounds on feasible angular velocities.
+% defines the notation used in this paper
 
-\subsection{Planar Pulling Subject to Friction}\label{sec:planar-pulling}
+%  and the important
+% concepts of quasi-static analysis of pushing.
+
+% The frictional moment envelope is employed in Sections
+% \ref{sec:prop-angular-velocity-bounds} and \ref{sec:cop-bounds} to
+% compute bounds on feasible angular velocities.
+
+\subsection{Planar Pushing Subject to Friction}\label{sec:planar-pulling}
 
 % Press-pull figure.
 \begin{figure}[t]
@@ -363,11 +354,12 @@ compute bounds on feasible angular velocities.
   \label{fig:presspull-motion}
 \end{figure}
 
-
  Planar pulling is a manipulation skill where
 the robot contacts a rigid body at a point and pulls that contact
 point along a trajectory. Here we present a preliminary quasi-static analysis of planar pulling
-subject to friction. \BB{Maybe describe why this is important}
+subject to friction. \BB{Maybe describe why this is important} 
+
+Our presentation follows that of \cite{alexander1993bounds, Mason}.
 
 Let the \textit{generalized velocity} of a planar rigid body be
 $\mathbf{v}^+ = [v_x, v_y, \omega]^T$, where $v_x$ and $v_y$ are the
@@ -897,10 +889,7 @@ detailed in Subsections \ref{sec:point-in-moment-hull} and
 \item 
 \end{inparaenum}
 
-
-
-Recall from Subsection \ref{sec:frictional-envelope} that an angular
-velocity 
+Recall from Section \ref{sec:background} that an angular velocity
 
 feasibility of a given angular velocity 
 
