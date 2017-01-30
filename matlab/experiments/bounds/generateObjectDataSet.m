@@ -147,5 +147,90 @@ r_max
 r_mean = mean(r)
 
 %% Generate pods.
+n = 4;
 
+data_path = getDataPath;
+bounds_path = fullfile(data_path,'bounds');
+npod_file = fullfile(bounds_path,[num2str(n),'pod_bounds.mat']);
 
+p_mean = 0.01;
+p_sigma = 0.0025;
+axes_max = 0.03;
+clear pod
+clear ellipse
+for i = 1:30
+    [p,e] = randomPod(n,r_max,p_mean,p_sigma,axes_max);
+    p.R = fillScanLines2DGrid2(p.K,p.V(1,:),p.V(2,:),2e-3);
+    size(p.R)
+    pod(i) = p;
+    ellipse{i} = e;
+end
+
+%%
+for i = 1:30
+    V = pod(i).V;
+    K = pod(i).K;
+    com = pod(i).com;
+    LSegX = @(V,K) [V(1,K(:,1)); V(1,K(:,2))];
+    LSegY = @(V,K) [V(2,K(:,1)); V(2,K(:,2))];
+    Vx = LSegX(V,K);
+    Vy = LSegY(V,K);
+    cla; hold on; grid on; axis equal;
+    plot(Vx,Vy,'b');
+    plot(com(1),com(2),'r*')
+    plot(pod(i).R(1,:),pod(i).R(2,:),'r.')
+    for j = 1:length(ellipse{i})
+        e = ellipse{i};
+        plot(e(j).pt(1),e(j).pt(2),'r.')
+    end
+    w = linspace(0,2*pi);
+    plot(r_max*cos(w),r_max*sin(w),'k')
+    waitforbuttonpress
+end
+
+%%
+clear bounds;
+% load(npod_file)
+for i = 1:length(pod)
+    obj = pod(i)
+    obj.cp = ellipse{i}(1).pt
+    % Exact bounds.
+    [L,U,T] = computeBounds(obj,obj.cp);
+    exact = struct;
+    exact.L = L;
+    exact.U = U;
+    exact.T = T;
+    % 50 percent contact.
+    obj50 = obj;
+    n_R = size(obj50.R,2);
+    obj50.LB = zeros([1,n_R]);
+    obj50.UB = 1/(0.5 * n_R) .* ones([1,n_R]);
+    [L,U,T] = computeBounds(obj50,obj50.cp);
+    fifty = struct;
+    fifty.L = L;
+    fifty.U = U;
+    fifty.T = T;
+    % Peshkins.
+    objp = obj;
+    Vp = objp.V;
+    comp = objp.com;
+    rp = max(sqrt(sum((Vp-repmat(comp,[1,size(Vp,2)])).^2)));
+    s = linspace(0,2*pi,100);
+    Vp = [rp*cos(s)+comp(1); rp*sin(s)+comp(2)];
+    Kp = [(1:99)' (2:100)'];
+    Rp = fillScanLines2DGrid2(Kp,Vp(1,:),Vp(2,:),5e-3);
+    objp.V = Vp;
+    objp.K = Kp;
+    objp.R = Rp;
+    [L,U,T] = computeBounds(objp,objp.cp);
+    peshkin.L = L;
+    peshkin.U = U;
+    peshkin.T = T;
+    % Store bounds.
+    obj.exact = exact;
+    obj.fifty = fifty;
+    obj.peshkin = peshkin;
+    bounds(i) = obj;
+    % Save.
+    save(npod_file,'bounds');
+end

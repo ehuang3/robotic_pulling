@@ -1,4 +1,4 @@
-function [ pod ] = randomPod( n_feet, r_max, p_mean, p_sigma )
+function [ pod, ellipse ] = randomPod( n_feet, r_max, p_mean, p_sigma, axes_max )
 %RANDOMPOD 
 %   
 
@@ -10,14 +10,15 @@ K = [];
 area = 0;
 A_max = pi*r_max^2;
 A_target = A_max;
-p_mean = 0.075;
-p_sigma = 0.025;
+% p_mean = 0.075;
+% p_sigma = 0.025;
 %
+
 for i = 1:n_feet
     % Uniformly sample feasible ellipses using rejection sampling.
     while true
         %%
-        
+
         % Sample random point in r_max circle.
         r = rand;
         t = (i-1)*2*pi/n_feet + rand*2*pi/n_feet;
@@ -132,8 +133,8 @@ for i = 1:n_feet
         
         % Sample axes.
         % Compute bounds on the feasible axes.
-        a_max = min(as);
-        b_max = min(bs);
+        a_max = min(min(as),axes_max);
+        b_max = min(min(bs),axes_max);
         f_l = (p_mean - p_sigma)*A_target;
         f_u = (p_mean + p_sigma)*A_target;
         a_min = f_l/(pi*b_max);
@@ -141,7 +142,7 @@ for i = 1:n_feet
         
         % Stop if ellipse is infeasible.
         if a_min > a_max || b_min > b_max
-            warning('Reject')
+%             warning('Reject')
             continue
         end
         
@@ -153,7 +154,7 @@ for i = 1:n_feet
         
         % Stop if no feasible sample is found.
         if isempty(s_i)
-            warning('No sample')
+%             warning('No sample')
             continue
         end
         
@@ -178,7 +179,7 @@ for i = 1:n_feet
         p = h_area / c_area;
 
         if rand < (1-p)
-            warning('low probability')
+%             warning('low probability')
             continue
         end
         
@@ -195,7 +196,7 @@ for i = 1:n_feet
         a = as(s_i);
         b = bs(s_i);
 %         plot(a,b,'k.')
-        t = linspace(0,2*pi);
+        t = linspace(0,2*pi,25);
         rot = @(t) [cos(t) -sin(t); sin(t) cos(t)];
         pts = rot(theta) * [a*cos(t); b*sin(t)];
         pts = pts + repmat(pt, [1,length(t)]);
@@ -204,6 +205,10 @@ for i = 1:n_feet
 %         plot(pts(1,:),pts(2,:),'b')
 
         area = area + pi*a*b;
+        
+        ellipse(i).pt = pt;
+        ellipse(i).a = a;
+        ellipse(i).b = b;
 
         % Save ellipse.
         n_t = length(t);
@@ -219,12 +224,20 @@ for i = 1:n_feet
     end
 end
 
-% Construct output.
+%% Construct output.
 pod = struct;
 pod.V = V;
 pod.K = K;
 pod.area = area;
-pod.com = [0;0];
+
+pts = [ellipse.pt];
+A = [ellipse.a];
+B = [ellipse.b];
+area = A.*B;
+total = sum(area);
+com = 1/total .* sum(repmat(area,[2,1]) .* pts,2)
+
+pod.com = com;
 
 end
 
