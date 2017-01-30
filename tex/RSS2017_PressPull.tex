@@ -1173,6 +1173,17 @@ bounds are required for smaller tables.
 \end{table}
 
 \subsection{Robotic Pulling on a Tabletop}
+To validate the planner, we generated random start and end poses of a rectangular (75mmx50mm) object.
+The object had four possible contact locations for the robot to pull on.
+Hard constraints were enforced to prevent the planner for generating trajectories outside the robot's reachable workspace.  
+The planner was evaluated for all contact points and the best trajectory was picked to be executed on the robot. 
+The final pose was recorded by the motion capture system.
+
+One hundred such experiements were tried and 23 experiments were discarded due to either the workspace constraint or detection uncertainty in the vision system.
+The remaining 77 experiments yeilded an average distance error of 3.9mm (standard deviation:2.6mm) and an angular error of 5.9 degrees (standard deviation: 6.16 degrees).
+
+
+
 \begin{figure}
 \begin{center}
   \includegraphics[width=\columnwidth]{fig/superimposed.eps}
