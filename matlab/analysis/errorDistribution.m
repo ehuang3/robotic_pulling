@@ -15,8 +15,8 @@ function errorDistribution(data,idx);
   avg_radial_error = mean(abs(err_r))
   std_radial_error = std(abs(err_r))
   err_th = abs(wrapToPi(err(3,:)));
-  avg_angular_error = mean(err_th)
-  std_angular_error = std(abs(err_th))
+  avg_angular_error = rad2deg(mean(err_th))
+  std_angular_error = rad2deg(std(abs(err_th)))
 
   % Check if angular error is within bounds:
   
