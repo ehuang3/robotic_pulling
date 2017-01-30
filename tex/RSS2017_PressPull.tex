@@ -125,32 +125,40 @@ cross/.default={2pt}}
 \maketitle
 
 \begin{abstract}
+  This paper explores the quasi-static motion of a planar slider being
+  pushed or pulled through a single contact point assumed not to
+  slip. The main contribution is to derive exact bounds on the
+  object's motion for a class of pressure distributions where the
+  center of pressure is known but the distribution of support forces
+  is unknown. The secondary contribution is to show that the exact
+  motion bounds can be used to plan robotic pulling trajectories that
+  have convergence guarantees on the final object pose. 
 
-% Items that an abstract should address:
-% 1. What were the main contributions?
-% 2. 
-% 3. 
+  \EH{TODO: Experimental results} 
 
-  Robotic pulling is the manipulation skill where the robot contacts a
-  rigid body at a point and pulls that contact point along a
-  trajectory.
+  The distance between the upper and lower motion bounds were 
+  5-10$\times$ 
 
-Major contributions:
-  \begin{enumerate}
-  \item Proof of stability
-  \item first known algorithm that computes exact angular velocity
-    bounds on the friction dominated motion of a pushed/pulled object.
-  \item Uncertainty bounds on the orientation
-  \item Planner that exploits the stability of pulling using the exact
-    angular velocity bounds.
-  \item to return trajectories.
-  \item An easy to implement in both hardware and software skill. 
-  \item validated on a real robotic system.
+  The exact bounds were shown to 
 
-    A useful addition to a roboticist's toolkit. that is serviceable
-    in a wide range of scenarios. ranging from furniture rearrangement
-    or table-top manipulation to bin picking.
-  \end{enumerate}
+  The exact motion bounds an tighter over wide range of object
+  geometries.
+
+% Major contributions:
+%   \begin{enumerate}
+%   \item Proof of stability
+%   \item first known algorithm that computes exact angular velocity
+%     bounds on the friction dominated motion of a pushed/pulled object.
+%   \item Uncertainty bounds on the orientation
+%   \item Planner that exploits the stability of pulling using the exact
+%     angular velocity bounds.
+%   \item to return trajectories.
+%   \item An easy to implement in both hardware and software skill. 
+%   \item validated on a real robotic system.
+%     A useful addition to a roboticist's toolkit. that is serviceable
+%     in a wide range of scenarios. ranging from furniture rearrangement
+%     or table-top manipulation to bin picking.
+%   \end{enumerate}
 \end{abstract}
 
 \IEEEpeerreviewmaketitle
@@ -247,10 +255,10 @@ velocity of the pushed object.
 
 If the motion cannot be predicted, then another option is to find
 bounds on the velocity of the pushed object. This problem was first
-raised in Mason's seminal thesis on robotic pushing
-\cite{Mason1982}. In the case of fixed contact pushing, this is
-equivalent to finding bounds on angular velocity of the object as it
-is pushed through the contact point.
+raised in Mason's thesis on robotic pushing \cite{Mason1982}. In the
+case of fixed contact pushing, this is equivalent to finding bounds on
+angular velocity of the object as it is pushed through the contact
+point.
 % Mason's seminal thesis on robotic pushing \cite{Mason1982} was the
 % first to raise the problem of bounding the motion of a pushed object
 % as an alternative to the errors associated with exact models.
@@ -261,17 +269,18 @@ Since then, various inexact angular velocity bounds have been
 published. The bisector bound restricts the feasible rotation centers
 to a half-space delimited by the perpendicular bisector between the
 contact point and center of pressure \cite{Mason}.  Alexander and
-Maddock bounded the set of feasible rotation centers to lie within the
-minimum object-enclosing vertical strip perpendicular to the wrench
-applied by the pusher \cite{alexander1993bounds}.  Peshkin bounded the
-motion of a pushed object by computing the set of feasible rotation
-centers of the minimum object-enclosing disk centered at the object's
-center of pressure \cite{peshkin1988motion}.
+Maddocks bounded the set of feasible rotation centers to lie within
+the minimum object-enclosing vertical strip perpendicular to the
+wrench applied by the pusher \cite{alexander1993bounds}.  Peshkin and
+Sanderson bounded the motion of a pushed object by computing the set
+of feasible rotation centers of the minimum object-enclosing disk
+centered at the object's center of pressure \cite{peshkin1988motion}.
 
 In contrast to the prior art, our algorithm is the first to find
 \textit{exact} angular velocity bounds for a pushed object. 
 
-
+Implicitly, this method checks feasibility against the class of
+pressure distributions with shared center of pressure. 
 
 Our work facilitates a new class of pressure distribution assumptions 
 
@@ -311,7 +320,7 @@ purposes. First, it defines the notation and terminology used
 throughout our paper. Second, it frames our work in the context of the
 quasi-static theory of planar pushing. Subsection
 \ref{sec:frictional-envelope} summarizes the moment envelope construct
-used for jointly reasoniparticularizessure and frictional torques. This
+used to jointly reason about pressure and frictional torques. This
 construct is particularly relevant for Subsection
 \ref{sec:point-in-moment-enve}, which introduces an algorithm that
 computes the feasibility of a given pushed object velocity.
@@ -538,7 +547,7 @@ A frictional moment envelope has as its parameters the support region
 $R$ and twist $\mathbf{v}^+$. Let $f_0$ be the total pressure. Then
 the function
 \begin{equation}
-  \mathbf{f}(\mathbf{x}) = -\mu f_0\,\frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert}\label{eq:unit-moment-at-x}
+  g(\mathbf{x}) = -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x}
 \end{equation}
 evaluates the frictional torque that would result from a unit
 normalized pressure at $\mathbf{x}$. Let $G$ map $R$ into a surface in
@@ -644,8 +653,8 @@ establish convergence guarantees for robotic pulling trajectories.
 
 We prove that the set of feasible angular velocities for an object
 with known center of pressure is connected and bounded. These two
-properties facilitate the use of a bisection search to locate the
-minimum and maximum angular velocities in Subsection
+properties justify the use of a bisection search to locate the minimum
+and maximum angular velocities in Subsection
 \ref{sec:exact-ang-vel-bound-alg}.
 
 We begin by citing a proposition from variation analysis used in our
@@ -723,9 +732,9 @@ set of pressure distributions with known center of pressure.
   \begin{equation}
     \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*}, \label{eq:rot-to-ang}
   \end{equation}
-  where $x^*$, strictly positive (negative), is the intersection of
-  the bisector line and the $x$-axis. Therefore, $\Omega$ is a
-  bounded interval.
+  where the rotation center $x^*$, strictly positive (negative), is
+  the intersection of the bisector line and the $x$-axis. Therefore,
+  $\Omega$ is a bounded interval.
 
   When the center of pressure falls on the line of motion, the rigid
   body translates and $\Omega = \{0\}$ \cite{Mason}.
@@ -1119,10 +1128,9 @@ and the effective rear axle center is the projection of the rotation center onto
 In this experiment, we compare distance-to-convergence for our exact
 angular velocity bounds and the previous best bound, i.e. the Peshkin
 bound \cite{peshkin1988motion}. We test the bounds over the objects in
-the MIT Pushing Dataset \cite{} and randomly generated bipods,
+the MIT Pushing Dataset \cite{YuBFR16} and randomly generated bipods,
 tripods, and quadrapods. The generated $n$-pods were chosen to have
-circumcircle diameters similar to the MIT objects, roughly
-$0.16$m. 
+circumcircle diameters similar to the MIT objects, roughly $0.16$m.
 
 We compute distance-to-convergence in the following manner. Let
 $\gamma$ be an angular velocity bound (can be upper or lower). We
@@ -1171,15 +1179,13 @@ bounds are required for smaller tables.
         \midrule
         Tripod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
         \midrule
-        Quadpod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        Quadrapod & $\begin{matrix}0.880\\0.417\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.120\\ 0.099\end{matrix}$ & $\begin{matrix}0.749\\0.489\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.114\\ 0.098\end{matrix}$ & $\begin{matrix}1.207\\0.329\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.235\\0.096\end{matrix}$ \\
         \bottomrule
       \end{tabular}
   \end{center}
   \caption{Comparison of distance-to-convergence (in meters) for different objects and angular velocity bounds. The top and bottom values in each cell correspond to distances from the upper and lower angular velocity bounds, respectively. See Section \ref{sec:bound-comparison} for the experimental setup.}
   \label{table:convergence-distance}
 \end{table}
-
-
 
 \subsection{Robotic Pulling on a Tabletop}
 To validate the planner, we generated random start and end poses of a rectangular (75mmx50mm) object.

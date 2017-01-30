@@ -6,7 +6,7 @@ import presspull.*
 import data.*
 
 %% Timings. convergence.
-load('/home/eric/src/presspull/data/bounds/mit_bounds.mat');
+load('/home/eric/src/presspull/data/bounds/4pod_bounds.mat');
 
 w = pi/2;
 tol = 1/180*pi;
@@ -14,20 +14,23 @@ exact = zeros([2,length(bounds)]);
 fifty = zeros([2,length(bounds)]);
 peshkin = zeros([2,length(bounds)]);
 for i = 1:length(bounds)
-    obj = bounds(i)
+    obj = bounds(i);
     T = obj.exact.T;
     L = obj.exact.L;
     U = obj.exact.U;
+    U(150) - L(150)
     exact(1,i) = computeConvergenceTime(w,tol,T,L);
     exact(2,i) = computeConvergenceTime(w,tol,T,U);
     T = obj.fifty.T;
     L = obj.fifty.L;
     U = obj.fifty.U;
+    U(150) - L(150)
     fifty(1,i) = computeConvergenceTime(w,tol,T,L);
     fifty(2,i) = computeConvergenceTime(w,tol,T,U);
     T = obj.peshkin.T;
     L = obj.peshkin.L;
     U = obj.peshkin.U;
+    U(150) - L(150)
     peshkin(1,i) = computeConvergenceTime(w,tol,T,L);
     peshkin(2,i) = computeConvergenceTime(w,tol,T,U);
 end
