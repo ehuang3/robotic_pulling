@@ -16,10 +16,27 @@ function out = sendAndExecuteTrajectory(trajectory,robot,safe_z,interact_z)
   %Add Trajectory to robot:
   
 
-  sub = rossubscriber('/Mocap',getData);
+  
+  speed_req = rosmessage(robot.setspeed_client);
+  speed_req.Tcp = 20;
+  response = call(robot.setspeed_client,speed_req);
+  add_request = rosmessage(robot.setcartesian_client);
 
+  add_request.X = trajectory(1,1);
+  add_request.Y = trajectory(1,2);
+  add_request.Z = interact_z;
+  add_request.Q0 = 0;
+  add_request.Qx = 0;
+  add_request.Qy = -1;
+  add_request.Qz = 0;
 
-  for i=1:size(trajectory,1)
+  response = call(robot.setcartesian_client,add_request);
+  speed_req = rosmessage(robot.setspeed_client);
+  speed_req.Tcp = 50;
+  global mocap_data;
+  mocap_data = [];
+  rossubscriber('/Mocap',@getMocapData);
+  for i=2:size(trajectory,1)
 
     add_request = rosmessage(robot.setcartesian_client);
 
@@ -30,8 +47,6 @@ function out = sendAndExecuteTrajectory(trajectory,robot,safe_z,interact_z)
     add_request.Qx = 0;
     add_request.Qy = -1;
     add_request.Qz = 0;
-    %add_request.Time = 0.1;
-    %add_request.Zone = 1;
 
     response = call(robot.setcartesian_client,add_request);
   end
@@ -65,7 +80,7 @@ end
 
 function getMocapData(src,msg)
   global mocap_data;
-  mocap_data = [mocap_data msg]
+  mocap_data = [mocap_data msg];
 end
 
     
