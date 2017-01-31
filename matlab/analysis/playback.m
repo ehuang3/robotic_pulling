@@ -6,6 +6,7 @@ function [  ] = playback( data,index)
   X = data.dat(index).xbest;
   U = data.dat(index).ubest;
   Tf = data.dat(index).tf;
+  T1 = data.dat(index).t1;
   fa = 0.00;
   ea = 0.3;
 
@@ -105,7 +106,12 @@ function [  ] = playback( data,index)
     % scatter(coml(1,persist(i)),coml(2,persist(i)),[],blue,'*');
   end
   Tf_rect= rot(Tf(3))*rect + repmat(Tf(1:2),1,4);
-  % fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
+  fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
+  
+  T1_rect= rot(T1(3))*rect + repmat(T1(1:2),1,4);
+  fill(T1_rect(1,:),T1_rect(2,:),'r','FaceAlpha',0.2);
+
+  
   load('outline_final.mat');
   top_left = cat(1,top_left.Position);
   bottom_right = cat(1,bottom_right.Position);

@@ -1,11 +1,24 @@
 function errorDistribution(data,idx);
+
+%%
   T1 = cat(2,data.dat.t1);
   Tf = cat(2,data.dat.tf);
   dat = cat(2,data.dat.rectbest);
   cp = cat(2,dat.cp);
+  xend = [];
+  for i = 1:length(data.dat)
+      xend(:,i) = data.dat(i).xbest(:,end);
+  end
   T1(:,idx) = [];
   Tf(:,idx) = [];
   cp(:,idx) = [];
+  xend(:,idx) = [];
+  
+  alpha = atan2(cp(2,:),cp(1,:));
+  
+  err_cmd = wrapToPi(Tf(3,:)+alpha-pi) - wrapToPi(mean(xend(3:4,:)))
+  err_cmd_u = wrapToPi(Tf(3,:)+alpha-pi) - wrapToPi(xend(3,:))
+  err_cmd_l = wrapToPi(Tf(3,:)+alpha-pi) - wrapToPi(xend(4,:))
 
   err = T1 -Tf;
 
@@ -15,9 +28,12 @@ function errorDistribution(data,idx);
   avg_radial_error = mean(abs(err_r))
   std_radial_error = std(abs(err_r))
   err_th = abs(wrapToPi(err(3,:)));
-  avg_angular_error = rad2deg(mean(err_th))
+  avg_angular_error = rad2deg(mean(abs(err_th)))
   std_angular_error = rad2deg(std(abs(err_th)))
 
+  % 
+
+  %%
   % Check if angular error is within bounds:
   
   d = data.dat;
