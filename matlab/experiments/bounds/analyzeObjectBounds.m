@@ -6,7 +6,7 @@ import presspull.*
 import data.*
 
 %% Timings. convergence.
-load('/home/eric/src/presspull/data/bounds/4pod_bounds.mat');
+load('/home/eric/src/presspull/data/bounds/2pod_bounds.mat');
 
 w = pi/2;
 tol = 1/180*pi;

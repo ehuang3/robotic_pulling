@@ -212,10 +212,10 @@ pressure distributions with shared center of pressure. Moreover, the
 bounds are exact for many additional classes of pressure distributions
 that have not been considered before.
 
-Dealing with uncertainty is a fundamental challenge in robotic
-manipulation. We demonstrate how our bounds can be applied to planning
-for robotic pulling under action uncertainty. Robotic pulling is a
-general-purpose manipulation skill for positioning and orienting
+Dealing with uncertainty is a fundamental challenge in robotics
+\cite{Thrun2005}. We demonstrate how our bounds can be applied to
+planning for robotic pulling under action uncertainty. Robotic pulling
+is a general-purpose manipulation skill for positioning and orienting
 objects. The proposed planner uses the angular velocity bounds to find
 actions that reduce the uncertainty in the system, i.e. close the
 distance between the integrated orientation bounds. Moreover, given a
@@ -233,7 +233,6 @@ planning pulling trajectories under action uncertainty. Section
 \ref{sec:experiments} presents our experimental results. Sections
 \ref{sec:discussion} and \ref{sec:conclusion} close the paper with a
 discussion and conclusion.
-
 
 % one reason for this success is because pulling has convenient
 % stability properties. Barring the one unstable equilibrium point, an
@@ -333,58 +332,77 @@ discussion and conclusion.
 % ``If the [motion] cannot be predicted, then the next best thing is to
 % determine the range of possible [motions].''
 
-Prior work on pushing is largely organized by how to address this
-uncertainty in object motion: what bounds on object motion can be
-obtained under what assumptions.  In all prior work, the bounds are
-conservative but not tight.  That is, the bounds include every
-feasible motion, but also include infeasible motions.
+Prior work bounding the pushed motion of an object is largely
+organized by the bounds on object motion that can be obtained and the
+assumptions required.
+% Since then, various inexact angular velocity bounds have been
+% published. 
+The bisector bound restricts the feasible rotation centers to a
+half-space delimited by the perpendicular bisector between the contact
+point and center of pressure \cite{Mason}.  Alexander and Maddocks
+bounded the set of feasible rotation centers to lie within the minimum
+object-enclosing vertical strip perpendicular to the wrench applied by
+the pusher \cite{alexander1993bounds}.  Peshkin and Sanderson bounded
+the motion of a pushed object by computing the set of feasible
+rotation centers of the minimum object-enclosing disk centered at the
+object's center of pressure \cite{peshkin1988motion}. In all prior
+work, the bounds are conservative but not exact. That is, the bounds
+include every feasible motion, but also include infeasible motions.
 
-Since then, various inexact angular velocity bounds have been
-published. The bisector bound restricts the feasible rotation centers
-to a half-space delimited by the perpendicular bisector between the
-contact point and center of pressure \cite{Mason}.  Alexander and
-Maddocks bounded the set of feasible rotation centers to lie within
-the minimum object-enclosing vertical strip perpendicular to the
-wrench applied by the pusher \cite{alexander1993bounds}.  Peshkin and
-Sanderson bounded the motion of a pushed object by computing the set
-of feasible rotation centers of the minimum object-enclosing disk
-centered at the object's center of pressure \cite{peshkin1988motion}.
+To the extent of our knowledge, prior work has used robotic pulling
+significantly less compared to its counterpart, robotic pushing.
+Though the stable equilibrium that occurs when pulling along a
+straight line was recognized by Mason \cite{mason1986} and Lynch and
+Mason \cite{lynch1995pulling}, we are not aware of any existing
+planner, apart from ours, which explicitly takes advantage of this
+stability. We note that the literature treats pulling as a topic
+subsumed by the theory of planar pushing. This is understandable
+because the differences between pulling and pushing are subtle and few
+(despite their significance). Regardless, our planner is most closely
+related to the work of Lynch and Mason \cite{lynch1996stable}. They
+invented an algorithm that plans stable pushes using two contact
+points. However, their use of weaker bounds \cite{peshkin1988motion,
+  alexander1993bounds, Mason} leads to more conservative strategies.
 
-In contrast to the prior art, our algorithm is the first to find
-\textit{exact} angular velocity bounds for a pushed object. 
+% there are several related works in robotic pushing worth
+% mentioning. Lynch and Mason invented an algorithm that plans stable
+% pushes using two contact points \cite{lynch1996stable}. 
 
-Implicitly, this method checks feasibility against the class of
-pressure distributions with shared center of pressure.
+% Robotic pulling represents 
 
-Our work facilitates a new class of pressure distribution assumptions
+% While pulling 
 
-All-or-nothing approaches to modeling.
+% While several planners for robotic pushing exist, 
 
-Our method can also restrict the set of feasible pressure
-distributions. This allows our method to obtain an order-of-magnitude
-improvement over previous bounds.
+% we were not able to find any designed for
 
-\begin{enumerate}
-\item Robotic Pushing
-  \begin{enumerate}
-  \item Planning
-  \item Force-motion model
-  \item Quasi-static motion model
-  \item Stable pushing
-  \end{enumerate}
+% In contrast to the prior art, our algorithm is the first to find
+% \textit{exact} angular velocity bounds for a pushed object. 
+% Implicitly, this method checks feasibility against the class of
+% pressure distributions with shared center of pressure.
+% Our work facilitates a new class of pressure distribution assumptions
+% All-or-nothing approaches to modeling.
+% Our method can also restrict the set of feasible pressure
+% distributions. This allows our method to obtain an order-of-magnitude
+% improvement over previous bounds.
 
-  Our work is most closely related to robotic pushing.
+% \begin{enumerate}
+% \item Robotic Pushing
+%   \begin{enumerate}
+%   \item Planning
+%   \item Force-motion model
+%   \item Quasi-static motion model
+%   \item Stable pushing
+%   \end{enumerate}
 
-  Lynch 
+%   Our work is most closely related to robotic pushing.
+%   Lynch 
+%   two-point stable pushing of Lynch et al. \cite{}.
+%   Though Lynch and Mason Pulling from Pushing \cite{lynch1995pulling}
+%   mechanical components robust to variations in the friction
 
-  two-point stable pushing of Lynch et al. \cite{}.
-
-  Though Lynch and Mason Pulling from Pushing \cite{lynch1995pulling}
-
-  mechanical components robust to variations in the friction
-
-\item Holonomic Planning
-\end{enumerate}
+% \item Holonomic Planning
+% \end{enumerate}
 
 \section{Background}\label{sec:background}
 % \BB{Briefly describe why this background is necessary. }
@@ -525,7 +543,7 @@ following:
 We take $\mathcal{C} = \{[0,1,\omega]^T, \omega \in \mathbb{R}\}$ so
 that the contact point motion is aligned with the coordinate frame. We
 call the objective in (\ref{eq:constrained-frictional-dissipation})
-the \textit{frictional dissipation equation},
+the \textit{frictional dissipation function},
 $\mathrm{P}(\mathbf{v}^+)$. The principle of minimal dissipation is
 equivalent to the quasi-static model of planar sliding with friction
 \cite{alexander1993bounds}.  In fact, the quasi-static motion
@@ -597,12 +615,12 @@ continuous and convex in $\mathbf{v}^+$.
     \includegraphics[width=1\linewidth]{fig/CoP_boundary}
     \caption{}
   \end{subfigure}
-  \caption{Example moment envelope for a 2D tetrapod with rotation
-    center $x_{\text{IC}} = 0.75$. (a) Support region $R$. (b)
-    Normalized-moment surface $G(R)$. (c) Convex moment envelope of
-    $G(R)$. (d) Intersection of the moment envelope and the
-    $xy$-plane. The intersection bounds the set of feasible centers of
-    pressure with zero moment.}
+  \caption{Example moment envelope for a trigonal 2D object with
+    rotation center $x_{\text{IC}} = 0.75$. (a) Support region
+    $R$. (b) Normalized-moment surface $G(R)$. (c) Convex moment
+    envelope of $G(R)$. (d) Intersection of the moment envelope and
+    the $xy$-plane. The intersection bounds the set of feasible
+    centers of pressure with zero moment.}
   \label{fig:moment-envelope}
 \end{figure}
 
@@ -618,8 +636,8 @@ An example frictional moment envelope is illustrated step-by-step in
 Figure \ref{fig:moment-envelope}.
 
 A frictional moment envelope has as its parameters the support region
-$R$ and twist $\mathbf{v}^+$. Let $f_0$ be the total pressure. Then
-the function
+$R$ and twist $\mathbf{v}^+$. Let $f_0$ be the total normal
+force. Then the function
 \begin{equation}
   g(\mathbf{x}) = -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x}
 \end{equation}
@@ -665,16 +683,18 @@ the moment envelope generated by $\omega$.
 
 \section{Theory}\label{sec:theory}
 
-This section covers our theoretical
-contributions. \ref{sec:prop-angular-velocity-bounds} lays the
-theoretical groundwork necessary for proving the correctness of the
-exact angular velocity bound algorithm introduced in
+This section covers our theoretical contributions. Subsection
+\ref{sec:prop-angular-velocity-bounds} lays the theoretical groundwork
+necessary for proving the correctness of the exact angular velocity
+bound algorithm introduced in
 \ref{sec:exact-ang-vel-bound-alg}. Subsection
 \ref{sec:orientation-bounds} extends the angular velocity bounds to
-orientation bounds. Lastly, \ref{sec:stability} contains an proof of
-the existence and uniqueness (modulo $2\pi$) of a stable equilibrium
-when pulling an object. These last two subsections are mainly to
-establish convergence guarantees for robotic pulling trajectories.
+orientation bounds. This last subsection is mainly to establish
+convergence guarantees for robotic pulling trajectories.
+
+% Lastly, \ref{sec:stability} contains a proof of
+% the existence and uniqueness (modulo $2\pi$) of a stable equilibrium
+% when pulling an object. 
 
 \subsection{Properties of Angular Velocities Bounds}\label{sec:prop-angular-velocity-bounds}
 
@@ -731,7 +751,7 @@ properties justify the use of a bisection search to locate the minimum
 and maximum angular velocities in Subsection
 \ref{sec:exact-ang-vel-bound-alg}.
 
-We begin by citing a proposition from variation analysis used in our
+We begin by citing a proposition from variational analysis used in our
 proofs of the main results.
 \begin{proposition}\label{prop:var-analysis}
   Suppose $P(u) := \argmin_x f(x,u)$ with
@@ -753,10 +773,11 @@ proofs of the main results.
 \begin{proof}
   Let $\Omega$ be the set of feasible angular velocities,
   w.r.t. (\ref{eq:constrained-frictional-dissipation}), for a given
-  support region $R$ with known center of pressure. $\Omega$ is
-  nonempty since a single support point located at the center of
-  pressure has an analytic solution. Let
-  $\omega_1, \omega_2 \in \Omega$ and let $p_1, p_2$ be their
+  support region $R$ with known center of pressure. Suppose $\Omega$
+  is non-empty.
+  % $\Omega$ is nonempty since a single support point located at the
+  % center of pressure has an analytic solution.
+  Let $\omega_1, \omega_2 \in \Omega$ and let $p_1, p_2$ be their
   corresponding pressure distributions. Then the new distribution
   $p_t = tp_1 + (1-t)p_2$, with $t \in [0,1]$, shares the same center
   of pressure as $p_1,p_2$. Define the function
@@ -782,7 +803,7 @@ proofs of the main results.
   $\Omega$ is connected.
 \end{proof}
 
-In general, Theorem \ref{thm:angular-velocities} holds for any convex%
+In general, Theorem \ref{thm:angular-velocities} holds for any convex
 set of pressure distributions with known center of pressure. 
 
 % Note, the set of pressure
@@ -819,44 +840,45 @@ set of pressure distributions with known center of pressure.
 \begin{figure}[t]
   \centering
     \includegraphics[width=1\linewidth]{fig/omega_bounds}
-    \caption{Example angular velocity bounds for the 2D tetrapod from
-      Figure \ref{fig:moment-envelope}. The tetrapod is oriented such
-      that the stable pulling configuration corresponds to
-      $\theta=0$.}
+    \caption{Example angular velocity bounds for the trigonal 2D
+      object from Figure \ref{fig:moment-envelope}. The object is
+      oriented such that the stable pulling configuration corresponds
+      to $\theta=0$.}
   \label{fig:omega-bounds}
 \end{figure}
 
 The angular velocity bounds derived in Subsection
 \ref{sec:prop-angular-velocity-bounds} can be integrated into bounds
 on the position of the pulled body.  Let $\theta$ be the true
-orientation of the pulled body in the world frame. Let the function
-$\omega$ map from the pulling angle to the true angular
-velocity. Likewise, let $u$ and $l$ be upper and lower bounds on the
-true orientation, and let the functions $\alpha$ and $\beta$ map from
-the angular deviation\footnote{Angular deviation from the stable
-  pulling configuration, in the frame of the contact point. A
-  deviation of 0 degrees corresponds to the center of pressure
-  dragging behind the contact point.} to the upper and lower angular
-velocity bound. An example plot of $u$ and $l$ is illustrated in
-Figure \ref{fig:omega-bounds}.
+orientation of the pulled body in the world frame.  We define the
+\textit{angular deviation} of the object as the angle deviation from
+the stable pulling configuration in the frame of the moving contact
+point. A deviation of 0 degrees corresponds to the center of pressure
+dragging behind the contact point. In Figure
+\ref{fig:presspull-motion}, the rectangular object has an angular
+deviation of 135 degrees. Let the function $\omega$ map from the
+angular deviation to the true angular velocity. Likewise, let $u$ and
+$l$ be upper and lower bounds on the true orientation, and let the
+functions $\alpha$ and $\beta$ map from the angular deviation to the
+upper and lower angular velocity bound. An example plot of $u$ and $l$
+is illustrated in Figure \ref{fig:omega-bounds}.
 
 We assume that the pulling trajectory
 $\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
 finite number of straight line segments of equal length. Given such a
 $\gamma$, the pulling angle
-$\phi(t) = \tan^{-1}(\gamma_y(t),\gamma_x(t))$ is a piece-wise
-constant (step) function. Let $v(t) = \lVert\dot{\gamma}(t)\rVert$. As
-the planar rigid body is pulled along $\gamma$, the state and bounds
-change according to the dynamical system
+$\phi(t) = \tan^{-1}(\dot{\gamma}_y(t),\dot{\gamma}_x(t))$ is a
+piece-wise constant (step) function. Let
+$v(t) = \lVert\dot{\gamma}(t)\rVert$. As the planar rigid body is
+pulled along $\gamma$ with unit velocity, the state and bounds change
+according to the dynamical system
 \begin{align}
-  \dot{x} &= v(t)\cdot\cos(\phi(t))\\
-  \dot{y} &= v(t)\cdot\sin(\phi(t))\\
-  \dot{\theta} &= v(t)\cdot\omega(\theta - \phi(t) + \pi)\\
-  \dot{u} &=  v(t)\cdot\alpha(u - \phi(t) + \pi) \label{eq:u-ode}\\ 
-  \dot{\ell} &=  v(t)\cdot\beta(\ell - \phi(t) + \pi). 
+  \dot{x} &= \cos(\phi(t))\\
+  \dot{y} &= \sin(\phi(t))\\
+  \dot{\theta} &= \omega(\theta - \phi(t) + \pi)\\
+  \dot{u} &=  \alpha(u - \phi(t) + \pi) \label{eq:u-ode}\\ 
+  \dot{\ell} &=  \beta(\ell - \phi(t) + \pi). 
 \end{align}
-Without loss of generality, we assume that the body is pulled at a
-constant unit velocity.
 
 \begin{proposition}
   For pulling of a rigid body with known initial pose, the orientation
@@ -924,61 +946,61 @@ constant unit velocity.
 %   }
 % \end{proof}
 
-\subsection{Quasi-static Stability}\label{sec:stability}
+% \subsection{Quasi-static Stability}\label{sec:stability}
 
-\EH{TODO: Simplify proof. Should be like two lines. It kind of makes
-  the paper more schizophrenic, so might even remove it.}
+% \EH{TODO: Simplify proof. Should be like two lines. It kind of makes
+%   the paper more schizophrenic, so might even remove it.}
 
-\begin{theorem}
-  For pulling of a rigid body in the plane, the line from the pulling
-  contact point to the body's center of pressure converges to the line
-  of motion.
-\end{theorem}
+% \begin{theorem}
+%   For pulling of a rigid body in the plane, the line from the pulling
+%   contact point to the body's center of pressure converges to the line
+%   of motion.
+% \end{theorem}
 
-\begin{proof}
-  % TODO Shorten this proof. Rewrite to use generalized velocities.
-  Let the $y$-axis of the coordinate frame be aligned with the line of
-  motion of the press-pull contact point (see Figure
-  \ref{fig:presspull-motion} for an example). Then the instantaneous
-  rotation center of the body must fall on the $x$-axis, and we can
-  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+% \begin{proof}
+%   % TODO Shorten this proof. Rewrite to use generalized velocities.
+%   Let the $y$-axis of the coordinate frame be aligned with the line of
+%   motion of the press-pull contact point (see Figure
+%   \ref{fig:presspull-motion} for an example). Then the instantaneous
+%   rotation center of the body must fall on the $x$-axis, and we can
+%   write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
 
-  Suppose the center of pressure is strictly to the right of the line
-  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
-  7.4 in \cite{Mason}, the rotation center lies on the positive
-  $x$-axis and has negative rotation. The velocity of a point on the
-  rigid body is given by
-  $\mathbf{v}(\mathbf{r}) =
-  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
-  \mathbf{r}_\text{IC})$.
-  We can compute the motion of the body relative to the contact point
-  by
-  \begin{align*}
-    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
-    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
-  \end{align*}
-  where $\mathbf{v}_c$ is the velocity of the contact point. In other
-  words, the body is rotating clockwise relative to the
-  contact point with angular velocity
-  \begin{equation}
-    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
-  \end{equation}
+%   Suppose the center of pressure is strictly to the right of the line
+%   of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+%   7.4 in \cite{Mason}, the rotation center lies on the positive
+%   $x$-axis and has negative rotation. The velocity of a point on the
+%   rigid body is given by
+%   $\mathbf{v}(\mathbf{r}) =
+%   \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+%   \mathbf{r}_\text{IC})$.
+%   We can compute the motion of the body relative to the contact point
+%   by
+%   \begin{align*}
+%     \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+%     &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+%   \end{align*}
+%   where $\mathbf{v}_c$ is the velocity of the contact point. In other
+%   words, the body is rotating clockwise relative to the
+%   contact point with angular velocity
+%   \begin{equation}
+%     \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+%   \end{equation}
 
-  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
-  pressure in the frame of the contact point. When the line of motion
-  passes through the center of pressure, a pure translation takes
-  place (Theorem 7.4 in \cite{Mason}). This implies that
-  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
-  $\theta$ is monotonically decreasing, we see that it must converge
-  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+%   Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+%   pressure in the frame of the contact point. When the line of motion
+%   passes through the center of pressure, a pure translation takes
+%   place (Theorem 7.4 in \cite{Mason}). This implies that
+%   $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+%   $\theta$ is monotonically decreasing, we see that it must converge
+%   to $-\pi/2$ in the limit as $t \rightarrow \infty$.
 
-  The case when the center of pressure is strictly to the left of the
-  line of motion follows from symmetry about the $y$-axis.
-\end{proof}
+%   The case when the center of pressure is strictly to the left of the
+%   line of motion follows from symmetry about the $y$-axis.
+% \end{proof}
 
-Note that the above proof holds for \textit{all pressure
-  distributions} of the body on the support
-surface.
+% Note that the above proof holds for \textit{all pressure
+%   distributions} of the body on the support
+% surface.
 
 \section{Methods}\label{sec:methods}
 
@@ -1160,10 +1182,10 @@ consist of constant curvature turns and straight line segments. To
 apply these curves to our system, we need two pieces of information:
 the minimum turning radius and the effective rear axle center. 
 
-Given a heading $\omega \in (-\pi/2,\pi/2) $ and resultant angular velocity
-$\alpha(\omega)$ in the frame of the contact point, the minimum
-turning radius is equivalent to the distance from the center of
-rotation to the line between the contact point and the center of
+Given a heading $\omega \in (0,\pi/2) $ and resulting upper angular
+velocity bound $\alpha(\omega)$ in the frame of the contact point, the
+minimum turning radius is equivalent to the distance from the center
+of rotation to the line between the contact point and the center of
 pressure $\mathbf{p}_0 = [x_0,y_0]^T$, that is
 \begin{equation}
   r_{\text{min}} = \frac{\sign y_0}{\alpha(\omega)},
