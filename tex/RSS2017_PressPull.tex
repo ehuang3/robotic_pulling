@@ -128,11 +128,12 @@ cross/.default={2pt}}
   This paper explores the quasi-static motion of a planar slider being
   pushed or pulled through a single contact point assumed not to
   slip. The main contribution is to derive exact bounds on the
-  object's motion for a class of pressure distributions where the
+  object's motion for classes of pressure distributions where the
   center of pressure is known but the distribution of support forces
-  is unknown. The secondary contribution is to show that the exact
-  motion bounds can be used to plan robotic pulling trajectories that
-  have convergence guarantees on the final object pose. 
+  is unknown. The second contribution is to show that the exact motion
+  bounds can be used to plan robotic pulling trajectories that bound
+  the uncertainty in object pose during execution and guarantee
+  convergence to the final pose.
 
   \EH{TODO: Experimental results} 
 
@@ -188,60 +189,6 @@ cross/.default={2pt}}
 % \begin{inparaenum}
 % \item 
 
-Dealing with uncertainty is a fundamental challenge in robotic
-manipulation. Uncertainty arises from many sources including limited
-sensors, incomplete models, and stochastic actions. In this work, we
-introduce robotic pulling as a method of robotic manipulation that
-remains stable in the presence of uncertainty.
-
-Robotic pulling is a general-purpose manipulation skill for positioning and
-orienting objects where the robot contacts a
-rigid body at a point and pulls that contact point along a
-trajectory. Pulling is especially useful for manipulating objects that are too
-large or heavy to be picked or objects that are tucked away and difficult
-to reach.
-
-In this paper, we introduce the theoretical and
-practical formulation of pulling as a primitive action for positioning
-and orienting objects under uncertainty. An important contribution of
-our approach is showing that, when pulling, %, even during open-loop control, 
-the system uncertainty (error) remains Lyapunov stable. %Next, we highlight the results that enable us to create our primitive action planner for pulling.
-%
-%The insight that motivated this work was our recognition, and
-%subsequent proof, of the stability of pulling. 
-Consider the following example: if an object is pulled
-in a straight line along a surface, the frictional forces cause the
-object to rotate around the contact point until the object's center of
-mass aligns with the line of motion. We show how algorithms can take advantage of
-this kind of stability to guarantee the object has been pulled into the
-correct position and orientation.
-
-Stability alone is not a sufficient for planning with convergence guarantees. % to enable planning to guarantee convergence. 
-A practical planner also requires knowledge of
-the object's rate of convergence to the stable configuration. Toward this
-end, we develop the first known algorithm that computes exact angular
-velocity bounds on the motion of a pushed or pulled object. The bounds
-can be made arbitrarily tight by specifying a convex set of candidate
-pressure distributions over which to compute them. In addition, we prove
-that the angular velocity bounds can be integrated into orientation
-bounds, which can be used for planning convergent trajectories.
-
-To show the practical benefit of our approach, we use Differential Dynamic Programming (DDP) as a
-locally optimal planner for computing pulling trajectories. By
-augmenting the dynamics with the orientation bounds, we allow DDP to
-track the convergence of the pulled object. In Section~\ref{} we verify this approach 
-both in simulation and on a real robotic system.
-% \end{inparaenum}
-
-% \begin{inparaenum}
-% \item Section \ref{sec:related-work}
-% \item Section \ref{sec:theory}
-% \item Section \ref{sec:methods}
-% \item Section \ref{sec:experiments}
-% \end{inparaenum}
-
-\section{Related Work}\label{sec:related-work}
-
 Pushing (or pulling) planar objects with fixed contact is difficult to
 model in both theory and practice. First, pressure distributions of
 objects are statically indeterminant (barring the case of three-point
@@ -258,13 +205,128 @@ bounds on the velocity of the pushed object. This problem was first
 raised in Mason's thesis on robotic pushing \cite{Mason1982}. In the
 case of fixed contact pushing, this is equivalent to finding bounds on
 angular velocity of the object as it is pushed through the contact
-point.
+point. To this end, we develop the first algorithm that finds
+\textit{exact} angular velocity bounds on the object's motion over all
+pressure distributions with shared center of pressure. Moreover, the
+bounds are exact for many additional classes of pressure distributions
+that have not been considered before.
+
+Dealing with uncertainty is a fundamental challenge in robotic
+manipulation. We demonstrate how our bounds can be applied to planning
+for robotic pulling under action uncertainty. Robotic pulling is a
+general-purpose manipulation skill for positioning and orienting
+objects. The proposed planner uses the angular velocity bounds to find
+actions that reduce the uncertainty in the system, i.e. close the
+distance between the integrated orientation bounds. Moreover, given a
+suitable initialization, the planner finds trajectories that guarantee
+the uncertainty at the final pose collapses to a singleton.
+
+
+
+% One reason for this success is because pulling has convenient
+% stability properties. Barring the one unstable equilibrium point, an
+% object pulled in a straight line converges to a stable equilibrium.
+
+% The rationale for this is that, 
+
+% there exists a stable and unstable equilibrium when
+
+% Because stable equilibria 
+
+% The end-product is 
+
+% A subset of pulling trajectories are stable 
+
+% Dragging objects 
+
+% Because pulling is an inherently stable maneuver, 
+
+% Our planner maintains bounds on the object pose during a
+% trajectory and reasons \\
+
+% where the robot contacts a rigid body at a point and pulls
+% that contact point along a trajectory. 
+
+% Pulling is especially useful for manipulating objects that are too
+% large or heavy to be picked or objects that are tucked away and
+% difficult to reach.
+
+% We apply our bounds to planning under uncertainty.
+% We verify 
+
+% Uncertainty arises from many sources including limited
+% sensors, incomplete models, and stochastic actions. In this work, we
+% introduce robotic pulling as a method of robotic manipulation that
+% remains stable in the presence of uncertainty.
+
+% Robotic pulling is a general-purpose manipulation skill for positioning and
+% orienting objects where the robot contacts a
+% rigid body at a point and pulls that contact point along a
+% trajectory. Pulling is especially useful for manipulating objects that are too
+% large or heavy to be picked or objects that are tucked away and difficult
+% to reach.
+
+% In this paper, we introduce the theoretical and practical formulation
+% of pulling as a primitive action for positioning and orienting objects
+% under uncertainty. An important contribution of our approach is
+% showing that, when pulling, %, even during open-loop control,
+% the system uncertainty (error) remains Lyapunov
+% stable. %Next, we highlight the results that enable us to create our primitive action planner for pulling.
+%
+%The insight that motivated this work was our recognition, and
+%subsequent proof, of the stability of pulling. 
+% Consider the following example: if an object is pulled
+% in a straight line along a surface, the frictional forces cause the
+% object to rotate around the contact point until the object's center of
+% mass aligns with the line of motion. We show how algorithms can take advantage of
+% this kind of stability to guarantee the object has been pulled into the
+% correct position and orientation.
+
+% To show the practical benefit of our approach, we use Differential Dynamic Programming (DDP) as a
+% locally optimal planner for computing pulling trajectories. By
+% augmenting the dynamics with the orientation bounds, we allow DDP to
+% track the convergence of the pulled object. In Section~\ref{} we verify this approach 
+% both in simulation and on a real robotic system.
+% \end{inparaenum}
+
+% \begin{inparaenum}
+% \item Section \ref{sec:related-work}
+% \item Section \ref{sec:theory}
+% \item Section \ref{sec:methods}
+% \item Section \ref{sec:experiments}
+% \end{inparaenum}
+
+% Stability alone is not a sufficient for planning with convergence
+% guarantees. % to enable planning to guarantee convergence.
+% A practical planner also requires knowledge of the object's rate of
+% convergence to the stable configuration.
+
+% Toward this end, we develop the first known algorithm that computes
+% exact angular velocity bounds on the motion of a pushed or pulled
+% object. The bounds can be made arbitrarily tight by specifying a
+% convex set of candidate pressure distributions over which to compute
+% them. In addition, we prove that the angular velocity bounds can be
+% integrated into orientation bounds, which can be used for planning
+% convergent trajectories.
+
+% In contrast to the prior art, our algorithm is the first to find
+% \textit{exact} angular velocity bounds for a pushed object. 
+
+\section{Related Work}\label{sec:related-work}
+
 % Mason's seminal thesis on robotic pushing \cite{Mason1982} was the
 % first to raise the problem of bounding the motion of a pushed object
 % as an alternative to the errors associated with exact models.
 % The problem of bounding the motion 
 % ``If the [motion] cannot be predicted, then the next best thing is to
 % determine the range of possible [motions].''
+
+Prior work on pushing is largely organized by how to address this
+uncertainty in object motion: what bounds on object motion can be
+obtained under what assumptions.  In all prior work, the bounds are
+conservative but not tight.  That is, the bounds include every
+feasible motion, but also include infeasible motions.
+
 Since then, various inexact angular velocity bounds have been
 published. The bisector bound restricts the feasible rotation centers
 to a half-space delimited by the perpendicular bisector between the
@@ -280,11 +342,11 @@ In contrast to the prior art, our algorithm is the first to find
 \textit{exact} angular velocity bounds for a pushed object. 
 
 Implicitly, this method checks feasibility against the class of
-pressure distributions with shared center of pressure. 
+pressure distributions with shared center of pressure.
 
-Our work facilitates a new class of pressure distribution assumptions 
+Our work facilitates a new class of pressure distribution assumptions
 
-All-or-nothing approaches to modeling. 
+All-or-nothing approaches to modeling.
 
 Our method can also restrict the set of feasible pressure
 distributions. This allows our method to obtain an order-of-magnitude
