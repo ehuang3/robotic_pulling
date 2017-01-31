@@ -132,11 +132,12 @@ cross/.default={2pt}}
   object's motion for classes of pressure distributions where the
   center of pressure is known but the distribution of support forces
   is unknown. The second contribution is to show that the exact motion
-  bounds can be used to plan robotic pulling trajectories that bound
-  the uncertainty in object pose during execution and guarantee
-  convergence to the final pose.
+  bounds can be used to plan robotic pulling trajectories that
+  guarantee convergence to the final pose. The planner was tested by 
 
   \EH{TODO: Experimental results} 
+
+
 
   The distance between the upper and lower motion bounds were 
   5-10$\times$ 
@@ -1335,7 +1336,7 @@ within the vision system's field of view. The planner was evaluated
 for all eight contact points and the lowest cost trajectory that
 remained within the robot workspace was executed on the robot at
 25mm/s linear speed. The final pose was then recorded by the motion
-capture system.
+capture system. 
 
 We collected 80 trials of robotic pulling. Of those, we discarded the
 4 trials were the algorithm failed to find any feasible trajectory
@@ -1344,9 +1345,9 @@ target pose was 4.00mm $\pm$ 3.02mm. The average absolute angular
 displacement from the target pose was 4.35 degrees $\pm$ 3.14
 degrees. Note the hole radius introduces a systematic error of 3mm to
 the final pose because the puller contacts the edge of the hole, not
-the center.
-
-
+the center. Overall, our experimental results support the claim that
+the planner finds convergent pulling trajectories. An example trial is
+visualized in Figure \ref{fig:trajectory}.
 
 % We distinguish between two types of error during the pulling
 % experiments. The target error is the error between the target pose and
