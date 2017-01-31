@@ -51,7 +51,8 @@ t = H(1:3,4)'
 
 
  H_body_robot = [R t; 0 0 0 1];
- H_corner_robot = H_body_robot * inv(H_body_corner)
+ H_corner_robot = H_body_robot * 
+ 
 
  H_in = [R, -R*t; 0 0 0 1];
  p0_in = H_in * p0;

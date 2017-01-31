@@ -24,14 +24,14 @@ import ddp.planCSC
 %Experiment constants:
 num_experiments = 100;
 data_location = '~/src/presspull/data/experiment/';
-experiment_prefix = 'small_rect2cp_100';
+experiment_prefix = 'small_rect8cp_100_mocap';
 % Workspace bounds.
 x_work_min = 0.39;
-x_work_max = 0.75;
+x_work_max = 0.70;
 y_work_min =-0.076;
 y_work_max = 0.35;
 reachable.xmin = 0.26;
-reachable.xmax = 0.75;
+reachable.xmax = 0.70;
 reachable.ymin = -0.24;
 reachable.ymax = 0.450;
 work = struct('xmin',x_work_min,'xmax',x_work_max,'ymin',y_work_min,'ymax',y_work_max);
@@ -44,8 +44,8 @@ A_theta = [-pi/2 pi/2];
 B_theta = [-pi/2 pi/2];
 
 % 3x6 rectangle.
-rect_w = 0.050;
-rect_l = 0.075;
+rect_w = 0.0496;
+rect_l = 0.07465;
 mass = 0.064;
 
 % List of contact points relative to object frame.
@@ -61,22 +61,22 @@ mass = 0.064;
 cp1 = [0.019315;0];
 cp2 = -cp1;
 %List of contact points for small acrylic rect:
-cp1 = [-34.5;22];
-cp2 = [-34.5;0];
-cp3 = [-34.5;-22];
-cp4 = [0;22];
+cp1 = [-0.0314525;0.019];
+cp2 = [-0.0314525;0];
+cp3 = [-0.0314525;-0.019];
+cp4 = [0;0.019];
 cp5 = -cp4;
 cp6 = -cp3;
 cp7 = -cp2;
 cp8 = -cp1;
-CP = [cp1 cp2];% cp3 cp4 cp5 cp6 cp7 cp8];
+CP = [cp1 cp2 cp3 cp4 cp5 cp6 cp7 cp8];
 %cpoff = [0.01508 + 0.0042; 0.01508 + 0.0042];
 %CP = CP + repmat(cpoff,[1,8]);
 %CP = CP + repmat([-rect_l/2;-rect_w/2],[1,size(CP,2)]);
 contact_point_list = CP;
 
 % Percentage of object always in contact with surface.
-percent_in_contact = 0.50;
+percent_in_contact = 0.25;
 
 % Object Frame
 %object_transform = [        0.934847617898597        -0.354817300112436         0.012830231885651          79.9554719491778;
@@ -89,10 +89,10 @@ percent_in_contact = 0.50;
 %                        -0.0216    0.9998    0.0021 -106.1857;
 %                              0         0         0    1.0000;];
 %Small Rectangle Transform
-object_transform = [ 0.9997    0.0212    0.0104   21.6681;
-                     0.0104    0.0028   -0.9999    2.4999;
-                    -0.0212    0.9998    0.0025  -46.1302;
-                          0         0         0    1.0000;];
+object_transform = [  0.9998    0.0179    0.0091   16.6952;
+                      0.0090    0.0009   -1.0000    2.0177;
+                     -0.0179    0.9998    0.0008  -44.6577;
+                           0         0         0    1.0000];
 global mocap_data;
 % Plot.
 do_plot = 1;
@@ -103,7 +103,7 @@ interact_z = 435;
 
 %% Initialize dynamic system for rectangles x contacts.
 try
-    load('/home/eric/src/presspull/data/rectxcp_small.mat')
+    load('/home/eric/src/presspull/data/rectxcp_8cp_small.mat')
 catch
     %%
     n_cp = size(contact_point_list,2);
@@ -172,7 +172,7 @@ robot = robotSubscriber();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Starting pose.
 
-for N=79:num_experiments
+for N=2:num_experiments
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% READ MOCAP AND ROBOT POSES
@@ -356,7 +356,7 @@ for N=79:num_experiments
     %
     trajectory = 1000*xbest(1:2,:)';
     sendAndExecuteTrajectoryRealtime(trajectory,robot,safe_z,interact_z);
-    poses = mocapToPose(mocap_data);
+    poses = mocapToPose(mocap_data,object_transform);
 
 
 

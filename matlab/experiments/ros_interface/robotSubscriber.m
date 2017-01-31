@@ -9,6 +9,7 @@ function robot = robotSubscriber()
   robot.setworkobj_client = rossvcclient('/robot_SetWorkObject');
   robot.status_client = rossvcclient('/robot_GetState');
   robot.splcmd_client = rossvcclient('/robot_SpecialCommand');
+  robot.setspeed_client = rossvcclient('/robot_SetSpeed');
   setToolAndWorkObj(robot);
 end
 function []= setToolAndWorkObj(robot)

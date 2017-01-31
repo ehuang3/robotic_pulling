@@ -6,45 +6,65 @@ import presspull.*
 import data.*
 
 %% Timings. convergence.
-load('/home/eric/src/presspull/data/bounds/2pod_bounds.mat');
+load('/home/eric/src/presspull/data/bounds/mit_bounds.mat');
 
-w = pi/2;
+w = linspace(1/pi,5/pi,25)
 tol = 1/180*pi;
-exact = zeros([2,length(bounds)]);
-fifty = zeros([2,length(bounds)]);
-peshkin = zeros([2,length(bounds)]);
-for i = 1:length(bounds)
-    obj = bounds(i);
-    T = obj.exact.T;
-    L = obj.exact.L;
-    U = obj.exact.U;
-    U(150) - L(150)
-    exact(1,i) = computeConvergenceTime(w,tol,T,L);
-    exact(2,i) = computeConvergenceTime(w,tol,T,U);
-    T = obj.fifty.T;
-    L = obj.fifty.L;
-    U = obj.fifty.U;
-    U(150) - L(150)
-    fifty(1,i) = computeConvergenceTime(w,tol,T,L);
-    fifty(2,i) = computeConvergenceTime(w,tol,T,U);
-    T = obj.peshkin.T;
-    L = obj.peshkin.L;
-    U = obj.peshkin.U;
-    U(150) - L(150)
-    peshkin(1,i) = computeConvergenceTime(w,tol,T,L);
-    peshkin(2,i) = computeConvergenceTime(w,tol,T,U);
+exact = cell(1);
+fifty = cell(1);
+peshkin = cell(1);
+for j = 1:length(w)
+    e = zeros([2,length(bounds)]);
+    f = zeros([2,length(bounds)]);
+    p = zeros([2,length(bounds)]);
+    for i = 1:length(bounds)
+        obj = bounds(i);
+        T = obj.exact.T;
+        L = obj.exact.L;
+        U = obj.exact.U;
+        U(150) - L(150);
+        e(1,i) = computeConvergenceTime(w(j),tol,T,L);
+        e(2,i) = computeConvergenceTime(w(j),tol,T,U);
+        T = obj.fifty.T;
+        L = obj.fifty.L;
+        U = obj.fifty.U;
+        U(150) - L(150);
+        f(1,i) = computeConvergenceTime(w(j),tol,T,L);
+        f(2,i) = computeConvergenceTime(w(j),tol,T,U);
+        T = obj.peshkin.T;
+        L = obj.peshkin.L;
+        U = obj.peshkin.U;
+        U(150) - L(150);
+        p(1,i) = computeConvergenceTime(w(j),tol,T,L);
+        p(2,i) = computeConvergenceTime(w(j),tol,T,U);
+    end
+    exact{j} = e;
+    fifty{j} = f;
+    peshkin{j} = p;
 end
+
+%% boxplot
+
+
+
+
+for i = 1:length(w)
+    EL = [EL exact{i}(1,:)'];
+    EU = [EU exact{i}(2,:)'];
+end
+
+figure(1); clf; hold on; grid on; 
 
 %%
 disp('exact')
-mu = mean(exact,2)
-sigma = std(exact,0,2)
+mu = mean(e,2)
+sigma = std(e,0,2)
 
 disp('fifty')
-mu = mean(fifty,2)
-sigma = std(fifty,0,2)
+mu = mean(f,2)
+sigma = std(f,0,2)
 
 disp('peshkin')
-mu = mean(peshkin,2)
-sigma = std(peshkin,0,2)
+mu = mean(p,2)
+sigma = std(p,0,2)
 
