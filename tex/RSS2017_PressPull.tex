@@ -220,11 +220,22 @@ objects. The proposed planner uses the angular velocity bounds to find
 actions that reduce the uncertainty in the system, i.e. close the
 distance between the integrated orientation bounds. Moreover, given a
 suitable initialization, the planner finds trajectories that guarantee
-the uncertainty at the final pose collapses to a singleton.
+the uncertainty at the final pose converges to a very small value.
+
+The rest of the paper is organized as follows. Section
+\ref{sec:related-work} discusses related work. Section
+\ref{sec:background} summarizes the relevant background on planar
+pushing needed to understand our work. Section \ref{sec:theory}
+develops several theoretical results needed to prove the correctness
+of our algorithmic contributions. Section \ref{sec:methods} introduces
+the exact angular velocity bound algorithm and the algorithm for
+planning pulling trajectories under action uncertainty. Section
+\ref{sec:experiments} presents our experimental results. Sections
+\ref{sec:discussion} and \ref{sec:conclusion} close the paper with a
+discussion and conclusion.
 
 
-
-% One reason for this success is because pulling has convenient
+% one reason for this success is because pulling has convenient
 % stability properties. Barring the one unstable equilibrium point, an
 % object pulled in a straight line converges to a stable equilibrium.
 
@@ -969,7 +980,7 @@ Note that the above proof holds for \textit{all pressure
   distributions} of the body on the support
 surface.
 
-\section{Methods}
+\section{Methods}\label{sec:methods}
 
 In this section, we synthesize the materials in Sections
 \ref{sec:background} and \ref{sec:theory} into an algorithm for
@@ -1265,9 +1276,9 @@ The remaining 77 experiments yielded an average distance error of 3.9mm (standar
 
 
 
-\section{Discussion}
+\section{Discussion}\label{sec:discussion}
 
-\section{Conclusion}
+\section{Conclusion}\label{sec:conclusion}
 
 \bibliographystyle{plainnat}
 \bibliography{references}
