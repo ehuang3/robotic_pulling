@@ -147,7 +147,7 @@ r_max
 r_mean = mean(r)
 
 %% Generate pods.
-n = 4;
+n = 3;
 
 data_path = getDataPath;
 bounds_path = fullfile(data_path,'bounds');
@@ -189,28 +189,29 @@ for i = 1:30
 end
 
 %%
-clear bounds;
+% clear bounds;
 % load(npod_file)
 for i = 1:length(pod)
+    %%
     obj = pod(i)
     obj.cp = ellipse{i}(1).pt
-    % Exact bounds.
+    %% Exact bounds.
     [L,U,T] = computeBounds(obj,obj.cp);
     exact = struct;
     exact.L = L;
     exact.U = U;
     exact.T = T;
-    % 50 percent contact.
+    %% 50 percent contact.
     obj50 = obj;
     n_R = size(obj50.R,2);
     obj50.LB = zeros([1,n_R]);
     obj50.UB = 1/(0.5 * n_R) .* ones([1,n_R]);
-    [L,U,T] = computeBounds(obj50,obj50.cp);
+    [L,U,T] = computeBounds(obj50,obj50.cp);    
     fifty = struct;
     fifty.L = L;
     fifty.U = U;
     fifty.T = T;
-    % Peshkins.
+    %% Peshkins.
     objp = obj;
     Vp = objp.V;
     comp = objp.com;
@@ -223,10 +224,11 @@ for i = 1:length(pod)
     objp.K = Kp;
     objp.R = Rp;
     [L,U,T] = computeBounds(objp,objp.cp);
+    peshkin = struct;
     peshkin.L = L;
     peshkin.U = U;
     peshkin.T = T;
-    % Store bounds.
+    %% Store bounds.
     obj.exact = exact;
     obj.fifty = fifty;
     obj.peshkin = peshkin;
