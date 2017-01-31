@@ -6,8 +6,8 @@ function [  ] = playback( data,index)
   X = data.dat(index).xbest;
   U = data.dat(index).ubest;
   Tf = data.dat(index).tf;
-  fa = 0.05;
-  ea = 0.2;
+  fa = 0.00;
+  ea = 0.3;
 
   %% Playback dynamics.
 
@@ -64,47 +64,55 @@ function [  ] = playback( data,index)
     Vy = [Vu(2,K(:,1)); Vu(2,K(:,2))];
     fill(Vx(2,:),Vy(2,:),orange,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',0.5,'EdgeColor',orange);
     tr = [tr [Vx(2,:); Vy(2,:)]];
-    hu = plot(comu(1,1:i),comu(2,1:i),'color',orange,'DisplayName','Upper Bound','LineWidth',2);
+    % hu = plot(comu(1,1:i),comu(2,1:i),'color',orange,'DisplayName','Upper Bound','LineWidth',2);
     Vx = [Vl(1,K(:,1)); Vl(1,K(:,2))];
     Vy = [Vl(2,K(:,1)); Vl(2,K(:,2))];
     fill(Vx(2,:),Vy(2,:),blue,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor',blue);
     tr = [tr [Vx(2,:); Vy(2,:)]];
-    hc = plot(coml(1,1:i),coml(2,1:i),'color',blue,'DisplayName','Lower Bound','LineWidth',2);
+    % hc = plot(coml(1,1:i),coml(2,1:i),'color',blue,'DisplayName','Lower Bound','LineWidth',2);
     plot(cp(1)+xi(1),cp(2)+xi(2),'r*')
     hl = plot(X(1,1:i),X(2,1:i),'r-.','LineWidth',2,'DisplayName','Contact Point');
-    h_leg = legend([hu hc hl]);
-    set(h_leg,'FontSize',8);
+    % h_leg = legend([hu hc hl]);
+    % set(h_leg,'FontSize',8);
     drawnow;
 
   end
   persist = 1:1:n_steps;
   gca;
+  k = numel(1:100:size(data.dat(index).poses,2))
+  col = linspace(50,255,k);
+  col = [col;col;col];
+
+
+  j = 0;
+  for i = 1:100:size(data.dat(index).poses,2)
+    j = j+1;
+    rect_plot = rot(data.dat(index).poses(3,i))*rect + repmat(data.dat(index).poses(1:2,i),1,4);
+    fill(rect_plot(1,:),rect_plot(2,:),'k','LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor','k')
+    j
+  end
   for i = 1:numel(persist)
     Vi = rot(X(3,persist(i)))*V + repmat(X(1:2,persist(i)),[1,n_vert]);
     Vx = [Vi(1,K(:,1)); Vi(1,K(:,2))];
     Vy = [Vi(2,K(:,1)); Vi(2,K(:,2))];
-    fill(Vx(2,:),Vy(2,:),orange,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor',orange);
+    % fill(Vx(2,:),Vy(2,:),orange,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor',orange);
     Vi = rot(X(4,persist(i)))*V + repmat(X(1:2,persist(i)),[1,n_vert]);
     Vx = [Vi(1,K(:,1)); Vi(1,K(:,2))];
     Vy = [Vi(2,K(:,1)); Vi(2,K(:,2))];
-    fill(Vx(2,:),Vy(2,:),blue,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor',blue)
-    plot(cp(1)+X(1,persist(i)),cp(2)+X(2,persist(i)),'r*')
+    % fill(Vx(2,:),Vy(2,:),blue,'LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor',blue)
+    % plot(cp(1)+X(1,persist(i)),cp(2)+X(2,persist(i)),'r*')
     % scatter(comu(1,persist(i)),comu(2,persist(i)),[],orange,'*');
     % scatter(coml(1,persist(i)),coml(2,persist(i)),[],blue,'*');
   end
   Tf_rect= rot(Tf(3))*rect + repmat(Tf(1:2),1,4);
   % fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
-  % load('outline_68.mat');
-  % top_left = cat(1,top_left.Position);
-  % bottom_right = cat(1,bottom_right.Position);
-  % plot(top_left(:,1),top_left(:,2),'color',orange,'LineStyle','--','Linewidth',3);
-  % plot(bottom_right(:,1),bottom_right(:,2),'color',blue,'LineStyle','--','Linewidth',3);
+  load('outline_final.mat');
+  top_left = cat(1,top_left.Position);
+  bottom_right = cat(1,bottom_right.Position);
+  plot(top_left(:,1),top_left(:,2),'color',[0.2 0.2 0.2],'LineStyle','--','Linewidth',2);
+  plot(bottom_right(:,1),bottom_right(:,2),'color',[0.2 0.2 0.2],'LineStyle','--','Linewidth',2);
   xlabel('x');
   ylabel('y');
 
-  for i = 1:100:size(data.dat(index).poses,2)
-    rect_plot = rot(data.dat(index).poses(3,i))*rect + repmat(data.dat(index).poses(1:2,i),1,4);
-    fill(rect_plot(1,:),rect_plot(2,:),'g','LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor','g')
-  end
 
 end
