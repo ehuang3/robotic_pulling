@@ -212,10 +212,10 @@ pressure distributions with shared center of pressure. Moreover, the
 bounds are exact for many additional classes of pressure distributions
 that have not been considered before.
 
-Dealing with uncertainty is a fundamental challenge in robotic
-manipulation. We demonstrate how our bounds can be applied to planning
-for robotic pulling under action uncertainty. Robotic pulling is a
-general-purpose manipulation skill for positioning and orienting
+Dealing with uncertainty is a fundamental challenge in robotics
+\cite{Thrun2005}. We demonstrate how our bounds can be applied to
+planning for robotic pulling under action uncertainty. Robotic pulling
+is a general-purpose manipulation skill for positioning and orienting
 objects. The proposed planner uses the angular velocity bounds to find
 actions that reduce the uncertainty in the system, i.e. close the
 distance between the integrated orientation bounds. Moreover, given a
@@ -332,9 +332,9 @@ discussion and conclusion.
 % ``If the [motion] cannot be predicted, then the next best thing is to
 % determine the range of possible [motions].''
 
-Prior work on pushing is largely organized by how to address this
-uncertainty in object motion: what bounds on object motion can be
-obtained under what assumptions. 
+Prior work bounding the pushed motion of an object is largely
+organized by the bounds on object motion that can be obtained and the
+assumptions required.
 % Since then, various inexact angular velocity bounds have been
 % published. 
 The bisector bound restricts the feasible rotation centers to a
@@ -346,10 +346,22 @@ the pusher \cite{alexander1993bounds}.  Peshkin and Sanderson bounded
 the motion of a pushed object by computing the set of feasible
 rotation centers of the minimum object-enclosing disk centered at the
 object's center of pressure \cite{peshkin1988motion}. In all prior
-work, the bounds are conservative but not tight. That is, the bounds
+work, the bounds are conservative but not exact. That is, the bounds
 include every feasible motion, but also include infeasible motions.
 
-To the extent of our knowledge, robotic pulling has been studied significanty 
+To the extent of our knowledge, prior work has used robotic pulling
+significantly less compared to its counterpart, robotic pushing.
+Though the stable equilibrium that occurs when pulling along a
+straight line was recognized by Mason \cite{mason1986} and Lynch and
+Mason \cite{lynch1995pulling}, we are not aware of any existing
+planner, apart from ours, which explicitly takes advantage of this
+stability. We note that the literature treats pulling as a topic
+subsumed by the theory of planar pushing. This is understandable
+because the differences between pulling and pushing are subtle and few
+(despite their significance).
+
+Regardless, there are several related works in robotic pushing worth
+mentioning. Lynch and Mason \cite{lynch1996stable}
 
 Robotic pulling represents 
 
@@ -369,27 +381,23 @@ we were not able to find any designed for
 % distributions. This allows our method to obtain an order-of-magnitude
 % improvement over previous bounds.
 
-\begin{enumerate}
-\item Robotic Pushing
-  \begin{enumerate}
-  \item Planning
-  \item Force-motion model
-  \item Quasi-static motion model
-  \item Stable pushing
-  \end{enumerate}
+% \begin{enumerate}
+% \item Robotic Pushing
+%   \begin{enumerate}
+%   \item Planning
+%   \item Force-motion model
+%   \item Quasi-static motion model
+%   \item Stable pushing
+%   \end{enumerate}
 
-  Our work is most closely related to robotic pushing.
+%   Our work is most closely related to robotic pushing.
+%   Lynch 
+%   two-point stable pushing of Lynch et al. \cite{}.
+%   Though Lynch and Mason Pulling from Pushing \cite{lynch1995pulling}
+%   mechanical components robust to variations in the friction
 
-  Lynch 
-
-  two-point stable pushing of Lynch et al. \cite{}.
-
-  Though Lynch and Mason Pulling from Pushing \cite{lynch1995pulling}
-
-  mechanical components robust to variations in the friction
-
-\item Holonomic Planning
-\end{enumerate}
+% \item Holonomic Planning
+% \end{enumerate}
 
 \section{Background}\label{sec:background}
 % \BB{Briefly describe why this background is necessary. }
