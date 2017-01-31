@@ -30,6 +30,9 @@ function errorDistribution(data,idx);
   err_th = abs(wrapToPi(err(3,:)));
   avg_angular_error = rad2deg(mean(abs(err_th)))
   std_angular_error = rad2deg(std(abs(err_th)))
+  
+  avg_cmd_error = rad2deg(mean(abs(err_cmd)))
+  std_cmd_error = rad2deg(std(abs(err_cmd)))
 
   % 
 

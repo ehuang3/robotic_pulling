@@ -90,7 +90,6 @@ function [  ] = playback( data,index)
     j = j+1;
     rect_plot = rot(data.dat(index).poses(3,i))*rect + repmat(data.dat(index).poses(1:2,i),1,4);
     fill(rect_plot(1,:),rect_plot(2,:),'k','LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor','k')
-    j
   end
   for i = 1:numel(persist)
     Vi = rot(X(3,persist(i)))*V + repmat(X(1:2,persist(i)),[1,n_vert]);
@@ -106,6 +105,7 @@ function [  ] = playback( data,index)
     % scatter(coml(1,persist(i)),coml(2,persist(i)),[],blue,'*');
   end
   Tf_rect= rot(Tf(3))*rect + repmat(Tf(1:2),1,4);
+<<<<<<< HEAD
   fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
   
   T1_rect= rot(T1(3))*rect + repmat(T1(1:2),1,4);
@@ -115,6 +115,12 @@ function [  ] = playback( data,index)
   load('outline_final.mat');
   top_left = cat(1,top_left.Position);
   bottom_right = cat(1,bottom_right.Position);
+=======
+  % fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
+  load('outline_46_mocap');
+  top_left = cat(1,top_right.Position);
+  bottom_right = cat(1,bottom_left.Position);
+>>>>>>> be6e2890df1d53cb83b929627b980cd21b51da4e
   plot(top_left(:,1),top_left(:,2),'color',[0.2 0.2 0.2],'LineStyle','--','Linewidth',2);
   plot(bottom_right(:,1),bottom_right(:,2),'color',[0.2 0.2 0.2],'LineStyle','--','Linewidth',2);
   xlabel('x');
