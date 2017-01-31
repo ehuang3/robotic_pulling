@@ -10,9 +10,9 @@ load('/home/eric/src/presspull/data/bounds/mit_bounds.mat');
 
 w = linspace(1/pi,5/pi,25)
 tol = 1/180*pi;
-exact = cell(1);
-fifty = cell(1);
-peshkin = cell(1);
+exact = struct;
+fifty = struct;
+peshkin = struct;
 for j = 1:length(w)
     e = zeros([2,length(bounds)]);
     f = zeros([2,length(bounds)]);

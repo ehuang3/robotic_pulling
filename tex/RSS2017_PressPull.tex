@@ -1198,8 +1198,8 @@ and the effective rear axle center is the projection of the rotation center onto
 
 
 \section{Experiments}\label{sec:experiments}
-\EH{Spin the experiments: We chose experiments that underscore the
-  practical benefits of our theoretical contributions.}
+% \EH{Spin the experiments: We chose experiments that underscore the
+%   practical benefits of our theoretical contributions.}
 
 \subsection{Comparison of
   Angular Velocity Bounds}\label{sec:bound-comparison}
@@ -1211,22 +1211,26 @@ the MIT Pushing Dataset \cite{YuBFR16} and randomly generated bipods,
 tripods, and quadrapods. The generated $n$-pods were chosen to have
 circumcircle diameters similar to the MIT objects, roughly $0.16$m.
 
-We compute distance-to-convergence in the following manner. Let
-$\gamma$ be an angular velocity bound (can be upper or lower). We
-orient the object such that the center of pressure is 90 degrees away
-from the stable configuration. Next, we simulate a pulling trajectory
-while integrating $\gamma$ and stop when the integral converges to
-within 1 degree of the stable configuration. The distance travelled is
-the distance-to-convergence\footnote{Note that this distance is
-  independent of the pulling velocity, see Equation
-  (\ref{eq:rot-to-ang}).}.
+% \begin{inparaenum}
+% \item MIT objects
+% \item Generated 30 random $n$-pods for each $n$
+% \item We sampled $10$ contact points and computed distance to
+%   convergence for each point.
+% \end{inparaenum}
 
-\begin{inparaenum}
-\item MIT objects
-\item Generated 30 random $n$-pods for each $n$
-\item We sampled $10$ contact points and computed distance to
-  convergence for each point.
-\end{inparaenum}
+For each MIT object, we picked $10$ even spaced contact points on the
+boundary of the object. We generated $30$ random $n$-pods for each
+category and took the contact point to be the center of a random pod
+(similar to pulling the leg of a chair). We compute
+distance-to-convergence in the following manner. Let $\gamma$ be an
+angular velocity bound (can be upper or lower). We orient the object
+such that the center of pressure is 90 degrees away from the stable
+configuration. Next, we simulate a pulling trajectory while
+integrating $\gamma$ and stop when the integral converges to within 1
+degree of the stable configuration. The distance travelled is the
+distance-to-convergence\footnote{Note that this distance is
+  independent of the pulling velocity, see Equation
+  (\ref{eq:rot-to-ang}).}. 
 
 The experimental results are collected in Table
 \ref{table:convergence-distance}. 
@@ -1244,7 +1248,7 @@ in contact with the surface, the distance-to-convergence of the exact
 bound is reduced by another factor of two. Because the exact bound
 converges within $3/4$ a meter, it is serviceable for manipulating the
 MIT objects on a large table. Naturally, smaller objects or tighter
-bounds are required for smaller tables.
+bounds are required for smaller tables. 
 
 \begin{table}[t]
   \begin{center}
@@ -1254,11 +1258,11 @@ bounds are required for smaller tables.
         \midrule
         MIT & $\begin{matrix}0.670\\0.172\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.141\\ 0.047\end{matrix}$ & $\begin{matrix}\mathbf{0.362}\\\mathbf{0.243}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.073\\ 0.053\end{matrix}$ & $\begin{matrix}1.354\\0.162\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.501\\ 0.041\end{matrix}$ \\
         \midrule
-        Bipod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        Bipod & $\begin{matrix}0.762\\0.516\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.210\\ 0.218\end{matrix}$ & $\begin{matrix}\mathbf{0.692}\\\mathbf{0.574}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.213\\ 0.216\end{matrix}$ & $\begin{matrix}0.899\\0.273\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.239\\0.095\end{matrix}$ \\
         \midrule
-        Tripod & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\ ??\end{matrix}$ & $\begin{matrix}??\\??\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}??\\??\end{matrix}$ \\
+        Tripod & $\begin{matrix}0.765\\0.522\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.133\\ 0.162\end{matrix}$ & $\begin{matrix}\mathbf{0.688}\\\mathbf{0.576}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.143\\ 0.157\end{matrix}$ & $\begin{matrix}1.180\\0.340\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.244\\0.108\end{matrix}$ \\
         \midrule
-        Quadrapod & $\begin{matrix}0.880\\0.417\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.120\\ 0.099\end{matrix}$ & $\begin{matrix}0.749\\0.489\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.114\\ 0.098\end{matrix}$ & $\begin{matrix}1.207\\0.329\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.235\\0.096\end{matrix}$ \\
+        Quadrapod & $\begin{matrix}0.880\\0.417\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.120\\ 0.099\end{matrix}$ & $\begin{matrix}\mathbf{0.749}\\\mathbf{0.489}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.114\\ 0.098\end{matrix}$ & $\begin{matrix}1.207\\0.329\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.235\\0.096\end{matrix}$ \\
         \bottomrule
       \end{tabular}
   \end{center}

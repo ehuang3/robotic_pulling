@@ -1,7 +1,10 @@
 close all;
 clear all;
 
-folder = '../../../data/mocap/';
+import data.*
+
+folder = fullfile(getDataPath,'experiment','tmp/')
+% folder = '../../../data/mocap/';
 
 %% Constants
 w = 0.0496;
