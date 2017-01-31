@@ -94,12 +94,17 @@ function [  ] = playback( data,index)
   end
   Tf_rect= rot(Tf(3))*rect + repmat(Tf(1:2),1,4);
   % fill(Tf_rect(1,:),Tf_rect(2,:),'k','FaceAlpha',0.2);
-  load('outline_68.mat');
-  top_left = cat(1,top_left.Position);
-  bottom_right = cat(1,bottom_right.Position);
-  plot(top_left(:,1),top_left(:,2),'color',orange,'LineStyle','--','Linewidth',3);
-  plot(bottom_right(:,1),bottom_right(:,2),'color',blue,'LineStyle','--','Linewidth',3);
+  % load('outline_68.mat');
+  % top_left = cat(1,top_left.Position);
+  % bottom_right = cat(1,bottom_right.Position);
+  % plot(top_left(:,1),top_left(:,2),'color',orange,'LineStyle','--','Linewidth',3);
+  % plot(bottom_right(:,1),bottom_right(:,2),'color',blue,'LineStyle','--','Linewidth',3);
   xlabel('x');
   ylabel('y');
-  ylim
+
+  for i = 1:100:size(data.dat(index).poses,2)
+    rect_plot = rot(data.dat(index).poses(3,i))*rect + repmat(data.dat(index).poses(1:2,i),1,4);
+    fill(rect_plot(1,:),rect_plot(2,:),'g','LineWidth',2,'FaceAlpha',fa,'EdgeAlpha',ea,'EdgeColor','g')
+  end
+
 end

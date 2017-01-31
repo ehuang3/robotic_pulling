@@ -1,14 +1,16 @@
 close all;
 clear all;
 
-folder = '../../../data/4cp/';
+folder = '../../../data/mocap/';
 
 %% Constants
-
-w = 0.048;
-l = 0.073;
+w = 0.0496;
+l = 0.0746;
 %%
 data = loadFiles(folder,w,l);
-idx = findExclusion(data);
+% idx = findExclusion(data);
+idx = []
 plotErrorRectangles(data,idx);
-errorDistribution(data,idx)
+% errorDistribution(data,idx)
+
+playback(data,1);
