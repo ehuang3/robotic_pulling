@@ -234,7 +234,6 @@ planning pulling trajectories under action uncertainty. Section
 \ref{sec:discussion} and \ref{sec:conclusion} close the paper with a
 discussion and conclusion.
 
-
 % one reason for this success is because pulling has convenient
 % stability properties. Barring the one unstable equilibrium point, an
 % object pulled in a straight line converges to a stable equilibrium.
@@ -335,34 +334,40 @@ discussion and conclusion.
 
 Prior work on pushing is largely organized by how to address this
 uncertainty in object motion: what bounds on object motion can be
-obtained under what assumptions.  In all prior work, the bounds are
-conservative but not tight.  That is, the bounds include every
-feasible motion, but also include infeasible motions.
+obtained under what assumptions. 
+% Since then, various inexact angular velocity bounds have been
+% published. 
+The bisector bound restricts the feasible rotation centers to a
+half-space delimited by the perpendicular bisector between the contact
+point and center of pressure \cite{Mason}.  Alexander and Maddocks
+bounded the set of feasible rotation centers to lie within the minimum
+object-enclosing vertical strip perpendicular to the wrench applied by
+the pusher \cite{alexander1993bounds}.  Peshkin and Sanderson bounded
+the motion of a pushed object by computing the set of feasible
+rotation centers of the minimum object-enclosing disk centered at the
+object's center of pressure \cite{peshkin1988motion}. In all prior
+work, the bounds are conservative but not tight. That is, the bounds
+include every feasible motion, but also include infeasible motions.
 
-Since then, various inexact angular velocity bounds have been
-published. The bisector bound restricts the feasible rotation centers
-to a half-space delimited by the perpendicular bisector between the
-contact point and center of pressure \cite{Mason}.  Alexander and
-Maddocks bounded the set of feasible rotation centers to lie within
-the minimum object-enclosing vertical strip perpendicular to the
-wrench applied by the pusher \cite{alexander1993bounds}.  Peshkin and
-Sanderson bounded the motion of a pushed object by computing the set
-of feasible rotation centers of the minimum object-enclosing disk
-centered at the object's center of pressure \cite{peshkin1988motion}.
+To the extent of our knowledge, robotic pulling has been studied significanty 
 
-In contrast to the prior art, our algorithm is the first to find
-\textit{exact} angular velocity bounds for a pushed object. 
+Robotic pulling represents 
 
-Implicitly, this method checks feasibility against the class of
-pressure distributions with shared center of pressure.
+While pulling 
 
-Our work facilitates a new class of pressure distribution assumptions
+While several planners for robotic pushing exist, 
 
-All-or-nothing approaches to modeling.
+we were not able to find any designed for
 
-Our method can also restrict the set of feasible pressure
-distributions. This allows our method to obtain an order-of-magnitude
-improvement over previous bounds.
+% In contrast to the prior art, our algorithm is the first to find
+% \textit{exact} angular velocity bounds for a pushed object. 
+% Implicitly, this method checks feasibility against the class of
+% pressure distributions with shared center of pressure.
+% Our work facilitates a new class of pressure distribution assumptions
+% All-or-nothing approaches to modeling.
+% Our method can also restrict the set of feasible pressure
+% distributions. This allows our method to obtain an order-of-magnitude
+% improvement over previous bounds.
 
 \begin{enumerate}
 \item Robotic Pushing
