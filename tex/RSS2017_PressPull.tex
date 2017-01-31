@@ -128,24 +128,27 @@ cross/.default={2pt}}
 \begin{abstract}
   This paper explores the quasi-static motion of a planar slider being
   pushed or pulled through a single contact point assumed not to
-  slip. The main contribution is to derive exact bounds on the
-  object's motion for classes of pressure distributions where the
-  center of pressure is known but the distribution of support forces
-  is unknown. The second contribution is to show that the exact motion
-  bounds can be used to plan robotic pulling trajectories that
-  guarantee convergence to the final pose. The planner was tested by 
+  slip. The main contribution is to derive a method for computing
+  exact bounds on the object's motion for classes of pressure
+  distributions where the center of pressure is known but the
+  distribution of support forces is unknown. The second contribution
+  is to show that the exact motion bounds can be used to plan robotic
+  pulling trajectories that guarantee convergence to the final
+  pose. The planner was tested on the task of pulling an acrylic
+  rectangle to random locations within the robot workspace. The
+  generated plans were accurate to 4.00mm $\pm$ 3.02mm of the target
+  position and 4.35 degrees $\pm$ 3.14 degrees of the target
+  orientation.
 
-  \EH{TODO: Experimental results} 
+  % \EH{TODO: Experimental results} 
 
+  % The distance between the upper and lower motion bounds were 
+  % 5-10$\times$ 
 
+  % The exact bounds were shown to 
 
-  The distance between the upper and lower motion bounds were 
-  5-10$\times$ 
-
-  The exact bounds were shown to 
-
-  The exact motion bounds an tighter over wide range of object
-  geometries.
+  % The exact motion bounds an tighter over wide range of object
+  % geometries.
 
 % Major contributions:
 %   \begin{enumerate}
@@ -231,9 +234,9 @@ develops several theoretical results needed to prove the correctness
 of our algorithmic contributions. Section \ref{sec:methods} introduces
 the exact angular velocity bound algorithm and the algorithm for
 planning pulling trajectories under action uncertainty. Section
-\ref{sec:experiments} presents our experimental results. Sections
-\ref{sec:discussion} and \ref{sec:conclusion} close the paper with a
-discussion and conclusion.
+\ref{sec:experiments} presents our experimental results. Section
+\ref{sec:conclusion} gives concluding remarks on the paper.
+
 
 % one reason for this success is because pulling has convenient
 % stability properties. Barring the one unstable equilibrium point, an
@@ -841,11 +844,8 @@ set of pressure distributions with known center of pressure.
 
 \begin{figure}[t]
   \centering
-    \includegraphics[width=1\linewidth]{fig/omega_bounds}
-    \caption{Example angular velocity bounds for the trigonal 2D
-      object from Figure \ref{fig:moment-envelope}. The object is
-      oriented such that the stable pulling configuration corresponds
-      to $\theta=0$.}
+    \includegraphics[width=1\linewidth]{fig/omega_bounds_1}
+    \caption{Example angular velocity bounds for the trigonal 2D object from Figure \ref{fig:moment-envelope}. The object is oriented such that the stable pulling configuration corresponds to $\theta=0$. The orange curve is the upper bound $\alpha$. The blue curve is the lower bound $\beta$.}
   \label{fig:omega-bounds}
 \end{figure}
 
@@ -1318,7 +1318,7 @@ material.
 
 \begin{figure}
 \begin{center}
-  \includegraphics[width=\columnwidth]{fig/object.png}
+  \includegraphics[width=\columnwidth]{fig/object}
 \end{center}
 \caption{The top and bottom view of the acrylic rectangle with motion
   capture markers and 8 holes for pulling.}
@@ -1401,9 +1401,18 @@ visualized in Figure \ref{fig:trajectory}.
 % \section{Discussion}\label{sec:discussion}
 \section{Conclusion}\label{sec:conclusion}
 
-In this paper, we introduce 
+In this paper, we derive a method for computing exact bounds on the
+object's motion for classes of pressure distributions where the center
+of pressure is known but the distribution of support forces is
+unknown. We also show these exact motion bounds can be used to plan
+robotic pulling trajectories that guarantee the pulled object
+converges to the final pose. We validate our planner on a real robotic
+system and show that the generated trajectories obtain low errors on
+the final pose of the object.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
 
 \end{document}
+
+
