@@ -63,7 +63,16 @@ cross/.default={2pt}}
 \section{Introduction}
 
 \begin{frame}{Introduction}
-  Hello
+  We explore the quasi-static motion of a planar slider being pushed
+  through a non-slipping contact point.\vspace{3mm}
+
+  Our main contributions are
+  \begin{itemize}
+  \item An algorithm that computes exact bounds on the object's
+    motion
+  \item An optimization-based planner that uses the exact bounds to
+    plan convergent pulling trajectories
+  \end{itemize}
 \end{frame}
 
 \section{Background}
@@ -200,7 +209,6 @@ cross/.default={2pt}}
 
 \begin{frame}{Angular Velocity Bounds Properties}
 
-
   \begin{columns}[c,onlytextwidth]
     \column{0.5\textwidth}
 
@@ -240,7 +248,7 @@ cross/.default={2pt}}
       \centering
       \def\iangle{35} % Angle of the inclined plane
       \begin{tikzpicture}[
-        scale=0.60, every node/.style={scale=0.75},
+        scale=0.80, every node/.style={scale=0.75},
         force/.style={>=latex,draw=black,fill=black},
         axis/.style={densely dashed,draw=gray,font=\small},
         ]
@@ -368,10 +376,18 @@ cross/.default={2pt}}
 
 \section{Methods}
 
-\begin{frame}{Exact Angular Velocity Bounds}
+\begin{frame}{Exact Bound Algorithm}
+  Find Exact Angular Velocity Bounds:
+  \begin{enumerate}
+  \item feasible rotation center
+  \item bisection search
+  \item feasibility test:
+    $[x_0,y_0]^T \in \conv G(R) \cap \{z=0\}$
+  \end{enumerate}
 \end{frame}
 
-\begin{frame}{Planning for Robotic Pulling}
+\begin{frame}{Planning Robotic Pulling}
+  
 \end{frame}
 
 \section{Experiments}
