@@ -12,6 +12,8 @@
 \usepackage{xspace}
 \newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
 
+\usepackage{media9}
+
 \usepackage{float}
 \usepackage{subcaption}
 \usepackage{epstopdf}
@@ -112,6 +114,66 @@ cross/.default={2pt}}
         \mathbf{m}_f = 0
       \end{equation*}
     \end{list}
+
+    \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      \def\iangle{35} % Angle of the inclined plane
+      \begin{tikzpicture}[
+        scale=1.25, every node/.style={scale=1.25},
+        force/.style={>=latex,draw=black,fill=black},
+        axis/.style={densely dashed,draw=gray,font=\small},
+        ]
+        \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
+        \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
+        \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
+        \draw [->,line width=1pt,rotate=-62.5] (0,0) ++(0,1) arc (90:30:1.0) node[right] {$\omega$};
+        {[axis,->]
+          \draw (0,0) -- (2.5,0) node[right] {$x$};
+          \draw (0,0) -- (0,2.5) node[above] {$y$};
+        }
+        {[force,->]
+          \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}$};
+        }
+        \fill (0,0) circle [radius=1.pt];
+        % \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+
+      \end{tikzpicture}
+      % \caption{Motion of a press-pulled slider.}
+      % \BB{Define variables and provide a short explanation of the figure.}}
+      % \label{fig:presspull-motion}
+    \end{figure}
+
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Quasi-static Theory of Planar Pushing}
+  % Theory
+  \begin{columns}[c,onlytextwidth]
+    \column{0.5\textwidth}
+
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+        \setlength{\labelsep}{0pt}
+      }
+    \item Principle of Minimal Dissipation:
+    \item the motion $\mathbf{v}^+$ satisfies
+      \begin{equation*} \begin{aligned}
+          & \underset{\mathbf{v}^+}{\text{minimize}}
+          & & \mu\int_R\lVert A(\mathbf{r})\mathbf{v}^+ \rVert p(\mathbf{r}) dA \\
+          & \text{subject to}
+          & & \mathbf{v}^+ \in \mathcal{C}.
+        \end{aligned} \label{eq:constrained-frictional-dissipation}
+      \end{equation*}
+    \item where $\mathcal{C} = \{[0,1,\omega]^T, \omega \in \mathbb{R}\}$
+    \end{list}\vspace{3.5mm}
+
+    Is useful because
+    \begin{itemize}
+    \item cost continuous \& convex in $\mathbf{v}^+$
+    \item $\equiv$ quasi-static assumption
+    \end{itemize}
 
     \column{0.5\textwidth}
     \begin{figure}
@@ -376,303 +438,256 @@ cross/.default={2pt}}
 
 \section{Methods}
 
-\begin{frame}{Exact Bound Algorithm}
-  Find Exact Angular Velocity Bounds:
-  \begin{enumerate}
-  \item feasible rotation center
-  \item bisection search
-  \item feasibility test:
-    $[x_0,y_0]^T \in \conv G(R) \cap \{z=0\}$
-  \end{enumerate}
+\begin{frame}{Exact Angular Velocity Bounds Algorithm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+      }
+    \item Let $\Omega$ be the set of feasible angular velocities
+    \item Find $\omega \in \Omega$
+      \begin{enumerate}
+      \item Solve for pressures $P$ s.t. $X^TP = CoP$
+      \item Compute $\omega$ given $P$
+      \end{enumerate}
+    \item Find $\ell, u \notin \Omega$, $\ell < \omega < u$
+      \begin{enumerate}
+      \item $t_1 \gets$ double $\omega$ until infeasible
+      \item $\ell, u \gets \min(t_1,0), \max(t_1,0)$
+      % \item $u \gets \max(t_1,0)$
+      \end{enumerate}
+    \item Bisection search for $\min\Omega$, $\max\Omega$
+      \begin{enumerate}
+      \item $\omega^* \gets (in + out)/2$
+      \item if $\omega^*$ feasible, $in \gets \omega^*$
+      \item else, $out \gets \omega^*$
+      \end{enumerate}
+    \end{list}
+
+    \column{0.475\textwidth}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+      }
+    \item Feasibility test of $\omega$
+      \begin{enumerate}
+      \item Compute moment hull $\conv G(R)$
+      \item $CoP \in \conv G(R) \cap \{z=0\}$ $\Rightarrow \omega$ feasible
+      \end{enumerate}
+    \end{list}
+    \begin{figure}[t]
+      \centering
+      \includegraphics[width=0.7\linewidth]{fig/CoP_boundary}
+      \caption{$\conv G(R) \cap \{z=0\}$}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Tighter Bounds}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+      }
+    \item Feasibility test as a linear program
+      \begin{equation*}
+        \begin{aligned}
+          & \underset{\mathbf{p}}{\text{minimize}}
+          & & \mathbf{0} \\
+          & \text{subject to}
+          & & G(R)\mathbf{p} = [x_0,y_0,0]^T,\\%\; \mathbf{1}\cdot\mathbf{p} = 1, \\
+          & & & \mathbf{1}\cdot\mathbf{p} = 1,\; L \leq \mathbf{p} \leq U
+        \end{aligned} \label{eq:lin-prog-PiCH}
+      \end{equation*}\vspace{5mm}
+    \item Setting $L$, $U$ controls range of pressures
+      $\mathbf{p}$
+    \item Can make bounds arbitrarily tight...
+    \end{list}
+    % \begin{itemize}
+    % \item Setting $L$, $U$ controls range of pressures
+    %   $\mathbf{p}$
+    % \item Can make bounds arbitrarily tight...
+    % \end{itemize}
+    \column{0.475\textwidth}
+    \begin{figure}[t]
+      \centering
+      \includegraphics[width=0.7\linewidth]{fig/moment_hull_2}
+      \caption{Frictional moment surface $G(R)$}
+    \end{figure}
+  \end{columns}
 \end{frame}
 
 \begin{frame}{Planning Robotic Pulling}
-  
+  \begin{columns}[T,onlytextwidth]
+    \column{0.5\textwidth}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+      }
+    \item Controls (heading + direction)
+      \begin{equation*}
+        u_i = [d_i, \phi_i]
+      \end{equation*}
+    \item DDP Dynamics
+      \begin{align*}
+        x_{i+1} &= x_i + d_i\cdot\cos(\phi_i) \\
+        y_{i+1} &= y_i + d_i\cdot\sin(\phi_i)\\
+        u_{i+1} &= u_i + d_i\cdot\hat{\alpha}(u_i - \phi_i + \pi) \\
+        \ell_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(\ell_i - \phi_i + \pi)\\
+        h_{i+1} &= h_i + d_i.
+      \end{align*}
+    % \item Initialize with Dubin's paths
+    \end{list}
+    \column{0.5\textwidth}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+      }
+    \item Loss Function
+      \begin{align*}
+        \mathcal{L}_F(\mathbf{x}_N,h_N) &= \mathbf{k}^T\mathcal{L}_{\bm{\delta}}(\mathbf{x}_N-\mathbf{x}_F) + \lambda h_N^2\\
+        \mathcal{L}_{\delta}(a) &= \sqrt{a^2+\delta^2}-\delta
+      \end{align*}
+    \end{list}
+    \begin{figure}
+      \begin{center}
+        \includegraphics[width=0.8\linewidth]{fig/trajectory_2.eps}
+      \end{center}
+      \caption{Example trajectory in red}
+      % \label{fig:trajectory}
+    \end{figure}
+  \end{columns}
 \end{frame}
 
 \section{Experiments}
 
-\begin{frame}{Robotic Pulling}
-  
+\begin{frame}{Bounds Comparisons}
+  \begin{columns}[c,onlytextwidth]
+    \column{0.5\textwidth}
+
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+        \setlength{\labelsep}{0pt}
+      }
+    \item Objects:
+      \begin{align*}
+        &\text{MIT Pushing Dataset}\\
+        &\text{2/3/4-pods}
+      \end{align*}
+    \item Setup:
+    \end{list}
+    \begin{itemize}
+    \item Object set 90$^\circ$
+    \item Pull right until CoP converges to 1$^\circ$
+    \end{itemize}
+
+    \column{0.5\textwidth}
+    \begin{figure}
+      \centering
+      \def\iangle{90} % Angle of the inclined plane
+      \begin{tikzpicture}[
+        scale=1.0, every node/.style={scale=1.0},
+        force/.style={>=latex,draw=black,fill=black},
+        axis/.style={densely dashed,draw=gray,font=\small},
+        ]
+        \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.0,.5);
+        \draw[rotate=\iangle] (-0.1,0) ++(1,0) circle[radius=2.4pt] node[cross] {};
+        \draw[rotate=\iangle] (-0.1,0) ++(1,0) node[above right] {\tiny CoP};
+        % \draw [->,line width=1pt,rotate=-62.5] (0,0) ++(0,1) arc (90:30:1.0) node[right] {$\omega$};
+        {[axis,->]
+          \draw (0,0) -- (2.5,0) node[right] {$x$};
+          % \draw (0,0) -- (0,2.5) node[above] {$y$};
+        }
+        {[force,->]
+          \draw (0,0) -- ++(1.5,0) node[below right] {$\mathbf{v}$};
+        }
+        \fill (0,0) circle [radius=1.pt];
+        % \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+
+      \end{tikzpicture}
+      % \caption{Motion of a press-pulled slider.}
+      % \BB{Define variables and provide a short explanation of the figure.}}
+      % \label{fig:presspull-motion}
+    \end{figure}
+
+  \end{columns}  
 \end{frame}
 
-% \begin{frame}[fragile]{Metropolis}
+\begin{frame}{Bounds Comparisons}
+\begin{table}[t]
+  \begin{center}
+      \begin{tabular}[c]{cccc}
+        \toprule
+        & Exact & Exact-50\% & Peshkin \\
+        \midrule
+        MIT & $\begin{matrix}0.670\\0.172\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.141\\ 0.047\end{matrix}$ & $\begin{matrix}\mathbf{0.362}\\\mathbf{0.243}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.073\\ 0.053\end{matrix}$ & $\begin{matrix}1.354\\0.162\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.501\\ 0.041\end{matrix}$ \\
+        \midrule
+        Bipod & $\begin{matrix}0.762\\0.516\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.210\\ 0.218\end{matrix}$ & $\begin{matrix}\mathbf{0.692}\\\mathbf{0.574}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.213\\ 0.216\end{matrix}$ & $\begin{matrix}0.899\\0.273\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.239\\0.095\end{matrix}$ \\
+        \midrule
+        Tripod & $\begin{matrix}0.765\\0.522\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.133\\ 0.162\end{matrix}$ & $\begin{matrix}\mathbf{0.688}\\\mathbf{0.576}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.143\\ 0.157\end{matrix}$ & $\begin{matrix}1.180\\0.340\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.244\\0.108\end{matrix}$ \\
+        \midrule
+        Quadrapod & $\begin{matrix}0.880\\0.417\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.120\\ 0.099\end{matrix}$ & $\begin{matrix}\mathbf{0.749}\\\mathbf{0.489}\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.114\\ 0.098\end{matrix}$ & $\begin{matrix}1.207\\0.329\end{matrix} \begin{matrix}\pm\\\pm\end{matrix} \begin{matrix}0.235\\0.096\end{matrix}$ \\
+        \bottomrule
+      \end{tabular}
+  \end{center}
+  \caption{Distance-to-convergence (in meters). Top and bottom values corr. upper and lower angular velocity bounds.}
+  \label{table:convergence-distance}
+\end{table}
+\end{frame}
 
-%   The \themename theme is a Beamer theme with minimal visual noise
-%   inspired by the \href{https://github.com/hsrmbeamertheme/hsrmbeamertheme}{\textsc{hsrm} Beamer
-%   Theme} by Benjamin Weiss.
+\begin{frame}{Real World Pulling (Setup)}
+  \begin{figure}
+    \centering
+    \includegraphics[width=\columnwidth]{fig/hardware.png}
+    \caption{Hardware setup for robotic pulling experiments.}
+    \label{fig:hardware}
+  \end{figure}
+\end{frame}
 
-%   Enable the theme by loading
+\begin{frame}{Real World Pulling}
+  \begin{columns}[c,onlytextwidth]
+    \column{0.5\textwidth}
 
-%   \begin{verbatim}    \documentclass{beamer}
-%     \usetheme{metropolis}\end{verbatim}
+    \begin{list}{}{
+        \setlength{\leftmargin}{0pt}
+        \setlength{\labelwidth}{0pt}
+        \setlength{\labelsep}{0pt}
+      }
+    \item abs pos error: 
+      \[4.00mm \pm 3.02mm\]
+    \item abs ang error: 
+      \[4.35^\circ  \pm 3.14^\circ\]
+    \item failures:
+      \[\text{4/80 runs - no valid plans}\]
+    \end{list}
 
-%   Note, that you have to have Mozilla's \emph{Fira Sans} font and XeTeX
-%   installed to enjoy this wonderful typography.
-% \end{frame}
-% \begin{frame}[fragile]{Sections}
-%   Sections group slides of the same topic
+    \column{0.5\textwidth}
 
-%   \begin{verbatim}    \section{Elements}\end{verbatim}
+    \begin{figure}
+      \begin{center}
+        \includegraphics[width=\columnwidth]{fig/trajectory_2.eps}
+      \end{center}
+      \caption{Measure pulling poses and swept volume of bounds}
+      % \label{fig:trajectory}
+    \end{figure}
 
-%   for which \themename provides a nice progress indicator \ldots
-% \end{frame}
+  \end{columns}
+\end{frame}
 
-% \section{Titleformats}
-
-% \begin{frame}{Metropolis titleformats}
-% 	\themename supports 4 different titleformats:
-% 	\begin{itemize}
-% 		\item Regular
-% 		\item \textsc{Smallcaps}
-% 		\item \textsc{allsmallcaps}
-% 		\item ALLCAPS
-% 	\end{itemize}
-% 	They can either be set at once for every title type or individually.
-% \end{frame}
-
-% {
-%     \metroset{titleformat frame=smallcaps}
-% \begin{frame}{Small caps}
-% 	This frame uses the \texttt{smallcaps} titleformat.
-
-% 	\begin{alertblock}{Potential Problems}
-% 		Be aware, that not every font supports small caps. If for example you typeset your presentation with pdfTeX and the Computer Modern Sans Serif font, every text in smallcaps will be typeset with the Computer Modern Serif font instead.
-% 	\end{alertblock}
-% \end{frame}
-% }
-
-% {
-% \metroset{titleformat frame=allsmallcaps}
-% \begin{frame}{All small caps}
-% 	This frame uses the \texttt{allsmallcaps} titleformat.
-
-% 	\begin{alertblock}{Potential problems}
-% 		As this titleformat also uses smallcaps you face the same problems as with the \texttt{smallcaps} titleformat. Additionally this format can cause some other problems. Please refer to the documentation if you consider using it.
-
-% 		As a rule of thumb: Just use it for plaintext-only titles.
-% 	\end{alertblock}
-% \end{frame}
-% }
-
-% {
-% \metroset{titleformat frame=allcaps}
-% \begin{frame}{All caps}
-% 	This frame uses the \texttt{allcaps} titleformat.
-
-% 	\begin{alertblock}{Potential Problems}
-% 		This titleformat is not as problematic as the \texttt{allsmallcaps} format, but basically suffers from the same deficiencies. So please have a look at the documentation if you want to use it.
-% 	\end{alertblock}
-% \end{frame}
-% }
-
-% \section{Elements}
-
-% \begin{frame}[fragile]{Typography}
-%       \begin{verbatim}The theme provides sensible defaults to
-% \emph{emphasize} text, \alert{accent} parts
-% or show \textbf{bold} results.\end{verbatim}
-
-%   \begin{center}becomes\end{center}
-
-%   The theme provides sensible defaults to \emph{emphasize} text,
-%   \alert{accent} parts or show \textbf{bold} results.
-% \end{frame}
-
-% \begin{frame}{Font feature test}
-%   \begin{itemize}
-%     \item Regular
-%     \item \textit{Italic}
-%     \item \textsc{SmallCaps}
-%     \item \textbf{Bold}
-%     \item \textbf{\textit{Bold Italic}}
-%     \item \textbf{\textsc{Bold SmallCaps}}
-%     \item \texttt{Monospace}
-%     \item \texttt{\textit{Monospace Italic}}
-%     \item \texttt{\textbf{Monospace Bold}}
-%     \item \texttt{\textbf{\textit{Monospace Bold Italic}}}
-%   \end{itemize}
-% \end{frame}
-
-% \begin{frame}{Lists}
-%   \begin{columns}[T,onlytextwidth]
-%     \column{0.33\textwidth}
-%       Items
-%       \begin{itemize}
-%         \item Milk \item Eggs \item Potatos
-%       \end{itemize}
-
-%     \column{0.33\textwidth}
-%       Enumerations
-%       \begin{enumerate}
-%         \item First, \item Second and \item Last.
-%       \end{enumerate}
-
-%     \column{0.33\textwidth}
-%       Descriptions
-%       \begin{description}
-%         \item[PowerPoint] Meeh. \item[Beamer] Yeeeha.
-%       \end{description}
-%   \end{columns}
-% \end{frame}
-% \begin{frame}{Animation}
-%   \begin{itemize}[<+- | alert@+>]
-%     \item \alert<4>{This is\only<4>{ really} important}
-%     \item Now this
-%     \item And now this
-%   \end{itemize}
-% \end{frame}
-% \begin{frame}{Figures}
-%   \begin{figure}
-%     \newcounter{density}
-%     \setcounter{density}{20}
-%     \begin{tikzpicture}
-%       \def\couleur{alerted text.fg}
-%       \path[coordinate] (0,0)  coordinate(A)
-%                   ++( 90:5cm) coordinate(B)
-%                   ++(0:5cm) coordinate(C)
-%                   ++(-90:5cm) coordinate(D);
-%       \draw[fill=\couleur!\thedensity] (A) -- (B) -- (C) --(D) -- cycle;
-%       \foreach \x in {1,...,40}{%
-%           \pgfmathsetcounter{density}{\thedensity+20}
-%           \setcounter{density}{\thedensity}
-%           \path[coordinate] coordinate(X) at (A){};
-%           \path[coordinate] (A) -- (B) coordinate[pos=.10](A)
-%                               -- (C) coordinate[pos=.10](B)
-%                               -- (D) coordinate[pos=.10](C)
-%                               -- (X) coordinate[pos=.10](D);
-%           \draw[fill=\couleur!\thedensity] (A)--(B)--(C)-- (D) -- cycle;
-%       }
-%     \end{tikzpicture}
-%     \caption{Rotated square from
-%     \href{http://www.texample.net/tikz/examples/rotated-polygons/}{texample.net}.}
-%   \end{figure}
-% \end{frame}
-% \begin{frame}{Tables}
-%   \begin{table}
-%     \caption{Largest cities in the world (source: Wikipedia)}
-%     \begin{tabular}{@{} lr @{}}
-%       \toprule
-%       City & Population\\
-%       \midrule
-%       Mexico City & 20,116,842\\
-%       Shanghai & 19,210,000\\
-%       Peking & 15,796,450\\
-%       Istanbul & 14,160,467\\
-%       \bottomrule
-%     \end{tabular}
-%   \end{table}
-% \end{frame}
-% \begin{frame}{Blocks}
-%   Three different block environments are pre-defined and may be styled with an
-%   optional background color.
-
-%   \begin{columns}[T,onlytextwidth]
-%     \column{0.5\textwidth}
-%       \begin{block}{Default}
-%         Block content.
-%       \end{block}
-
-%       \begin{alertblock}{Alert}
-%         Block content.
-%       \end{alertblock}
-
-%       \begin{exampleblock}{Example}
-%         Block content.
-%       \end{exampleblock}
-
-%     \column{0.5\textwidth}
-
-%       \metroset{block=fill}
-
-%       \begin{block}{Default}
-%         Block content.
-%       \end{block}
-
-%       \begin{alertblock}{Alert}
-%         Block content.
-%       \end{alertblock}
-
-%       \begin{exampleblock}{Example}
-%         Block content.
-%       \end{exampleblock}
-
-%   \end{columns}
-% \end{frame}
-% \begin{frame}{Math}
-%   \begin{equation*}
-%     e = \lim_{n\to \infty} \left(1 + \frac{1}{n}\right)^n
-%   \end{equation*}
-% \end{frame}
-% \begin{frame}{Line plots}
-%   \begin{figure}
-%     \begin{tikzpicture}
-%       \begin{axis}[
-%         mlineplot,
-%         width=0.9\textwidth,
-%         height=6cm,
-%       ]
-
-%         \addplot {sin(deg(x))};
-%         \addplot+[samples=100] {sin(deg(2*x))};
-
-%       \end{axis}
-%     \end{tikzpicture}
-%   \end{figure}
-% \end{frame}
-% \begin{frame}{Bar charts}
-%   \begin{figure}
-%     \begin{tikzpicture}
-%       \begin{axis}[
-%         mbarplot,
-%         xlabel={Foo},
-%         ylabel={Bar},
-%         width=0.9\textwidth,
-%         height=6cm,
-%       ]
-
-%       \addplot plot coordinates {(1, 20) (2, 25) (3, 22.4) (4, 12.4)};
-%       \addplot plot coordinates {(1, 18) (2, 24) (3, 23.5) (4, 13.2)};
-%       \addplot plot coordinates {(1, 10) (2, 19) (3, 25) (4, 15.2)};
-
-%       \legend{lorem, ipsum, dolor}
-
-%       \end{axis}
-%     \end{tikzpicture}
-%   \end{figure}
-% \end{frame}
-% \begin{frame}{Quotes}
-%   \begin{quote}
-%     Veni, Vidi, Vici
-%   \end{quote}
-% \end{frame}
-
-% {%
-% \setbeamertemplate{frame footer}{My custom footer}
-% \begin{frame}[fragile]{Frame footer}
-%     \themename defines a custom beamer template to add a text to the footer. It can be set via
-%     \begin{verbatim}\setbeamertemplate{frame footer}{My custom footer}\end{verbatim}
-% \end{frame}
-% }
-
-% \begin{frame}{References}
-%   Some references to showcase [allowframebreaks] \cite{Mason,ConcreteMath,Simpson,Er01,greenwade93}
-% \end{frame}
-
-\section{Conclusion}
-
-\begin{frame}{Summary}
-
-  Get the source of this theme and the demo presentation from
-
-  \begin{center}\url{github.com/matze/mtheme}\end{center}
-
-  The theme \emph{itself} is licensed under a
-  \href{http://creativecommons.org/licenses/by-sa/4.0/}{Creative Commons
-  Attribution-ShareAlike 4.0 International License}.
-
-  \begin{center}\ccbysa\end{center}
-
+\begin{frame}{Real World Pulling}
+  \centering
+  \includemedia[
+  activate=onclick,
+  width=0.75\textwidth,
+  addresource=rss2017.mp4,
+  flashvars={%
+    source=rss2017.mp4% same path as in addresource!
+    % &autoPlay=true%    % optional configuration
+    % &loop=true%        % variables
+  }]{Pulling example on real system}{VPlayer.swf}
 \end{frame}
 
 \begin{frame}[standout]

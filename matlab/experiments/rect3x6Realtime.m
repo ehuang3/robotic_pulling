@@ -101,6 +101,28 @@ do_plot = 1;
 safe_z = 470;
 interact_z = 435;
 
+if do_plot
+    figure(1); clf; hold on; axis equal;
+    rect = rectangle(rect_l/2, rect_w/2);
+    V = rect.V + repmat([rect_l/2;rect_w/2],[1 5]);
+    plot(V(1,:),V(2,:),'k')
+    set(gca,'xtick',[],'ytick',[])
+    xlabel('75mm')
+    ylabel('50mm')
+    CPP = CP + repmat([rect_l/2;rect_w/2],[1,8]);
+    for i = 1:size(CP,2)
+        rad = 0.003;
+        cpp = CPP(:,i);
+        wt = linspace(0,2*pi);
+        plot(rad*cos(wt) + cpp(1), rad*sin(wt) + cpp(2), 'k')
+    end
+    axis([0 rect_l 0 rect_w])
+    
+    set(gcf, 'Color', 'w');
+    set(gca,'fontsize',14)
+    export_fig src/presspull/tex/fig/acrylic_rect.eps 
+end
+
 %% Initialize dynamic system for rectangles x contacts.
 try
     load('/home/eric/src/presspull/data/rectxcp_8cp_small.mat')

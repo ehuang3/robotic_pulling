@@ -41,6 +41,14 @@ grid on
 hold on
 fill([T, fliplr(T)]+2*pi, [L, fliplr(U)], 0.75 * ones([1, 3]))
 fill([T, fliplr(T)]-2*pi, [L, fliplr(U)], 0.75 * ones([1, 3]))
+blue = [0 113 188]/255;
+orange = [216 82 24]/255;
+plot(T,L,'color',blue,'linewidth',2)
+plot(T,U,'color',orange,'linewidth',2)
+plot(T+2*pi,L,'color',blue,'linewidth',2)
+plot(T+2*pi,U,'color',orange,'linewidth',2)
+plot(T-2*pi,L,'color',blue,'linewidth',2)
+plot(T-2*pi,U,'color',orange,'linewidth',2)
 % plot([T, fliplr(T)]+2*pi, [L, fliplr(U)], 'k')
 % plot([T, fliplr(T)]-2*pi, [L, fliplr(U)], 'k')
 axis(a)
