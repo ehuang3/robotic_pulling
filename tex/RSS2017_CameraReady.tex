@@ -1040,44 +1040,44 @@ detailed in Subsection \ref{sec:diff-dynam-progr}.
 \subsection{Exact Angular Velocity Bound
   Algorithm}\label{sec:exact-ang-vel-bound-alg}
 
-\begin{algorithm}
+\begin{algorithm}[t]
 \caption{Exact Angular Velocity Bounds}\label{alg:angular-velocity-bounds}
 \begin{algorithmic}[1]
 \Function{Find Extrema}{$R$, $x_0$, $y_0$}
 \If {$x_0$ is $0$} \Return {$[0,0]$}
 \EndIf
 % \BState \emph{min}:
-\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  L \leq \mathbf{x} \leq U$
-\State $x_r \gets \Call{Compute Rotation Center}{R,P}$
-\State $l \gets 0$
-\State $u \gets -\lVert\mathbf{v}_c\rVert/x_r$
-\State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+\State $P \gets \min_\mathbf{x} \mathbf{0} \text{\;s.t.\;} R\mathbf{x} = [x_0,y_0]^T,  L \leq \mathbf{x} \leq U$ \label{line:find-pressure}
+\State $x_r \gets \Call{Compute Rotation Center}{R,P}$ \label{line:find-rc}
+\State $\omega \gets -\lVert\mathbf{v}_c\rVert/x_r$ \label{line:rc-to-w}
+\State $l \gets 0$ \label{line:0}
+\State $\omega_1 \gets \Call{Bisection Search}{R,x_0,y_0,l,\omega}$ \label{line:bisection-1}
 % \BState \emph{max}:
-\State $l \gets u \gets -\lVert\mathbf{v}_c\rVert/x_r$
+\State $u \gets \omega$ \label{line:find-u-start}
 \Do% {$u \gets 2u$}
-\State {$l \gets 2l$}
-\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, l]^T$
+\State {$u \gets 2u$} 
+\State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, u]^T$
 \State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
-\DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$}
-\State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,l,u}$
+\DoWhile{$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$} \label{line:find-u-end}
+\State $\omega_2 \gets \Call{Bisection Search}{R,x_0,y_0,u,\omega}$ \label{line:bisection-2}
 % \BState \emph{return}:
 \State $l \gets \Call{Min}{\omega_1,\omega_2}$
 \State $u \gets \Call{Max}{\omega_1,\omega_2}$
 \State \Return {$[l, u]$}
 \EndFunction
 % 
-\Function{Bisection Search}{$R$, $x_0$, $y_0$, $l$, $u$}
-\While{$\varepsilon < |u-l|$}
-\State $\omega \gets (u+l)/2$
+\Function{Bisection Search}{$R$, $x_0$, $y_0$, $\alpha$, $\beta$}
+\While{$\varepsilon < |\alpha-\beta|$}
+\State $\omega \gets (\alpha + \beta)/2$
 \State $\mathbf{v}^+ \gets [\mathbf{v}_c^T, \omega]^T$
 \State $G \gets \{-\mathbf{x}\times A(\mathbf{x})\mathbf{v}^+ / \lVert A(\mathbf{x})\mathbf{v}^+ \rVert \;|\; \mathbf{x} \in R\}$
 \If {$[x_0,y_0,0]^T \in \Call{ConvHull}{G}$} 
-\State $u \gets \omega$
+\State $\beta \gets \omega$
 \Else{} 
-\State $l \gets \omega$
+\State $\alpha \gets \omega$
 \EndIf
 \EndWhile
-\State \Return $(u+l)/2$
+\State \Return $(\alpha + \beta)/2$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -1087,27 +1087,48 @@ detailed in Subsection \ref{sec:diff-dynam-progr}.
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
 $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
-$\Omega$. The bisection search is justified because $\Omega$ is
-connected and bounded by Theorem \ref{thm:angular-velocities} and Corollary
+$\Omega$. This choice is justified because $\Omega$ is connected and
+bounded by Theorem \ref{thm:angular-velocities} and Corollary
 \ref{cor:bounded}.
 
-To initialize, the bisection search first finds feasible
-pressure distribution using linear programming and then finds feasible
-rotation center using the root-finding method in \cite{Mason1982}. The
-bisection search tests the feasibility of an angular velocity $\omega$
-by checking whether the point $[x_0,y_0,0]^T$ is contained in the
-associated frictional moment envelope (see Section
-\ref{sec:frictional-envelope}). 
+To initialize the bisection search, we need an angular velocity in
+$\Omega$ and two angular velocities above and below the bounds of
+$\Omega$. First, we compute an angular velocity $\omega$ in $\Omega$.
+We find a feasible assignment of pressures $P$ such that the center of
+pressure is $[x_0, y_0]$ (line \ref{line:find-pressure}). From $P$,
+the resultant rotation center $[x_r,0]$ can be computed using the
+root-finding method in \cite{Mason1982} (line \ref{line:find-rc}).
+Lastly, we convert the rotation center into the angular velocity
+$\omega \in \Omega$ (line \ref{line:rc-to-w}). Of the two out-of-bound
+angular velocities $l$ and $u$, we can set $l$ to $0$ (line
+\ref{line:0}). The other can be found by repeatedly doubling $\omega$
+until the resulting angular velocity is no longer feasible (lines
+\ref{line:find-u-start}-\ref{line:find-u-end}). As a reminder, we test
+the feasibility of a given angular velocity $\omega'$ by checking
+whether the point $[x_0,y_0,0]^T$ is contained in the associated
+frictional moment envelope (see Section
+\ref{sec:frictional-envelope}). Now that $\omega$, $u$, and $l$ have
+been computed, we pass them into the bisection search to compute the
+boundary points of $\Omega$ (lines \ref{line:bisection-1} and
+\ref{line:bisection-2}). The run-time of the algorithm is
+$\mathcal{O}(d\,n\log{} n)$, where $d$ is the number of significant
+digits returned and $n$ is the number of points in the discretization
+of $R$.
+
+% To initialize, the bisection search first finds a feasible pressure
+% distribution with center of pressure $[x_0,y_0]$ (line
+% \ref{line:find-pressure}) and then finds a feasible rotation center
+% using the root-finding method in \cite{Mason1982} (line
+% \ref{line:find-rc}). The bisection search tests the feasibility of an
+% angular velocity $\omega$ by checking whether the point
+% $[x_0,y_0,0]^T$ is contained in the associated frictional moment
+% envelope (see Section \ref{sec:frictional-envelope}).
 
 % In quasi-static terminology, this is equivalent to checking whether
 % there exists a pressure distribution with center of pressure
 % $[x_0,y_0]^T$ such that the velocity
 % $\mathbf{v}^+ = [\mathbf{v}_c^T, \omega]^T$ generates zero moment
 % about the contact point (Equation \ref{eq:moment-at-contact}).
-
-The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
-$d$ is the number of significant digits returned and $n$ is the number
-of points in the discretization of $R$.
 
 \subsection{Point In Tighter Moment
   Envelope}\label{sec:point-in-moment-enve}
