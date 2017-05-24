@@ -18,6 +18,14 @@ tex/RSS2017_PressPull.fls
 tex/RSS2017_PressPull.log
 tex/RSS2017_PressPull.out
 tex/RSS2017_PressPull.pdf
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.pdf
 tex/RSS2017_ContactWorkshop.aux
 tex/RSS2017_ContactWorkshop.bbl
 tex/RSS2017_ContactWorkshop.blg
