@@ -358,15 +358,16 @@ orientation of the pulled body in the world frame.  We define the
 \textit{angular deviation} of the object as the angle deviation from
 the stable pulling configuration in the frame of the moving contact
 point. A deviation of 0 degrees corresponds to the center of pressure
-dragging behind the contact point.
+dragging behind the contact point (note that this configuration is
+stable, see Figure \ref{fig:omega-bounds}).
 % In Figure \ref{fig:presspull-motion}, the rectangular object has an
 % angular deviation of 135 degrees.
-Let the function $\omega$ map from the
-angular deviation to the true angular velocity. Likewise, let $u$ and
-$l$ be upper and lower bounds on the true orientation, and let the
-functions $\alpha$ and $\beta$ map from the angular deviation to the
-upper and lower angular velocity bound. An example plot of $u$ and $l$
-is illustrated in Figure \ref{fig:omega-bounds}.
+Let the function $\omega$ map from the angular deviation to the true
+angular velocity. Likewise, let $u$ and $l$ be upper and lower bounds
+on the true orientation, and let the functions $\alpha$ and $\beta$
+map from the angular deviation to the upper and lower angular velocity
+bound. An example plot of $u$ and $l$ is illustrated in Figure
+\ref{fig:omega-bounds}.
 
 We assume that the pulling trajectory
 $\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
@@ -634,8 +635,7 @@ configuration. Next, we simulate a pulling trajectory while
 integrating $\gamma$ and stop when the integral converges to within 1
 degree of the stable configuration. The distance travelled is the
 distance-to-convergence\footnote{Note that this distance is
-  independent of the pulling velocity, see Equation
-  (\ref{eq:rot-to-ang}).}. 
+  independent of the pulling velocity.}.
 
 The experimental results are collected in Table
 \ref{table:convergence-distance}. 
