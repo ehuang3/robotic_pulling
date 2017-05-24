@@ -1110,10 +1110,14 @@ frictional moment envelope (see Section
 \ref{sec:frictional-envelope}). Now that $\omega$, $u$, and $l$ have
 been computed, we pass them into the bisection search to compute the
 boundary points of $\Omega$ (lines \ref{line:bisection-1} and
-\ref{line:bisection-2}). The run-time of the algorithm is
-$\mathcal{O}(d\,n\log{} n)$, where $d$ is the number of significant
-digits returned and $n$ is the number of points in the discretization
-of $R$.
+\ref{line:bisection-2}).
+
+The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
+$d$ is the number of significant digits returned and $n$ is the number
+of points in the discretization of $R$. This computation is relatively
+expensive to perform online. In Section \ref{sec:diff-dynam-progr}, we
+avoid recomputing angular velocity bounds by fitting Fourier series to
+a set of pre-computed orientation-bound pairs.
 
 % To initialize, the bisection search first finds a feasible pressure
 % distribution with center of pressure $[x_0,y_0]$ (line
