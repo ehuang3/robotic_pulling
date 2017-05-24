@@ -248,7 +248,6 @@ planning pulling trajectories under action uncertainty. Section
 \ref{sec:experiments} presents our experimental results. Section
 \ref{sec:conclusion} gives concluding remarks on the paper.
 
-
 % one reason for this success is because pulling has convenient
 % stability properties. Barring the one unstable equilibrium point, an
 % object pulled in a straight line converges to a stable equilibrium.
@@ -347,11 +346,15 @@ planning pulling trajectories under action uncertainty. Section
 % ``If the [motion] cannot be predicted, then the next best thing is to
 % determine the range of possible [motions].''
 
-Prior work bounding the pushed motion of an object is largely
-organized by the bounds on object motion that can be obtained and the
-assumptions required.
-% Since then, various inexact angular velocity bounds have been
-% published. 
+% Prior work bounding the pushed motion of an object is largely
+% organized by the bounds on object motion that can be obtained and the
+% assumptions required.
+
+We can categorize prior work bounding the motion of a pushed object
+according to the tightness of the bounds and the basic assumptions
+from which those bounds are deduced, such as knowledge of the center
+of pressure location.
+%
 The bisector bound restricts the feasible rotation centers to a
 half-space delimited by the perpendicular bisector between the contact
 point and center of pressure \cite{Mason}.  Alexander and Maddocks
