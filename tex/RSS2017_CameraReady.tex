@@ -1153,11 +1153,14 @@ pressure distributions from which the bounds were computed. This
 allows us to restrict pressure distributions to smaller subclasses and
 thus achieve tighter angular velocity bounds. Let $\mathcal{C}$ be the
 class of normalized pressure distributions over a region $R$ with
-center of pressure $[x_0, y_0]$. Note, as written, Algorithm
-\ref{alg:angular-velocity-bounds} checks the feasibility of an angular
-velocity with respect to $\mathcal{C}$. Now, suppose we had a convex
-subclass $\mathcal{K}$ of pressure distributions such that
-$\mathcal{K} \subset \mathcal{C}$. We can setup an alternative
+center of pressure $[x_0, y_0]$.
+% Note, as written, Algorithm
+% \ref{alg:angular-velocity-bounds} checks the feasibility of an angular
+% velocity with respect to $\mathcal{C}$.
+Now, suppose we had a convex subclass $\mathcal{K}$ of pressure
+distributions such that $\mathcal{K} \subset
+\mathcal{C}$. Regrettably, the point-in-convex-hull feasibility test
+only works for $\mathcal{C}$. However, we can setup an alternative
 feasibility test with respect to $\mathcal{K}$ by solving the linear
 program
 \begin{equation}
