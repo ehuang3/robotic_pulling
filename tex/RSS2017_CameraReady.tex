@@ -393,7 +393,6 @@ points. However, their use of weaker bounds \cite{peshkin1988motion,
 % While several planners for robotic pushing exist, 
 
 % we were not able to find any designed for
-
 % In contrast to the prior art, our algorithm is the first to find
 % \textit{exact} angular velocity bounds for a pushed object. 
 % Implicitly, this method checks feasibility against the class of
@@ -830,7 +829,7 @@ set of pressure distributions with known center of pressure.
 
 \begin{corollary}\label{cor:bounded}
   For pulling of a planar rigid body with known center of pressure,
-  the set of all feasible angular velocities is a bounded interval.
+  the set of all feasible angular velocities is bounded.
 \end{corollary}
 
 \begin{proof}
@@ -848,7 +847,7 @@ set of pressure distributions with known center of pressure.
   \end{equation}
   where the rotation center $x^*$, strictly positive (negative), is
   the intersection of the bisector line and the $x$-axis. Therefore,
-  $\Omega$ is a bounded interval.
+  $\Omega$ is bounded.
 
   When the center of pressure falls on the line of motion, the rigid
   body translates and $\Omega = \{0\}$ \cite{Mason}.
@@ -967,50 +966,69 @@ according to the dynamical system
 % \EH{TODO: Simplify proof. Should be like two lines. It kind of makes
 %   the paper more schizophrenic, so might even remove it.}
 
-\begin{theorem} \label{thm:cop-lom-convergence} For pulling of a rigid
-  body in the plane, the rigid body converges to the state where its
-  center of pressure is collinear with the pulling direction.
+\begin{theorem} \label{thm:cop-lom-convergence}
+  For pulling of a rigid body in the plane, the rigid body converges
+  to the state where its center of pressure is collinear with the
+  pulling direction.
 \end{theorem}
 
 \begin{proof}
-  % TODO Shorten this proof. Rewrite to use generalized velocities.
-  Let the $y$-axis of the coordinate frame be aligned with the line of
-  motion of the press-pull contact point (see Figure
-  \ref{fig:presspull-motion} for an example). Then the instantaneous
-  rotation center of the body must fall on the $x$-axis, and we can
-  write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
+  We know from Theorem 7.4 in \cite{Mason} that the rigid body
+  translates when the center of pressure is already collinear with the
+  pulling direction. Now, suppose the center of pressure is strictly
+  to the right of the pulling direction (as in Figure
+  \ref{fig:presspull-motion}). Then by Theorem 7.4 in \cite{Mason},
+  the rigid body rotates clockwise about the contact point, i.e. has
+  angular velocity $\omega < 0$. Let $\varphi \in (\pi, 0)$ be the
+  angular deviation of the rigid body. Since $\varphi$ is
+  monotonically decreasing and $\omega = 0$ if $\varphi = 0$, we see
+  that $\varphi$ converges to $0$ in the limit as
+  $t \rightarrow \infty$. The case when the center of pressure is
+  strictly to the left of the line of motion follows from symmetry.
 
-  Suppose the center of pressure is strictly to the right of the line
-  of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
-  7.4 in \cite{Mason}, the rotation center lies on the positive
-  $x$-axis and has negative rotation. The velocity of a point on the
-  rigid body is given by
-  $\mathbf{v}(\mathbf{r}) =
-  \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
-  \mathbf{r}_\text{IC})$.
-  We can compute the motion of the body relative to the contact point
-  by
-  \begin{align*}
-    \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
-    &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
-  \end{align*}
-  where $\mathbf{v}_c$ is the velocity of the contact point. In other
-  words, the body is rotating clockwise relative to the
-  contact point with angular velocity
-  \begin{equation}
-    \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
-  \end{equation}
+  % When the line of motion passes through the center of pressure,
+  % a pure translation takes place (Theorem 7.4 in \cite{Mason}). This
+  % implies that $\dot{\theta} = 0$ if and only if
+  % $\theta = \pi/2, -\pi/2$. Since $\theta$ is monotonically
+  % decreasing, we see that it must converge to $-\pi/2$ in the limit as
+  % $t \rightarrow \infty$.
 
-  Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
-  pressure in the frame of the contact point. When the line of motion
-  passes through the center of pressure, a pure translation takes
-  place (Theorem 7.4 in \cite{Mason}). This implies that
-  $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
-  $\theta$ is monotonically decreasing, we see that it must converge
-  to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+  % Let the $y$-axis of the coordinate frame be aligned with the line of
+  % motion of the press-pull contact point (see Figure
+  % \ref{fig:presspull-motion} for an example). Then the instantaneous
+  % rotation center of the body must fall on the $x$-axis, and we can
+  % write $\mathbf{r}_\text{IC} = (x_\text{IC},0)^T$.
 
-  The case when the center of pressure is strictly to the left of the
-  line of motion follows from symmetry about the $y$-axis.
+  % Suppose the center of pressure is strictly to the right of the line
+  % of motion (as in Figure \ref{fig:presspull-motion}). Then by Theorem
+  % 7.4 in \cite{Mason}, the rotation center lies on the positive
+  % $x$-axis and has negative rotation. The velocity of a point on the
+  % rigid body is given by
+  % $\mathbf{v}(\mathbf{r}) =
+  % \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} -
+  % \mathbf{r}_\text{IC})$.
+  % We can compute the motion of the body relative to the contact point
+  % by
+  % \begin{align*}
+  %   \mathbf{v}(\mathbf{r}) - \mathbf{v}_c &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{r}_\text{IC}) - \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{0} - \mathbf{r}_\text{IC}) \\
+  %   &= \dot{\theta}\,\hat{\mathbf{k}}\times(\mathbf{r} - \mathbf{0}) \numberthis \label{eqn:rel-rotation-center},
+  % \end{align*}
+  % where $\mathbf{v}_c$ is the velocity of the contact point. In other
+  % words, the body is rotating clockwise relative to the
+  % contact point with angular velocity
+  % \begin{equation}
+  %   \dot{\theta} = -\frac{\lVert\mathbf{v}_c\rVert}{x_\text{IC}}.
+  % \end{equation}
+
+  % Let $\theta \in (\pi/2, -\pi/2)$ be the orientation of the center of
+  % pressure in the frame of the contact point. When the line of motion
+  % passes through the center of pressure, a pure translation takes
+  % place (Theorem 7.4 in \cite{Mason}). This implies that
+  % $\dot{\theta} = 0$ if and only if $\theta = \pi/2, -\pi/2$. Since
+  % $\theta$ is monotonically decreasing, we see that it must converge
+  % to $-\pi/2$ in the limit as $t \rightarrow \infty$.
+
+
 \end{proof}
 
 % Note that the above proof holds for \textit{all pressure
