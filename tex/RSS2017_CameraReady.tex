@@ -485,7 +485,7 @@ other applied forces while neglecting inertial forces \cite{Mason}.
 
 Let the \textit{generalized velocity}, or \textit{twist}, of a planar
 rigid body be $\mathbf{v}^+ = [v_x, v_y, \omega]^T$, where $v_x$ and
-$v_y$ are the (linear) velocities of a reference point and $\omega$ is
+$v_y$ are the linear velocities of a reference point and $\omega$ is
 the angular velocity about that point. Taking the origin as the
 reference point, the velocity of a point $\mathbf{x} = [x_1,x_2]^T$ on
 the body is then given by
@@ -1144,8 +1144,8 @@ The exact angular velocity bounds computed in Section
 \ref{sec:exact-ang-vel-bound-alg} result in slow convergence towards
 the stable pulling equilibrium point (for experimental measurements,
 see Subsection \ref{sec:bound-comparison}). Consequently, wide bounds
-cause our planner to generate long trajectories that exceed the robot
-workspace in order to satisfy tolerances on the final pose
+cause our planner to generate long trajectories that exceed the
+robot's workspace in order to satisfy tolerances on the final pose
 uncertainty.
 
 In this subsection, we show how to modify the constraints on the
