@@ -707,8 +707,11 @@ necessary for proving the correctness of the exact angular velocity
 bound algorithm introduced in
 \ref{sec:exact-ang-vel-bound-alg}. Subsection
 \ref{sec:orientation-bounds} extends the angular velocity bounds to
-orientation bounds. This last subsection is mainly to establish
-convergence guarantees for robotic pulling trajectories.
+orientation bounds. Subsection \ref{sec:stable-equil-when} proves the
+existence and uniqueness of the stable equilibrium during
+pulling. These last two subsections build the machinery needed to plan
+robotic pulling trajectories with convergence guarantees
+(Subsection \ref{sec:diff-dynam-progr}).
 
 % Lastly, \ref{sec:stability} contains a proof of
 % the existence and uniqueness (modulo $2\pi$) of a stable equilibrium
@@ -875,8 +878,8 @@ deviation of 135 degrees. Let the function $\omega$ map from the
 angular deviation to the true angular velocity. Likewise, let $u$ and
 $l$ be upper and lower bounds on the true orientation, and let the
 functions $\alpha$ and $\beta$ map from the angular deviation to the
-upper and lower angular velocity bound. An example plot of $u$ and $l$
-is illustrated in Figure \ref{fig:omega-bounds}.
+upper and lower angular velocity bound. An example plot of $\alpha$
+and $\beta$ is illustrated in Figure \ref{fig:omega-bounds}.
 
 We assume that the pulling trajectory
 $\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
@@ -964,7 +967,9 @@ according to the dynamical system
 % \subsection{Quasi-static Stability}\label{sec:stability}
 
 % \EH{TODO: Simplify proof. Should be like two lines. It kind of makes
-%   the paper more schizophrenic, so might even remove it.}
+% the paper more schizophrenic, so might even remove it.}
+
+\subsection{Stable Equilibrium When Pulling}\label{sec:stable-equil-when}
 
 \begin{theorem} \label{thm:cop-lom-convergence}
   For pulling of a rigid body in the plane, the rigid body converges
