@@ -468,7 +468,7 @@ computes the feasibility of a given pushed object velocity.
     {
       % \draw[rotate=\iangle,style=densely dashed] (0,0) -- (\ilen,0);
       \draw[rotate=-90,style=<->,>=latex] ++(\ilen,0) arc (0:90+\iangle-6:\ilen);
-      \draw[rotate=-45] (\ilen+0.05,0) node[right] {$\theta$};
+      \draw[rotate=-45] (\ilen+0.05,0) node[right] {$\rho$};
     }
     \def\wlen{0.2}
     {
@@ -481,7 +481,7 @@ computes the feasibility of a given pushed object velocity.
   \end{tikzpicture}
   \caption{Coordinate frame associated with a press-pulled slider,
     where $\mathbf{v}_c$ is the contact point velocity, $\omega$ is
-    the angular velocity of the slider, $\theta$ is the angular
+    the angular velocity of the slider, $\rho$ is the angular
     deviation from the stable pulling configuration.}
 % \BB{Define variables and provide a short explanation of the figure.}}
   \label{fig:presspull-motion}
@@ -528,15 +528,15 @@ maps a twist $[v_x, v_y, \omega]$ at the origin to a rotation center
 and angular velocity about that rotation center and visa-versa.
 
 % \EH{Define conversion between twist and rotation center.}
-We choose a coordinate frame such that the origin is the contact point
-and the $y$-axis aligns with the contact point velocity (see Figure
-\ref{fig:presspull-motion} for an example). Let $\theta$ be the
-\textit{angular deviation} from the stable pulling configuration to
-the rigid body's center of pressure. The stable pulling configuration
-occurs when the center of pressure is collinear with and behind the
-direction of the pulling motion (proof in Subsection
-\ref{sec:stable-equil-when}). The contact point is assumed to be
-pushed with unit speed, yielding a body twist
+We define the \textit{contact frame} to be the coordinate frame where
+the origin is the contact point and the $y$-axis aligns with the
+contact point velocity (see Figure \ref{fig:presspull-motion} for an
+example).  Let $\rho$ be the \textit{angular deviation} from the
+stable pulling configuration to the rigid body's center of
+pressure. The stable pulling configuration occurs when the center of
+pressure is collinear with and behind the direction of the pulling
+motion (proof in Subsection \ref{sec:stable-equil-when}). The contact
+point is assumed to be pushed with unit speed, yielding a body twist
 $\mathbf{v}^+ = [0,1,\omega]^T$.  Assuming Coulomb's law of sliding
 friction, the total frictional force and moment of the body at the
 origin are
@@ -758,6 +758,14 @@ pulling trajectories that guarantee convergence to the final pose.
 
 \subsection{Stable Equilibrium When Pulling}\label{sec:stable-equil-when}
 
+For completeness, we prove the existence and uniqueness of the stable
+equilibrium that occurs when pulling a rigid body. The existence of
+the stable equilibrium was observed, without proof, in Mason
+\cite{mason1986}, Lynch and Mason \cite{lynch1995pulling}, and
+Berretty et al. \cite{berretty2001orienting}. The robotic pulling
+trajectories generated in Subsection \ref{sec:diff-dynam-progr}
+automatically use the stable equilibrium to reduce pose uncertainty.
+
 \begin{theorem} \label{thm:cop-lom-convergence}
   For pulling of a rigid body in the plane, the rigid body converges
   to the state where its center of pressure is collinear with the
@@ -936,26 +944,25 @@ set of pressure distributions with known center of pressure.
 \end{corollary}
 
 \begin{proof}
-  Let us assume the pulling coordinate frame (defined in Subsection
-  \ref{sec:plan-push-subj}) and prove Corollary \ref{cor:bounded}
-  separately for the cases when the rigid body's center of pressure
-  lies strictly in the right-half plane, left-half plane, or on the
-  $y$-axis.
+  We prove Corollary \ref{cor:bounded} separately for the cases when
+  the rigid body's center of pressure lies strictly in the right-half
+  plane, left-half plane, or on the $y$-axis.
 
-  Suppose the center of pressure lies in the right-half plane. Then by
-  Theorem 7.4 of \cite{Mason} the angular velocity of the pulled body
-  is strictly negative and hence, $0$ bounds $\Omega$ from above. To
-  establish a lower bound, we appeal to the following two properties
-  about the set of feasible rotation centers when pushing or pulling
-  with sticking contact. First, the rotation center must lie on the
-  $x$-axis. Second, the rotation center must lie behind the line
-  bisecting the contact point and the center of pressure
-  \cite{Mason}. We observe that any feasible rotation center must have
-  the form $[x,0]$ with $x > x^* > 0$, where $x^*$ is the intersection
-  of the bisecting line and the $x$-axis. Recall that, by convention,
-  we fix the contact point velocity to $\mathbf{v}_c = [0,1]^T$. We
-  compute the angular velocity $\omega^*$ at $[0,x^*]$ using
-  $\mathbf{v}_c$ and see that $\Omega$ is bounded from below by 
+  Suppose the center of pressure lies in the right-half plane of the
+  contact frame. Then by Theorem 7.4 of \cite{Mason} the angular
+  velocity of the pulled body is strictly negative and hence, $0$
+  bounds $\Omega$ from above. To establish a lower bound, we appeal to
+  the following two properties about the set of feasible rotation
+  centers when pushing or pulling with sticking contact. First, the
+  rotation center must lie on the $x$-axis. Second, the rotation
+  center must lie behind the line bisecting the contact point and the
+  center of pressure \cite{Mason}. We observe that any feasible
+  rotation center must have the form $[x,0]$ with $x > x^* > 0$, where
+  $x^*$ is the intersection of the bisecting line and the
+  $x$-axis. Recall that, by convention, we fix the contact point
+  velocity to $\mathbf{v}_c = [0,1]^T$. We compute the angular
+  velocity $\omega^*$ at $[0,x^*]$ using $\mathbf{v}_c$ and see that
+  $\Omega$ is bounded from below by
   \begin{equation}
     % \omega = -\frac{\lVert\mathbf{v}_c\rVert}{x} > -\frac{\lVert\mathbf{v}_c\rVert}{x^*}
     \omega^* = -\frac{\lVert\mathbf{v}_c\rVert}{x^*}.% < \omega, \quad \forall \omega \in \Omega
@@ -1012,21 +1019,23 @@ set of pressure distributions with known center of pressure.
   \label{fig:omega-bounds}
 \end{figure}
 
-The angular velocity bounds derived in Subsection
-\ref{sec:prop-angular-velocity-bounds} can be integrated into bounds
-on the position of the pulled body.  Let $\theta$ be the true
-orientation of the pulled body in the world frame.  We define the
-\textit{angular deviation} of the object as the angle deviation from
-the stable pulling configuration in the frame of the moving contact
-point. A deviation of 0 degrees corresponds to the center of pressure
-dragging behind the contact point. In Figure
-\ref{fig:presspull-motion}, the rectangular object has an angular
-deviation of 135 degrees. Let the function $\omega$ map from the
-angular deviation to the true angular velocity. Likewise, let $u$ and
-$l$ be upper and lower bounds on the true orientation, and let the
-functions $\alpha$ and $\beta$ map from the angular deviation to the
-upper and lower angular velocity bound. An example plot of $\alpha$
-and $\beta$ is illustrated in Figure \ref{fig:omega-bounds}.
+We prove that the angular velocity bounds derived in Subsection
+\ref{sec:prop-angular-velocity-bounds} integrate into bounds on the
+orientation of the pulled body.
+
+Let $\theta$ be the orientation of the rigid body in the world frame
+and let $u$ and $l$ be upper and lower bounds on the orientation in
+the world frame. Let the function $\omega(\rho)$ map from the angular
+deviation to the angular velocity of the rigid body. Likewise, let the
+functions $\alpha(\rho)$ and $\beta(\rho)$ map from the angular
+deviation to the upper and lower angular velocity bounds.  An example
+phase-plot of $\alpha(\rho)$ and $\beta(\rho)$ is illustrated in
+Figure \ref{fig:omega-bounds}. Note the stable equilibrium at
+$\theta = 0$.
+
+% Likewise, let $u$ and $l$ be upper and lower bounds on the true
+% orientation, and let the functions $\alpha$ and $\beta$ map from the
+% angular deviation to the upper and lower angular velocity bound. 
 
 We assume that the pulling trajectory
 $\gamma:\mathbb{R}\rightarrow\mathbb{R}^2$ can be approximated by a
@@ -1042,8 +1051,10 @@ according to the dynamical system
   \dot{y} &= \sin(\phi(t))\\
   \dot{\theta} &= \omega(\theta - \phi(t) + \pi)\\
   \dot{u} &=  \alpha(u - \phi(t) + \pi) \label{eq:u-ode}\\ 
-  \dot{\ell} &=  \beta(\ell - \phi(t) + \pi). 
+  \dot{\ell} &=  \beta(\ell - \phi(t) + \pi)
 \end{align}
+where the expression $x - \phi(t) + \pi$ maps an orientation $x$ in
+the global frame to the angular deviation.
 
 \begin{proposition}\label{prop:orientation-bounds}
   For pulling of a rigid body with known initial pose, the orientation
