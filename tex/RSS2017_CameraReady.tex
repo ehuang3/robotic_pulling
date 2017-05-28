@@ -456,17 +456,33 @@ computes the feasibility of a given pushed object velocity.
     \fill[draw=black,fill=blue!10,thin,rotate=\iangle] (-0.3,-0.5) rectangle (2.3,.5);
     \draw[rotate=\iangle] (1,0) circle[radius=2.4pt] node[cross] {};
     \draw[rotate=\iangle] (1,0) node[above right] {\tiny CoP};
-    {[axis,->]
-      \draw (0,0) -- (2.5,0) node[right] {$x$};
-      \draw (0,0) -- (0,2.5) node[above] {$y$};
+    {[axis,<->]
+      \draw (-1.25,0) -- (2.5,0) node[right] {$x$};
+      \draw (0,-1.25) -- (0,2.5) node[above] {$y$};
     }
     {[force,->]
       \draw (0,0) -- ++(0,1.5) node[right] {$\mathbf{v}_c$};
     }
+
+    \def\ilen{1}
+    {
+      % \draw[rotate=\iangle,style=densely dashed] (0,0) -- (\ilen,0);
+      \draw[rotate=-90,style=<->,>=latex] ++(\ilen,0) arc (0:90+\iangle-6:\ilen);
+      \draw[rotate=-45] (\ilen+0.05,0) node[right] {$\theta$};
+    }
+    \def\wlen{0.2}
+    {
+      % \draw[rotate=\iangle,style=densely dashed] (0,0) -- (\ilen,0);
+      \draw[rotate=-45,style=->,>=latex] ++(\wlen,0) arc (0:225:\wlen);
+      \draw[rotate=45] (\wlen-0.05,0) node[above right] {$\omega$};
+    }
     \fill (0,0) circle [radius=1.pt];
-    \fill (1.2207,0) circle [radius=1.pt] node[below right] {$x_{\text{\tiny IC}}$};
+    % \fill (1.8,0) circle [radius=1.pt] node[below right] {$\mathbf{r_c}$};
   \end{tikzpicture}
-  \caption{Motion of a press-pulled slider.}
+  \caption{Coordinate frame associated with a press-pulled slider,
+    where $\mathbf{v}_c$ is the contact point velocity, $\omega$ is
+    the angular velocity of the slider, $\theta$ is the angular
+    deviation from the stable pulling configuration.}
 % \BB{Define variables and provide a short explanation of the figure.}}
   \label{fig:presspull-motion}
 \end{figure}
@@ -514,9 +530,14 @@ and angular velocity about that rotation center and visa-versa.
 % \EH{Define conversion between twist and rotation center.}
 We choose a coordinate frame such that the origin is the contact point
 and the $y$-axis aligns with the contact point velocity (see Figure
-\ref{fig:presspull-motion} for an example). The contact point is
-assumed to be pushed with unit speed, yielding a body twist 
-$\mathbf{v}^+ = [0,1,\omega]^T$. Assuming Coulomb's law of sliding
+\ref{fig:presspull-motion} for an example). Let $\theta$ be the
+\textit{angular deviation} from the stable pulling configuration to
+the rigid body's center of pressure. The stable pulling configuration
+occurs when the center of pressure is collinear with and behind the
+direction of the pulling motion (proof in Subsection
+\ref{sec:stable-equil-when}). The contact point is assumed to be
+pushed with unit speed, yielding a body twist
+$\mathbf{v}^+ = [0,1,\omega]^T$.  Assuming Coulomb's law of sliding
 friction, the total frictional force and moment of the body at the
 origin are
 \begin{align}
@@ -1094,7 +1115,6 @@ according to the dynamical system
 
 % \EH{TODO: Simplify proof. Should be like two lines. It kind of makes
 % the paper more schizophrenic, so might even remove it.}
-
 
 % Note that the above proof holds for \textit{all pressure
 %   distributions} of the body on the support
