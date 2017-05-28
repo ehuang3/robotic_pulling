@@ -133,7 +133,6 @@ Atlanta, Georgia 30332\\ Email: bboots@cc.gatech.edu}}
 % Telephone: (800) 555--1212, Fax: (888) 555--1212}
 % \authorblockA{\authorrefmark{4}Tyrell Inc., 123 Replicant Street, Los Angeles, California 90210--4321}}
 
-
 \maketitle
 
 \begin{abstract}
@@ -503,13 +502,23 @@ where
     0 & 1 &  x_1
   \end{bmatrix*}.
 \end{equation}
-% \EH{Define conversion between twist and rotation center.}  
+Where convenient, we will convert freely between twists and their
+equivalent formulation, rotation centers. The mappings
+\begin{align}
+  [v_x, v_y, \omega] &\rightarrow [-\frac{v_y}{\omega}, \frac{v_x}{\omega}, \omega] \\
+  [r_x, r_y, \varphi] &\rightarrow [r_y\omega, -r_x\omega, \varphi]
+\end{align}
+maps a twist $[v_x, v_y, \omega]$ at the origin to a rotation center
+and angular velocity about that rotation center and visa-versa.
+
+% \EH{Define conversion between twist and rotation center.}
 We choose a coordinate frame such that the origin is the contact point
 and the $y$-axis aligns with the contact point velocity (see Figure
 \ref{fig:presspull-motion} for an example). The contact point is
-assumed to be pushed with unit speed. Assuming Coulomb's law of
-sliding friction, the total frictional force and moment of the body at
-the origin are
+assumed to be pushed with unit speed, yielding a body twist 
+$\mathbf{v}^+ = [0,1,\omega]^T$. Assuming Coulomb's law of sliding
+friction, the total frictional force and moment of the body at the
+origin are
 \begin{align}
   % Force
   % \mathbf{f}_f &= -\mu\,\sign(\dot{\theta})\,\mathbf{\hat{k}}\,\times\int_{R}\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA \\
