@@ -367,19 +367,30 @@ work, the bounds are conservative but not exact. That is, the bounds
 include every feasible motion, but also include infeasible motions.
 
 To the extent of our knowledge, prior work has used robotic pulling
-significantly less compared to its counterpart, robotic pushing.
-Though the stable equilibrium that occurs when pulling along a
-straight line was recognized by Mason \cite{mason1986} and Lynch and
-Mason \cite{lynch1995pulling}, we are not aware of any existing
-planner, apart from ours, which explicitly takes advantage of this
-stability. We note that the literature treats pulling as a topic
-subsumed by the theory of planar pushing. This is understandable
-because the differences between pulling and pushing are subtle and few
-(despite their significance). Regardless, our planner is most closely
-related to the work of Lynch and Mason \cite{lynch1996stable}. They
-invented an algorithm that plans stable pushes using two contact
-points. However, their use of weaker bounds \cite{peshkin1988motion,
-  alexander1993bounds, Mason} leads to more conservative strategies.
+significantly less compared to its counterpart, robotic pushing. The
+stable equilibrium that occurs when pulling along a straight line was
+recognized, without proof, by Mason \cite{mason1986}, Lynch and Mason
+\cite{lynch1995pulling}, and Berretty et al.
+\cite{berretty2001orienting}. For completeness, we provide a proof in
+Subsection \ref{sec:stable-equil-when}. To the best of our knowledge,
+Berretty et al. is the only work, apart from ours, to explicitly take
+advantage of this stability \cite{berretty2001orienting}. However, the
+method of Berretty et al. is limited to orienting asymmetrical convex
+polygons. In contrast, our method can both position and orient any
+pullable object, irregardless of its geometry.
+% Though the stable equilibrium that occurs when pulling along a
+% straight line was recognized by Mason \cite{mason1986} and Lynch and
+% Mason \cite{lynch1995pulling}, we are not aware of any existing
+% planner, apart from ours, which explicitly takes advantage of this
+% stability. We note that the literature treats pulling as a topic
+% subsumed by the theory of planar pushing. This is understandable
+% because the differences between pulling and pushing are subtle and few
+% (despite their significance). 
+Our planner is also related to the work of Lynch and Mason
+\cite{lynch1996stable}. They invented an algorithm that plans stable
+pushes using two contact points. However, their use of weaker bounds
+\cite{peshkin1988motion, alexander1993bounds, Mason} leads to more
+conservative strategies.
 
 % there are several related works in robotic pushing worth
 % mentioning. Lynch and Mason invented an algorithm that plans stable
@@ -766,10 +777,9 @@ Berretty et al. \cite{berretty2001orienting}. The robotic pulling
 trajectories generated in Subsection \ref{sec:diff-dynam-progr}
 automatically use the stable equilibrium to reduce pose uncertainty.
 
-\begin{theorem} \label{thm:cop-lom-convergence}
-  For pulling of a rigid body in the plane, the rigid body converges
-  to the state where its center of pressure is collinear with the
-  pulling direction.
+\begin{theorem} \label{thm:cop-lom-convergence} For pulling of a rigid
+  body in the plane, the rigid body converges to the state where its
+  center of pressure is collinear with the pulling direction.
 \end{theorem}
 
 \begin{proof}
@@ -779,12 +789,12 @@ automatically use the stable equilibrium to reduce pose uncertainty.
   to the right of the pulling direction (as in Figure
   \ref{fig:presspull-motion}). Then by Theorem 7.4 in \cite{Mason},
   the rigid body rotates clockwise about the contact point, i.e. has
-  angular velocity $\omega < 0$. Let $\varphi \in (\pi, 0)$ be the
-  angular deviation of the rigid body. Since $\varphi$ is
-  monotonically decreasing and $\omega = 0$ if $\varphi = 0$, we see
-  that $\varphi$ converges to $0$ in the limit as
-  $t \rightarrow \infty$. The case when the center of pressure is
-  strictly to the left of the line of motion follows from symmetry.
+  angular velocity $\omega < 0$. Let $\rho \in (\pi, 0)$ be the
+  angular deviation of the rigid body. Since $\rho$ is monotonically
+  decreasing and $\omega = 0$ if $\rho = 0$ or $\pi$, we see that
+  $\rho$ converges to $0$ in the limit as $t \rightarrow \infty$. The
+  case when the center of pressure is strictly to the left of the line
+  of motion follows from symmetry.
   % When the line of motion passes through the center of pressure,
   % a pure translation takes place (Theorem 7.4 in \cite{Mason}). This
   % implies that $\dot{\theta} = 0$ if and only if
