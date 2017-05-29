@@ -558,7 +558,7 @@ origin are
   % \mathbf{f}_f &= -\mu\int_{R}\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA \\
   % Moment
   % \mathbf{m}_f &= -\mu\,\sign(\dot{\theta}) \int_{R}\mathbf{r}\cdot\frac{\mathbf{r}-\mathbf{r_{\text{IC}}}}{\lVert \mathbf{r}-\mathbf{r_{\text{IC}}} \rVert} p(\mathbf{r}) dA,
-  \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact}
+  \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{A(\mathbf{r})\mathbf{v}^+}{\lVert A(\mathbf{r})\mathbf{v}^+ \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact},
   % \mathbf{m}_f &= -\mu\int_{R}\mathbf{r}\times\frac{\mathbf{v}(\mathbf{r})}{\lVert \mathbf{v}(\mathbf{r}) \rVert} p(\mathbf{r}) dA, \label{eq:moment-at-contact}
 \end{align}
 where $\mu$ is the coefficient of friction (static and dynamic), $R$
@@ -1292,7 +1292,7 @@ program
     & \underset{p}{\text{minimize}}
     & & \left\lVert \sum_Rg(\mathbf{r})p(\mathbf{r})\right\rVert \\
     & \text{subject to} 
-    & & p \in \mathcal{K}
+    & & p \in \mathcal{K},
   \end{aligned} \label{eq:lin-prog-feasibility}
 \end{equation}
 where $p$ is a discretized pressure distribution, $g(\mathbf{r})$ is
@@ -1307,7 +1307,7 @@ $p \in \mathcal{K}$.
 Several options exists for the choice of $\mathcal{K}$. 
 In our experiments, we use
 \begin{equation}
-  \mathcal{K} = \{p\;|\; 0 \leq p_i \leq U, p \in \mathcal{C}\} \label{eq:upper-bound-pressures}
+  \mathcal{K} = \{p\;|\; 0 \leq p_i \leq U, p \in \mathcal{C}\} \label{eq:upper-bound-pressures},
 \end{equation}
 where $U \leq 1$ is an upper bound on the discretized pressures. The
 upper bound $U$ controls the percentage of $R$ guaranteed to be in
@@ -1428,7 +1428,7 @@ towards the target orientation (due to Proposition
 
 We initialize our optimizer using paths generated from Dubin's curves
 \cite{dubins1957curves} because pulling with sticking contact shares
-similar dynamics with the simple car \cite{lavalle1999planning}.
+similar dynamics with the simple car \cite{zhou17dubin}.
 Dubin's curves are time-optimal paths for simple cars. The curves
 consist of constant curvature turns and straight line segments. To
 apply these curves to our system, we need two pieces of information:
@@ -1447,7 +1447,6 @@ and the effective rear axle center is the projection of the rotation center onto
   \mathbf{c}_{\text{rear}} = -\frac{x_0}{\alpha(\omega)}\cdot\frac{\mathbf{p}_0}{\lVert \mathbf{p}_0 \rVert^2}.
 \end{equation}
 % From these, we can compute Dubin's curves for our initialization.
-
 
 \section{Experiments}\label{sec:experiments}
 % \EH{Spin the experiments: We chose experiments that underscore the
@@ -1470,8 +1469,8 @@ circumcircle diameters similar to the MIT objects, roughly $0.16$m.
 %   convergence for each point.
 % \end{inparaenum}
 
-For each MIT object, we picked $10$ even spaced contact points on the
-boundary of the object. We generated $30$ random $n$-pods for each
+For each MIT object, we pick $10$ even spaced contact points on the
+boundary of the object. We generate $30$ random $n$-pods for each
 category and took the contact point to be the center of a random pod
 (similar to pulling the leg of a chair). We compute
 distance-to-convergence in the following manner. Let $\gamma$ be an
@@ -1482,7 +1481,7 @@ integrating $\gamma$ and stop when the integral converges to within 1
 degree of the stable configuration. The distance travelled is the
 distance-to-convergence\footnote{Note that this distance is
   independent of the pulling velocity, see Equation
-  (\ref{eq:rot-to-ang}).}. 
+  (\ref{eq:rot-to-ang}).}.
 
 The experimental results are collected in Table
 \ref{table:convergence-distance}. 
@@ -1573,11 +1572,11 @@ remained within the robot workspace was executed on the robot at
 25mm/s linear speed. The final pose was then recorded by the motion
 capture system.
 
-We collected 80 trials of robotic pulling. Of those, we discarded the
-4 trials where the algorithm failed to find any feasible trajectory
-within the robot workspace. The average absolute displacement from the
-target pose was 4.00mm $\pm$ 3.02mm. The average absolute angular
-displacement from the target pose was 4.35 degrees $\pm$ 3.14
+We collected eighty trials of robotic pulling. Of those eighty, we
+discarded the four trials where our planner failed trajectories that
+satisfied workspace constraints. The average absolute displacement
+from the target pose was 4.00mm $\pm$ 3.02mm. The average absolute
+angular displacement from the target pose was 4.35 degrees $\pm$ 3.14
 degrees. Note the hole radius introduces a systematic error of 3mm to
 the final pose because the puller contacts the edge of the hole, not
 the center. Overall, our experimental results support the claim that
@@ -1630,16 +1629,16 @@ visualized in Figure \ref{fig:trajectory}.
 \label{fig:trajectory}
 \end{figure}
 
-\section{Future Work}\label{sec:future work}
-{
-  \color{red}
-  \begin{inparaenum}
-  \item Extension of the proposed planner to general objects (increase the scope of the contribution).
-  \item NAMO
-  \item Press-pulling
-  \item 
-  \end{inparaenum}
-}
+% \section{Future Work}\label{sec:future work}
+% {
+%   \color{red}
+%   \begin{inparaenum}
+%   \item Extension of the proposed planner to general objects (increase the scope of the contribution).
+%   \item NAMO
+%   \item Press-pulling
+%   \item 
+%   \end{inparaenum}
+% }
 
 % \section{Discussion}\label{sec:discussion}
 \section{Conclusion}\label{sec:conclusion}
