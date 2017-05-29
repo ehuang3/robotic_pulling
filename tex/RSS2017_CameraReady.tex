@@ -533,10 +533,10 @@ Where convenient, we will convert freely between twists and their
 equivalent formulation, rotation centers. The mappings
 \begin{align}
   [v_x, v_y, \omega] &\rightarrow [-\frac{v_y}{\omega}, \frac{v_x}{\omega}, \omega] \\
-  [r_x, r_y, \varphi] &\rightarrow [r_y\omega, -r_x\omega, \varphi]
+  [r_x, r_y, \varphi] &\rightarrow [r_y\varphi, -r_x\varphi, \varphi]
 \end{align}
-maps a twist $[v_x, v_y, \omega]$ at the origin to a rotation center
-and angular velocity about that rotation center and visa-versa.
+maps a twist at the origin to a rotation center and angular velocity
+about that rotation center and visa-versa.
 
 % \EH{Define conversion between twist and rotation center.}
 We define the \textit{contact frame} to be the coordinate frame where
@@ -1061,9 +1061,9 @@ according to the dynamical system
   \dot{y} &= \sin(\phi(t))\\
   \dot{\theta} &= \omega(\theta - \phi(t) + \pi)\\
   \dot{u} &=  \alpha(u - \phi(t) + \pi) \label{eq:u-ode}\\ 
-  \dot{\ell} &=  \beta(\ell - \phi(t) + \pi)
+  \dot{\ell} &=  \beta(\ell - \phi(t) + \pi),
 \end{align}
-where the expression $x - \phi(t) + \pi$ maps an orientation $x$ in
+where the expression $z - \phi(t) + \pi$ maps an orientation $z$ in
 the global frame to the angular deviation.
 
 \begin{proposition}\label{prop:orientation-bounds}
@@ -1095,9 +1095,10 @@ the global frame to the angular deviation.
   \begin{equation}
     \int_{u(t_0)}^{u(t_1)}\frac{1}{\alpha(x - \phi(t_0))}dx \leq \int_{u(t_0)}^{u(t_1)}\frac{1}{\omega(x - \phi(t_0))}dx.
   \end{equation}
-  This indicates that $\theta(t_1) \leq u(t_1)$, a
+  This indicates that it takes less time for $u$ to reach $u(t_1)$
+  compared to $\theta$, and therefore, $\theta(t_1) \leq u(t_1)$, a
   contradiction. Therefore, the upper bound holds and the lower bound
-  follows from an identical argument.
+  follows from a similar argument.
 \end{proof}
 
 % \begin{proposition}
