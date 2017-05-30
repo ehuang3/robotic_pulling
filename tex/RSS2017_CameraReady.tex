@@ -88,7 +88,7 @@ cross/.default={2pt}}
 \author{\authorblockN{Eric Huang\authorrefmark{2},
 Ankit Bhatia\authorrefmark{2},
 Byron Boots\authorrefmark{1} and
-Matt Mason\authorrefmark{2}}
+Matthew T. Mason\authorrefmark{2}}
 \authorblockA{\authorrefmark{2}Robotics Institute\\
 Carnegie Mellon University,
 Pittsburgh, Pennsylvania 15213\\ Email: \{erich1,ankitb\}@andrew.cmu.edu, matt.mason@cs.cmu.edu}
@@ -377,7 +377,7 @@ Berretty et al. is the only work, apart from ours, to explicitly take
 advantage of this stability \cite{berretty2001orienting}. However, the
 method of Berretty et al. is limited to orienting asymmetrical convex
 polygons. In contrast, our method can both position and orient any
-pullable object, irregardless of its geometry.
+pullable object, regardless of its geometry.
 % Though the stable equilibrium that occurs when pulling along a
 % straight line was recognized by Mason \cite{mason1986} and Lynch and
 % Mason \cite{lynch1995pulling}, we are not aware of any existing
@@ -536,7 +536,7 @@ equivalent formulation, rotation centers. The mappings
   [r_x, r_y, \varphi] &\rightarrow [r_y\varphi, -r_x\varphi, \varphi]
 \end{align}
 maps a twist at the origin to a rotation center and angular velocity
-about that rotation center and visa-versa.
+about that rotation center and vice versa.
 
 % \EH{Define conversion between twist and rotation center.}
 We define the \textit{contact frame} to be the coordinate frame where
@@ -585,8 +585,8 @@ Note that both the angular velocity and its corresponding twist are
 taken with respect to the contact point frame. However, using
 equations (\ref{eq:force-at-contact}) and (\ref{eq:moment-at-contact})
 directly to check feasibility can lead to difficulties when the
-integrand's denominator $\lVert A(\mathbf{r})\mathbf{v}^+\rVert =
-0$. The next formulation obviates that difficulty.
+integrand's denominator $\lVert A(\mathbf{r})\mathbf{v}^+\rVert$ is
+zero. The next formulation obviates that difficulty.
 
 The principle of minimal dissipation states that the motion of the
 pushed body minimizes the instantaneous work dissipated by friction
@@ -1406,9 +1406,9 @@ dynamics in our trajectory optimizer
   l_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(l_i - \phi_i + \pi)\\
   h_{i+1} &= h_i + d_i,
 \end{align}
-where the functions $\hat{\alpha}$ and $\hat{\beta}$ are fourer series
-approximations of the upper and lower angular velocity bounds (to
-avoid costly in-loop computations) and the additional state $h_i$
+where the functions $\hat{\alpha}$ and $\hat{\beta}$ are Fourier
+series approximations of the upper and lower angular velocity bounds
+(to avoid costly in-loop computations) and the additional state $h_i$
 measures the cumulative distance pulled.
 
 We use the following cost functions to bias the trajectory optimizer
@@ -1432,7 +1432,7 @@ orientation bounds are equal to $\omega_T$ in the target state
 $\mathbf{x}_F$. This ensures the generated trajectory minimizes
 uncertainty in the final orientation (due to Proposition
 \ref{prop:orientation-bounds}). Finally, we initialize our trajectory
-optimizer using paths generated from Dubin's curves. Pushing with
+optimizer using paths generated from Dubins' curves. Pushing with
 sticking contact shares similar dynamics with the simple car
 \cite{dubins1957curves, zhou17dubin}.
 
@@ -1463,8 +1463,6 @@ sticking contact shares similar dynamics with the simple car
 \section{Experiments}\label{sec:experiments}
 % \EH{Spin the experiments: We chose experiments that underscore the
 %   practical benefits of our theoretical contributions.}
-
-
 
 \subsection{Comparison of
   Angular Velocity Bounds}\label{sec:bound-comparison}
@@ -1587,15 +1585,16 @@ remained within the robot workspace was executed on the robot at
 capture system.
 
 We collected eighty trials of robotic pulling. Of those eighty, we
-discarded the four trials where our planner failed trajectories that
-satisfied workspace constraints. The average absolute displacement
-from the target pose was 4.00mm $\pm$ 3.02mm. The average absolute
-angular displacement from the target pose was 4.35 degrees $\pm$ 3.14
-degrees. Note the hole radius introduces a systematic error of 3mm to
-the final pose because the puller contacts the edge of the hole, not
-the center. Overall, our experimental results support the claim that
-the planner finds convergent pulling trajectories. An example trial is
-visualized in Figure \ref{fig:trajectory}.
+discarded the four trials where our planner failed to find
+trajectories that satisfied workspace constraints. The average
+absolute displacement from the target pose was 4.00mm $\pm$
+3.02mm. The average absolute angular displacement from the target pose
+was 4.35 degrees $\pm$ 3.14 degrees. Note the hole radius introduces a
+systematic error of 3mm to the final pose because the puller contacts
+the edge of the hole, not the center. Overall, our experimental
+results support the claim that the planner finds convergent pulling
+trajectories. An example trial is visualized in Figure
+\ref{fig:trajectory}.
 
 % We distinguish between two types of error during the pulling
 % experiments. The target error is the error between the target pose and
