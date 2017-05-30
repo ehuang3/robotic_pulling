@@ -1328,7 +1328,6 @@ solves linear program (\ref{eq:lin-prog-feasibility}) using
 % of the contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
 % principle, at least 50\% of $R$ is always in contact with the surface.
 
-
 % The upper and lower bounds, $U$ and $L$, have a nice physical
 % interpretation. Let $N$ be the number of points in the discretization
 % of the contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
@@ -1385,72 +1384,87 @@ solves linear program (\ref{eq:lin-prog-feasibility}) using
 % \item Yifan's DDP code
 % \item Which ddp algorithm was used
 % \end{inparaenum}
-% \EH{TODO: Tie in theoretical results on uncertainty into DDP} 
+% \EH{TODO: Tie in theoretical results on uncertainty into DDP}
 
 We use control-limited Differential Dynamic Programming (DDP)
-\cite{tassa2014control} to plan trajectories for robotic pulling.  Our
-implementation uses the following first order approximation of the
-discretized dynamics
+\cite{tassa2014control} to plan convergent trajectories for robotic
+pulling. At a high level, DDP solves a trajectory optimization problem
+where the objective is to reach a target pose $[x_T, y_T, \omega_T]^T$
+with small uncertainty, i.e. the integrated orientation bounds are
+within $\epsilon$ of $\omega_T$.
+
+Let the discretized state be $\mathbf{x}_i = [x_i,y_i,u_i,l_i]^T$,
+$i\in[1,N]$. Let the discretized controls be
+$\mathbf{u}_i = [d_i,\phi_i]^T$, $i\in[1,N]$, where $d_i$ is the
+distance to travel and $\phi_i$ is the heading in the global frame. We
+use the following first order approximation of the discretized
+dynamics in our trajectory optimizer
 \begin{align}
   x_{i+1} &= x_i + d_i\cdot\cos(\phi_i) \\
   y_{i+1} &= y_i + d_i\cdot\sin(\phi_i)\\
   u_{i+1} &= u_i + d_i\cdot\hat{\alpha}(u_i - \phi_i + \pi) \\
-  \ell_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(\ell_i - \phi_i + \pi)\\
-  h_{i+1} &= h_i + d_i.
+  l_{i+1} &= \ell_i + d_i\cdot\hat{\beta}(l_i - \phi_i + \pi)\\
+  h_{i+1} &= h_i + d_i,
 \end{align}
-In this system, the controls at index $i$ are the distance $d_i$ and
-heading $\phi_i$. The functions $\hat{\alpha}$ and $\hat{\beta}$ are
-Fourier series approximations of the upper and lower bounds $\alpha$
-and $\beta$. The variable $h_i$ measures the cumulative distance
-pulled.
+where the functions $\hat{\alpha}$ and $\hat{\beta}$ are fourer series
+approximations of the upper and lower angular velocity bounds (to
+avoid costly in-loop computations) and the additional state $h_i$
+measures the cumulative distance pulled.
 
-Let $\mathbf{x}_i = [x_i,y_i,u_i,l_i]^T$ and
-$\mathbf{u}_i = [d_i,\phi_i]^T$, with $i\in[1,N]$. In our DDP planner,
-we set the running cost $\mathcal{L}(\mathbf{x}_i,\mathbf{u}_i)$ to
-zero. We set the final cost to be
+We use the following cost functions to bias the trajectory optimizer
+towards finding convergent trajectories. We set the running cost
+$\mathcal{L}(\mathbf{x}_i,\mathbf{u}_i)$, $i\in[1,N-1]$ to zero. We
+set the final cost to be
 \begin{equation}
 \mathcal{L}_F(\mathbf{x}_N,h_N) = \mathbf{k}^T\mathcal{L}_{\bm{\delta}}(\mathbf{x}_N-\mathbf{x}_F) + \lambda h_N^2,
 \end{equation}
 where $\mathcal{L}_{\bm{\delta}}$ is the vectorized version of the
-Pseudo-Huber loss function \footnote{This function approximates an
+Pseudo-Huber loss function\footnote{This function approximates an
   $\ell_1$ norm for $a > \delta$.}
 \begin{equation}
-\mathcal{L}_{\delta}(a) = \sqrt{a^2+\delta^2}-\delta,
+  \mathcal{L}_{\delta}(a) = \sqrt{a^2+\delta^2}-\delta,
 \end{equation}
-$\mathbf{x}_F$ is the goal configuration, $\mathbf{k}$ is the slope of
-the vectorized Pseudo-Huber loss function, $\bm{\delta}$ is the width
+$\mathbf{x}_F = [x_T,y_T,\omega_T,\omega_T]^T$ is the target state,
+$\mathbf{k}$ and $\bm{\delta}$ are the slope and width, respectively,
 of the vectorized Pseudo-Huber loss function, and $\lambda$ is the
-distance penalty coefficient. We set the final upper and lower bounds,
-$u_N$ and $\ell_N$, to be equal in the target state
-$\mathbf{x}_F$. This ensures the generated trajectory converges
-towards the target orientation (due to Proposition
-\ref{prop:orientation-bounds}).
+distance penalty coefficient. Note that the target upper and lower
+orientation bounds are equal to $\omega_T$ in the target state
+$\mathbf{x}_F$. This ensures the generated trajectory minimizes
+uncertainty in the final orientation (due to Proposition
+\ref{prop:orientation-bounds}). Finally, we initialize our trajectory
+optimizer using paths generated from Dubin's curves. Pushing with
+sticking contact shares similar dynamics with the simple car
+\cite{dubins1957curves, zhou17dubin}.
 
-We initialize our optimizer using paths generated from Dubin's curves
-\cite{dubins1957curves} because pulling with sticking contact shares
-similar dynamics with the simple car \cite{zhou17dubin}.
-Dubin's curves are time-optimal paths for simple cars. The curves
-consist of constant curvature turns and straight line segments. To
-apply these curves to our system, we need two pieces of information:
-the minimum turning radius and the effective rear axle center. 
+% Given a heading $\omega \in (0,\pi/2) $ and resulting upper angular
+% velocity bound $\alpha(\omega)$ in the frame of the contact point, the
+% minimum turning radius is equivalent to the distance from the center
+% of rotation to the line between the contact point and the center of
+% pressure $\mathbf{p}_0 = [x_0,y_0]^T$, that is
 
-Given a heading $\omega \in (0,\pi/2) $ and resulting upper angular
-velocity bound $\alpha(\omega)$ in the frame of the contact point, the
-minimum turning radius is equivalent to the distance from the center
-of rotation to the line between the contact point and the center of
-pressure $\mathbf{p}_0 = [x_0,y_0]^T$, that is
-\begin{equation}
-  r_{\text{min}} = \frac{\sign y_0}{\alpha(\omega)},
-\end{equation}
-and the effective rear axle center is the projection of the rotation center onto that line, i.e.
-\begin{equation}
-  \mathbf{c}_{\text{rear}} = -\frac{x_0}{\alpha(\omega)}\cdot\frac{\mathbf{p}_0}{\lVert \mathbf{p}_0 \rVert^2}.
-\end{equation}
+% Dubin's curves are time-optimal paths for simple cars. The curves
+% consist of constant curvature turns and straight line segments. To
+% apply these curves to our system, we need two pieces of information:
+% the minimum turning radius and the effective rear axle center. 
+% Given a heading $\omega \in (0,\pi/2) $ and resulting upper angular
+% velocity bound $\alpha(\omega)$ in the frame of the contact point, the
+% minimum turning radius is equivalent to the distance from the center
+% of rotation to the line between the contact point and the center of
+% pressure $\mathbf{p}_0 = [x_0,y_0]^T$, that is
+% \begin{equation}
+%   r_{\text{min}} = \frac{\sign y_0}{\alpha(\omega)},
+% \end{equation}
+% and the effective rear axle center is the projection of the rotation center onto that line, i.e.
+% \begin{equation}
+%   \mathbf{c}_{\text{rear}} = -\frac{x_0}{\alpha(\omega)}\cdot\frac{\mathbf{p}_0}{\lVert \mathbf{p}_0 \rVert^2}.
+% \end{equation}
 % From these, we can compute Dubin's curves for our initialization.
 
 \section{Experiments}\label{sec:experiments}
 % \EH{Spin the experiments: We chose experiments that underscore the
 %   practical benefits of our theoretical contributions.}
+
+
 
 \subsection{Comparison of
   Angular Velocity Bounds}\label{sec:bound-comparison}
