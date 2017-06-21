@@ -111,7 +111,7 @@ cross/.default={2pt}}
 \author{\authorblockN{Eric Huang\authorrefmark{1},
 Ankit Bhatia\authorrefmark{1},
 Byron Boots\authorrefmark{2} and
-Matt Mason\authorrefmark{1}}
+Matthew T. Mason\authorrefmark{1}}
 \authorblockA{\authorrefmark{1}Robotics Institute\\
 Carnegie Mellon University,
 Pittsburgh, Pennsylvania 15213\\ Email: \{erich1,ankitb\}@andrew.cmu.edu, matt.mason@cs.cmu.edu}
@@ -230,6 +230,17 @@ algorithm and the algorithm for planning pulling trajectories under
 action uncertainty. Section \ref{sec:experiments} presents our
 experimental results. Section \ref{sec:conclusion} gives concluding
 remarks on the paper.
+
+\section{Related Work}\label{sec:related-work}
+
+In all prior work bounding the motion of a pushed object, the bounds
+are not exact \cite{Mason, alexander1993bounds, peshkin1988motion}.
+Our method computes exact bounds. Berretty et al. is the only work,
+apart from ours, to explicitly take advantage of the stability of
+pulling \cite{berretty2001orienting}. However, their method is limited
+to orienting asymmetrical convex polygons. In contrast, our method can
+both position and orient any pullable object, regardless of its
+geometry.
 
 \section{Theory}\label{sec:theory}
 
@@ -461,19 +472,54 @@ Subsection \ref{sec:diff-dynam-progr}.
 
 % \EH{TODO: Explain correctness of algorithm using theoretical results}
 
+% Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
+% velocity bounds for a given support region $R$ and center of pressure
+% $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
+% $\Omega$. This choice is justified because $\Omega$ is connected and
+% bounded by Theorem \ref{thm:angular-velocities} and Corollary
+% \ref{cor:bounded}.
+
+% To initialize the bisection search, we need an angular velocity in
+% $\Omega$ and two angular velocities above and below the bounds of
+% $\Omega$. First, we compute an angular velocity $\omega$ in $\Omega$.
+% We find a feasible assignment of pressures $P$ such that the center of
+% pressure is $[x_0, y_0]$ (line \ref{line:find-pressure}). From $P$,
+% the resultant rotation center $[x_r,0]$ can be computed using the
+% root-finding method in \cite{Mason1982} (line \ref{line:find-rc}).
+% Lastly, we convert the rotation center into the angular velocity
+% $\omega \in \Omega$ (line \ref{line:rc-to-w}). Of the two out-of-bound
+% angular velocities $l$ and $u$, we can set $l$ to $0$ (line
+% \ref{line:0}). The other can be found by repeatedly doubling $\omega$
+% until the resulting angular velocity is no longer feasible (lines
+% \ref{line:find-u-start}-\ref{line:find-u-end}). As a reminder, we test
+% the feasibility of a given angular velocity $\omega'$ by checking
+% whether the point $[x_0,y_0,0]^T$ is contained in the associated
+% frictional moment envelope (see Section
+% \ref{sec:frictional-envelope}). Now that $\omega$, $u$, and $l$ have
+% been computed, we pass them into the bisection search to compute the
+% boundary points of $\Omega$ (lines \ref{line:bisection-1} and
+% \ref{line:bisection-2}).
+
+% The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
+% $d$ is the number of significant digits returned and $n$ is the number
+% of points in the discretization of $R$. This computation is relatively
+% expensive to perform online. In Section \ref{sec:diff-dynam-progr}, we
+% avoid recomputing angular velocity bounds by fitting Fourier series to
+% a set of pre-computed orientation-bound pairs.
+
 Algorithm \ref{alg:angular-velocity-bounds} finds exact angular
 velocity bounds for a given support region $R$ and center of pressure
 $[x_0,y_0]^T$. It uses bisection search to estimate the end-points of
-$\Omega$. The bisection search is justified because $\Omega$ is
-connected and bounded by Theorem \ref{thm:angular-velocities} and Corollary
-\ref{cor:bounded}.
-
-To initialize, the bisection search first finds feasible
-pressure distribution using linear programming and then finds feasible
-rotation center using the root-finding method in \cite{Mason1982}. The
-bisection search tests the feasibility of an angular velocity $\omega$
-by checking whether the point $[x_0,y_0,0]^T$ is contained in the
-associated frictional moment envelope \cite{Huang2015Bounds}.
+$\Omega$, where $\Omega$ is set of feasible angular velocities. The
+bisection search is justified because $\Omega$ is connected and
+bounded by Theorem \ref{thm:angular-velocities} and Corollary
+\ref{cor:bounded}. To initialize, the bisection search first finds
+feasible pressure distribution using linear programming and then finds
+feasible rotation center using the root-finding method in
+\cite{Mason1982}. The bisection search tests the feasibility of an
+angular velocity $\omega$ by checking whether the point
+$[x_0,y_0,0]^T$ is contained in the associated frictional moment
+envelope \cite{Huang2015Bounds}.
 
 % In quasi-static terminology, this is equivalent to checking whether
 % there exists a pressure distribution with center of pressure
@@ -485,50 +531,107 @@ The run-time of the algorithm is $\mathcal{O}(d\,n\log{} n)$, where
 $d$ is the number of significant digits returned and $n$ is the number
 of points in the discretization of $R$.
 
-\subsection{Point In Tighter Moment
-  Envelope}\label{sec:point-in-moment-enve}
+\subsection{Improving on Exact Angular Velocity Bounds}\label{sec:point-in-moment-enve}
 
-In this subsection, we show how angular velocity bounds can be
-computed for new classes of pressure distributions. 
+The exact angular velocity bounds computed in Section
+\ref{sec:exact-ang-vel-bound-alg} result in slow convergence towards
+the stable pulling equilibrium point (for experimental measurements,
+see Subsection \ref{sec:bound-comparison}). Consequently, wide bounds
+cause our planner to generate long trajectories that exceed the
+robot's workspace in order to satisfy tolerances on the final pose
+uncertainty.
 
-We know from \cite{Huang2015Bounds} that we can test the feasibility
-of an angular velocity $\omega$ by querying whether the moment
-envelope generated by $\omega$ contains the point $[x_0,y_0,0]^T$,
-where $[x_0,y_0]^T$ is the object's center of pressure. Implicitly,
-this method checks feasibility against the class of pressure
-distributions with shared center of pressure. However, this assumption
-is often too broad in practice. We cast the feasibility test as a
-linear program to facilitate checking against new classes of pressure
-distributions, including, for example, bounds on the pressure
-magnitude at various points.
-
-This linear program checks the feasibility of angular velocity by
-directly solving for an assignment of discrete, bounded pressures such
-that the pushed object has the correct center of pressure and
-generates zero moment
+In this subsection, we show how to modify the constraints on the
+pressure distributions from which the bounds were computed. This
+allows us to restrict pressure distributions to smaller subclasses and
+thus achieve tighter angular velocity bounds. Let $\mathcal{C}$ be the
+class of normalized pressure distributions over a region $R$ with
+center of pressure $[x_0, y_0]$.
+% Note, as written, Algorithm
+% \ref{alg:angular-velocity-bounds} checks the feasibility of an angular
+% velocity with respect to $\mathcal{C}$.
+Now, suppose we had a convex subclass $\mathcal{K}$ of pressure
+distributions such that $\mathcal{K} \subset
+\mathcal{C}$. Regrettably, the point-in-convex-hull feasibility test
+only works for $\mathcal{C}$. However, we can setup an alternative
+feasibility test with respect to $\mathcal{K}$ by solving the linear
+program
 \begin{equation}
   \begin{aligned}
-    & \underset{\mathbf{p}}{\text{minimize}}
-    & & \mathbf{0} \\
-    & \text{subject to}
-    & & G\mathbf{p} = [x_0,y_0,0]^T,\; \mathbf{1}\cdot\mathbf{p} = 1, \\
-    & & & L \leq \mathbf{p} \leq U,
-  \end{aligned} \label{eq:lin-prog-PiCH}
+    & \underset{p}{\text{minimize}}
+    & & \left\lVert \sum_Rg(\mathbf{r})p(\mathbf{r})\right\rVert \\
+    & \text{subject to} 
+    & & p \in \mathcal{K},
+  \end{aligned} \label{eq:lin-prog-feasibility}
 \end{equation}
-where $\mathbf{p}$ is a normalized pressure distribution, $G$ is the
-moment surface function \cite{Huang2015Bounds} computed over the
-discretized support region $R$, and $L$ and $U$ are bounds on
-$\mathbf{p}$.
+where $p$ is a discretized pressure distribution, $g(\mathbf{r})$ is
+the unit-torque function \cite{Huang2015Bounds},
+% \begin{equation}
+%   g(\mathbf{x}) = -\mu f_0\,\mathbf{x}\times \frac{A(\mathbf{x})\mathbf{v}^+}{\lVert A(\mathbf{x})\mathbf{v}^+ \rVert} \label{eq:unit-moment-at-x},
+% \end{equation}
+% from equation (\ref{eq:unit-moment-at-x}),
+and the summation is over points $\mathbf{r} \in R$. A given angular
+velocity $\omega$ is feasible if and only if the linear program
+(\ref{eq:lin-prog-feasibility}) finds a pressure distribution $p$ such
+that the objective
+$\left\lVert \sum_Rg(\mathbf{r})p(\mathbf{r})\right\rVert$ is $0$ and
+$p \in \mathcal{K}$.
 
-The upper and lower bounds, $U$ and $L$, have a nice physical
-interpretation. Let $N$ be the number of points in the discretization
-of the contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
-principle, at least 50\% the area of $R$ is always in contact with the
-surface.  Or set $L$ to $0.1/N$. Then at least 10\% of object weight
-is uniformly distributed.
-
-We solve the linear program (\ref{eq:lin-prog-PiCH}) using
+Several options exists for the choice of $\mathcal{K}$. 
+In our experiments, we use
+\begin{equation}
+  \mathcal{K} = \{p\;|\; 0 \leq p_i \leq U, p \in \mathcal{C}\} \label{eq:upper-bound-pressures},
+\end{equation}
+where $U \leq 1$ is an upper bound on the discretized pressures. The
+upper bound $U$ controls the percentage of $R$ guaranteed to be in
+contact with the surface, i.e. has non-zero pressure. For example, if
+we set $U = 2/N$, where $N$ is the number of points in the
+discretization of $R$, then, by the pigeon-hole principle, at least
+50\% of $R$ is always in contact with the surface. Our implementation
+solves linear program (\ref{eq:lin-prog-feasibility}) using
 \texttt{Gurobi} \cite{gurobi}.
+
+% In this subsection, we show how angular velocity bounds can be
+% computed for new classes of pressure distributions. 
+
+% We know from \cite{Huang2015Bounds} that we can test the feasibility
+% of an angular velocity $\omega$ by querying whether the moment
+% envelope generated by $\omega$ contains the point $[x_0,y_0,0]^T$,
+% where $[x_0,y_0]^T$ is the object's center of pressure. Implicitly,
+% this method checks feasibility against the class of pressure
+% distributions with shared center of pressure. However, this assumption
+% is often too broad in practice. We cast the feasibility test as a
+% linear program to facilitate checking against new classes of pressure
+% distributions, including, for example, bounds on the pressure
+% magnitude at various points.
+
+% This linear program checks the feasibility of angular velocity by
+% directly solving for an assignment of discrete, bounded pressures such
+% that the pushed object has the correct center of pressure and
+% generates zero moment
+% \begin{equation}
+%   \begin{aligned}
+%     & \underset{\mathbf{p}}{\text{minimize}}
+%     & & \mathbf{0} \\
+%     & \text{subject to}
+%     & & G\mathbf{p} = [x_0,y_0,0]^T,\; \mathbf{1}\cdot\mathbf{p} = 1, \\
+%     & & & L \leq \mathbf{p} \leq U,
+%   \end{aligned} \label{eq:lin-prog-PiCH}
+% \end{equation}
+% where $\mathbf{p}$ is a normalized pressure distribution, $G$ is the
+% moment surface function \cite{Huang2015Bounds} computed over the
+% discretized support region $R$, and $L$ and $U$ are bounds on
+% $\mathbf{p}$.
+
+% The upper and lower bounds, $U$ and $L$, have a nice physical
+% interpretation. Let $N$ be the number of points in the discretization
+% of the contact region $R$. Set $U$ to $2/N$. Then by the pigeon-hole
+% principle, at least 50\% the area of $R$ is always in contact with the
+% surface.  Or set $L$ to $0.1/N$. Then at least 10\% of object weight
+% is uniformly distributed.
+
+% We solve the linear program (\ref{eq:lin-prog-PiCH}) using
+% \texttt{Gurobi} \cite{gurobi}.
 
 \subsection{Planning Convergent Trajectories for Robotic
   Pulling}\label{sec:diff-dynam-progr}
@@ -704,14 +807,14 @@ of 2mm. To compensate sensing error, the holes on the rectangle were
 oversized to have a 3mm radius. We used MDF board as our surface
 material.
 
-\begin{figure}
-\begin{center}
-  \includegraphics[width=\columnwidth]{fig/object}
-\end{center}
-\caption{The top and bottom view of the acrylic rectangle with motion
-  capture markers and 8 holes for pulling.}
-\label{fig:object}
-\end{figure}
+% \begin{figure}
+% \begin{center}
+%   \includegraphics[width=\columnwidth]{fig/object}
+% \end{center}
+% \caption{The top and bottom view of the acrylic rectangle with motion
+%   capture markers and 8 holes for pulling.}
+% \label{fig:object}
+% \end{figure}
 
 We computed angular velocity bounds for the acrylic rectangle over
 pressure distributions restricted to have at least 25\% of the object
@@ -794,6 +897,16 @@ robotic pulling trajectories that guarantee the pulled object
 converges to the final pose. We validate our planner on a real robotic
 system and show that the generated trajectories obtain low errors on
 the final pose of the object.
+
+\section*{Acknowledgments}
+
+Eric Huang was supported by the Department of Defense (DoD) through
+the National Defense Science \& Engineering Graduate Fellowship
+(NDSEG) Program. This material is based upon work supported by the
+National Science Foundation under Grants No. IIS1409003 and
+IIS1637908. Any opinions, findings, and conclusions or recommendations
+expressed in this material are those of the author(s) and do not
+necessarily reflect the views of the National Science Foundation.
 
 \bibliographystyle{plainnat}
 \bibliography{references}
