@@ -33,9 +33,9 @@ fill([T, fliplr(T)], [L, fliplr(U)], 0.75 * ones([1, 3]))
 % plot([T, fliplr(T)], [L, fliplr(U)],'k')
 % plot(T,L,'k','LineWidth',2')
 % plot(T,U,'k')
-yl = ylabel('$\dot{\theta}$');
+yl = ylabel('$\omega$');
 set(yl, 'Interpreter', 'latex')
-xlabel \theta
+xlabel \rho
 a = axis;
 grid on
 hold on
@@ -68,7 +68,7 @@ set(gcf, 'Renderer', 'painters');
 hp = findobj(gca,'type','patch');
 hatchfill(hp)
 ax.GridAlpha = 0.5
-% export_fig src/presspull/tex/fig/omega_bounds1.eps -a1 -nocrop -native -m2 -a1 -eps
+export_fig src/robotic_pulling/tex/fig/omega_bounds_2.eps -a1 -nocrop -native -m2 -a1 -eps
 
 %% 
 
