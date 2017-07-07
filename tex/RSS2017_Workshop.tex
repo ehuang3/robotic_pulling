@@ -18,7 +18,7 @@
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
 
-\documentclass[landscape,paperwidth=42in,paperheight=32in,margin=1.5in,fontscale = 0.32]{baposter} % Adjust the font scale/size here
+\documentclass[potrait,paperwidth=20in,paperheight=30in,margin=1.5in,fontscale = 0.5]{baposter} % Adjust the font scale/size here
 
 \usepackage{graphicx} % Required for including images
 \usepackage{graphbox}
@@ -109,7 +109,7 @@
 
 \begin{poster}
 {
-  columns=3,
+  columns=2,
   headerborder=closed, % Adds a border around the header of content boxes
   colspacing=1em, % Column spacing
   bgColorOne=white, % Background color for the gradient on the left side of the poster
@@ -132,10 +132,10 @@
 %----------------------------------------------------------------------------------------
 %
 {\includegraphics[height=6em]{images/mlab_logo.png}} % Second university/lab logo on the right
-{\textbf{Exact Bounds on the Contact Driven Motion of a Sliding
+{\Huge\textbf{Exact Bounds on the Contact Driven \\Motion of a Sliding
     Object,\\\vspace{1mm} With Applications to Robotic Pulling}
   \vspace{3mm}} % Poster title
-{\LARGE{{Eric Huang, Ankit Bhatia, Byron Boots, and Matthew
+  {{{Eric Huang, Ankit Bhatia, Byron Boots, and Matthew
       T. Mason}}\vspace{3mm}} % Author names and institution
 {\includegraphics[height=6em]{images/ri_logo.png}} % First university/lab logo on the left
 \headerbox{Abstract}{name=ab,column=0,row=0}{ This work explores the
@@ -227,7 +227,7 @@
   \end{center}
 }
 
-\headerbox{Exact Angular Velocity Bounds}{name=ex,column=1,row=0}{
+\headerbox{Exact Angular Velocity Bounds}{name=ex,column=0,below=bg}{
 
   Let $\Omega$ be the set of \textbf{feasible} angular velocities
   for a given center of pressure $\mathbf{c}$ and orientation $\rho$.
@@ -262,7 +262,7 @@
     % \end{equation}
   \end{itemize}
 }
-\headerbox{Robotic Pulling Planner}{name=pl,column=1,below=ex,bottomaligned=bg}{\vspace{3mm}
+\headerbox{Robotic Pulling Planner}{name=pl,column=1,row=0,}{\vspace{3mm}
 
   We use Control-limited Differential Dynamic Programming (DDP) to
   plan \textbf{pulling trajectories} that \textbf{guarantee
@@ -291,7 +291,7 @@
   \end{equation}
 }
 
-\headerbox{Experiments}{name=exp,column=2,row=0}{
+\headerbox{Experiments}{name=exp,column=1,below=pl}{
   \begin{tabular}{@{}cc@{}}
     \multicolumn{1}{m{0.45\columnwidth}}{\includegraphics[width=0.5\columnwidth]{fig/hardware.png}} & \multicolumn{1}{m{0.45\columnwidth}}{\includegraphics[width=0.5\columnwidth]{fig/trajectory_2.eps}}
      % & \includegraphics[width=0.5\columnwidth]{fig/trajectory_2.eps}
@@ -305,12 +305,12 @@
   workspace constraints.
 
 } \headerbox{Future
-  work}{name=fw,column=2,below=exp}{
+  work}{name=fw,column=1,below=exp}{
   \begin{itemize}
   \item Apply the exact bounds/planner to real-world robotics problems such as
     NAMO, tabletop rearrangement.
   \end{itemize}
-} \headerbox{Conclusion}{name=con,column=2,below=fw}{
+} \headerbox{Conclusion}{name=con,column=1,below=fw}{
 
   We derived a method for computing \textbf{exact} angular velocity
   bounds and planning convergent pulling trajectories.
@@ -321,21 +321,21 @@
     positioning and orienting objects.
   \end{itemize}
 }
-\headerbox{References}{name=ref,column=2,below=con}{
+\headerbox{References}{name=ref,column=1,below=con,bottomaligned=ex}{
   \scriptsize{
     \bibliographystyle{plain}
     \bibliography{references}
   }
 }
-\headerbox{Acknowledgements}{name=ack,column=2,below=ref,bottomaligned=pl}{
-  \scriptsize{
-    Eric Huang was supported by the Department of Defense (DoD) through
-    the National Defense Science \& Engineering Graduate Fellowship
-    (NDSEG) Program. This material is based upon work supported by the
-    National Science Foundation under Grants No. IIS1409003 and
-    IIS1637908.
-  }
-}
+% \headerbox{Acknowledgements}{name=ack,column=1,below=ref,bottomaligned=ex}{
+%   \scriptsize{
+%     Eric Huang was supported by the Department of Defense (DoD) through
+%     the National Defense Science \& Engineering Graduate Fellowship
+%     (NDSEG) Program. This material is based upon work supported by the
+%     National Science Foundation under Grants No. IIS1409003 and
+%     IIS1637908.
+%   }
+% }
 \end{poster}
 
 \end{document}
